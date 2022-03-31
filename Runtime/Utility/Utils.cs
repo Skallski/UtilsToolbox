@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Skallu.Utils
@@ -64,10 +66,21 @@ namespace Skallu.Utils
         
                 return new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
             }
-        
+
         }
+
+        public static class StringExtensionUtils
+        {
+            // changes color of log message to one provided as method parameter
+            //
+            // call example: Debug.Log("test".Color(Color.blue));
+            public static string Color(this string text, Color color)
+            {
+                return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{text}</color>";
+            }
+            
+        }
+        
     }
     
-    
 }
-
