@@ -1,5 +1,5 @@
 # Skallu-Utils
-My package of Unity [extensions](http://en.wikipedia.org/wiki/Extension_method)) and stuff, which I find useful.
+My package of Unity [extensions](http://en.wikipedia.org/wiki/Extension_method) and stuff, which I find useful.
 
 ## Usage
 
