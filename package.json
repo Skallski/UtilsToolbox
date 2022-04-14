@@ -1,15 +1,16 @@
 {
-    "name": "com.skallu.skallu-utils",
-    "version": "1.0.0",
-    "displayName": "Skallu Utils",
-    "description": "",
-    "unity": "2020.3",
-    "dependencies": {
-    },
-    "keywords": ["Skallu", "utils"],
-    "author": {
-        "name": "Skallu",
-        "email": "kaminski.patryk@hotmail.com",
-        "url": "https://github.com/Skallu0711"
-    }
+  "name": "com.skallu.skallu-utils",
+  "version": "1.0.1",
+  "displayName": "Skallu Utils",
+  "description": "Package of extensions and stuff, which I find useful.",
+  "unity": "2020.3",
+  "keywords": [
+    "Skallu",
+    "utils"
+  ],
+  "author": {
+    "name": "Skallu",
+    "email": "kaminski.patryk@hotmail.com",
+    "url": "https://github.com/Skallu0711"
+  }
 }
