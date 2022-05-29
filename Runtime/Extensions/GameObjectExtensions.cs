@@ -1,21 +1,17 @@
-using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils
+namespace SkalluUtils.Extensions
 {
-    namespace Utils
+    namespace GameObjectExtensions
     {
-        public static class Utils
+        public static class GameObjectExtensions
         {
-            
-        }
-    }
-    
-    namespace Extensions
-    {
-        public static class GameObjectExtensionUtils
-        {
-            // destroys all components of game object except the one provided as method parameter
+            /// <summary>
+            /// Destroys all components of game object except the one provided as method parameter
+            /// </summary>
+            /// <param name="gameObject"> gameObject on which the method will be called </param>
+            /// <param name="componentToKeep"> component to not destroy </param>
             public static void DestroyComponentsExceptProvided(this GameObject gameObject, Component componentToKeep)
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
@@ -30,25 +26,29 @@ namespace SkalluUtils
                 }
             }
             
-            // destroys all components of game object except the list of those provided as method parameter
+            /// <summary>
+            /// Destroys all components of game object except the list of those provided as method parameter
+            /// </summary>
+            /// <param name="gameObject"> gameObject on which the method will be called </param>
+            /// <param name="componentsToKeep"> list of components to not destroy </param>
             public static void DestroyComponentsExceptProvided(this GameObject gameObject, List<Component> componentsToKeep)
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
 
                 foreach (var component in allComponents)
                 {
-                    if (component != null)
+                    if (component != null && !componentsToKeep.Contains(component))
                     {
-                        if (!componentsToKeep.Contains(component))
-                        {
-                            if (component.GetType() != typeof(Transform)) // Transform component cannot be destroyed
-                                Object.Destroy(component);
-                        }
+                        if (component.GetType() != typeof(Transform)) // Transform component cannot be destroyed
+                            Object.Destroy(component);
                     }
                 }
             }
-
-            // destroys all components of game object
+            
+            /// <summary>
+            /// Destroys all components of game object
+            /// </summary>
+            /// <param name="gameObject"> gameObject on which the method will be called </param>
             public static void DestroyAllComponents(this GameObject gameObject)
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
@@ -63,18 +63,6 @@ namespace SkalluUtils
                 }
             }
         }
-
-        public static class StringExtensionUtils
-        {
-            // changes color of log message to one provided as method parameter
-            //
-            // call example: Debug.Log("sample text".Color(Color.blue));
-            public static string Color(this string text, Color color)
-            {
-                return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{text}</color>";
-            }
-        }
-        
     }
     
 }

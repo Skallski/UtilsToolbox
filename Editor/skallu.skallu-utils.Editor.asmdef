@@ -1,0 +1,18 @@
+{
+    "name": "skallu.skallu-utils.Editor",
+    "rootNamespace": "SkalluUtils",
+    "references": [
+        "skallu.skallu-utils"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
