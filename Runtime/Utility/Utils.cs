@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace SkalluUtils
 {
+    
+#if UNITY_EDITOR
     namespace PropertyAttributes
     {
         namespace ReadOnlyInspectorPropertyAttribute
@@ -25,7 +27,8 @@ namespace SkalluUtils
             public class ReadOnlyInspectorAttribute : PropertyAttribute {}
         }
     }
-
+#endif
+    
     namespace Utils
     {
         public static class Utils
