@@ -8,7 +8,7 @@
 	<a href="https://github.com/Skallu0711/Skallu-Utils/pulls">
 		<img alt="GitHub pull requests" src ="https://img.shields.io/github/issues-pr/Skallu0711/Skallu-Utils" />
 	</a>
-	<a href="https://github.com/Skallu0711/Skallu-Utils/blob/master/LICENSE.md">
+	<a href="https://github.com/Skallu0711/Skallu-Utils/blob/master/LICENSE">
 		<img alt="GitHub license" src ="https://img.shields.io/github/license/Skallu0711/Skallu-Utils" />
 	</a>
 	<img alt="GitHub last commit" src ="https://img.shields.io/github/last-commit/Skallu0711/Skallu-Utils" />
