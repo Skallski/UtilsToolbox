@@ -16,33 +16,28 @@
 
 My package of Unity [extensions](http://en.wikipedia.org/wiki/Extension_method) and stuff, which I find useful.
 
-All the extensions attributes and utils here are under development.
+All the extensions, attributes and utils here are under development.
 
-## Extensions
+## Usage
+
+### Extensions
 ```csharp
 using SkalluUtils.Extensions;
-
-using SkalluUtils.Extensions.GameObjectExtensions;
-using SkalluUtils.Extensions.StringExtensions;
-using SkalluUtils.Extensions.Vector2Extensions;
-using SkalluUtils.Extensions.Vector3Extensions;
 ```
-[GameObject Extensions](Runtime/Extensions/GameObjectExtensions.cs)
-[String Extensions](Runtime/Extensions/StringExtensions.cs)
-[Vector2 Extensions](Runtime/Extensions/Vector2Extensions.cs)
-[Vector3 Extensions](Runtime/Extensions/Vector3Extensions.cs)
+* [GameObject Extensions](Runtime/Extensions/GameObjectExtensions.cs) 
+* [String Extensions](Runtime/Extensions/StringExtensions.cs)
+* [Vector2 Extensions](Runtime/Extensions/Vector2Extensions.cs)
+* [Vector3 Extensions](Runtime/Extensions/Vector3Extensions.cs)
 
-## Property Attributes
+### Property Attributes
 ```csharp
 using SkalluUtils.PropertyAttributes;
 ```
-[PropertyAttributes](Runtime/PropertyAttributes)
+* [PropertyAttributes](Runtime/PropertyAttributes)
 
-## Utils
+### Utils
 ```csharp
 using SkalluUtils.Utils;
-
-using SkalluUtils.Utils.Sound;
 ```
-[Utils](Runtime/Utils)
-[Sound Utils](Runtime/Utils/Soundutils.cs)
+* [Utils](Runtime/Utils)
+* [Sound Utils](Runtime/Utils/Soundutils.cs)
