@@ -1,7 +1,7 @@
 # Skallu-Utils
 
 <p align="center">
-	<img alt="GitHub package.json version" src ="https://img.shields.io/github/package-json/v/Skallu0711/Skallu-Utils" />
+	<img alt="package.json version" src ="https://img.shields.io/github/package-json/v/Skallu0711/Skallu-Utils" />
 	<a href="https://github.com/Skallu0711/Skallu-Utils/issues">
 		<img alt="GitHub issues" src ="https://img.shields.io/github/issues/Skallu0711/Skallu-Utils" />
 	</a>
