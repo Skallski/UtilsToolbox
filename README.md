@@ -40,4 +40,4 @@ using SkalluUtils.PropertyAttributes;
 using SkalluUtils.Utils;
 ```
 * [Utils](Runtime/Utils)
-* [Sound Utils](Runtime/Utils/Soundutils.cs)
+* [Sound Utils](Runtime/Utils/SoundUtils.cs)
