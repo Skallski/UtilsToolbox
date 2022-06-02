@@ -27,16 +27,16 @@ using SkalluUtils.Extensions.StringExtensions;
 using SkalluUtils.Extensions.Vector2Extensions;
 using SkalluUtils.Extensions.Vector3Extensions;
 ```
-[GameObject Extensions] (Runtime/Extensions/GameObjectExtensions.cs)
-[String Extensions] (Runtime/Extensions/StringExtensions.cs)
-[Vector2 Extensions] (Runtime/Extensions/Vector2Extensions.cs)
-[Vector3 Extensions] (Runtime/Extensions/Vector3Extensions.cs)
+[GameObject Extensions](Runtime/Extensions/GameObjectExtensions.cs)
+[String Extensions](Runtime/Extensions/StringExtensions.cs)
+[Vector2 Extensions](Runtime/Extensions/Vector2Extensions.cs)
+[Vector3 Extensions](Runtime/Extensions/Vector3Extensions.cs)
 
 ## Property Attributes
 ```csharp
 using SkalluUtils.PropertyAttributes;
 ```
-[PropertyAttributes] (Runtime/PropertyAttributes)
+[PropertyAttributes](Runtime/PropertyAttributes)
 
 ## Utils
 ```csharp
@@ -44,5 +44,5 @@ using SkalluUtils.Utils;
 
 using SkalluUtils.Utils.Sound;
 ```
-[Utils] (Runtime/Utils)
-[Sound Utils] (Runtime/Utils/Soundutils.cs)
+[Utils](Runtime/Utils)
+[Sound Utils](Runtime/Utils/Soundutils.cs)
