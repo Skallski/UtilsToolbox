@@ -10,7 +10,7 @@ namespace SkalluUtils.Extensions
             /// Gets random point inside collider bounds
             /// </summary>
             /// <param name="col"> collider on which the method will be called </param>
-            public static Vector2 RandomPointInsideBounds(this Collider col)
+            public static Vector3 RandomPointInsideBounds(this Collider col)
             {
                 return new Vector3(
                     Random.Range(col.bounds.min.x, col.bounds.max.x),
