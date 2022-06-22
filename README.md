@@ -28,6 +28,7 @@ using SkalluUtils.Extensions;
 * [String Extensions](Runtime/Extensions/StringExtensions.cs)
 * [Vector2 Extensions](Runtime/Extensions/Vector2Extensions.cs)
 * [Vector3 Extensions](Runtime/Extensions/Vector3Extensions.cs)
+* [Collider2D Extensions](Runtime/Extensions/Collider2DExtensions.cs)
 
 ### Property Attributes
 ```csharp
