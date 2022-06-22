@@ -26,9 +26,9 @@ using SkalluUtils.Extensions;
 ```
 * [GameObject Extensions](Runtime/Extensions/GameObjectExtensions.cs) 
 * [String Extensions](Runtime/Extensions/StringExtensions.cs)
-* [Vector2 Extensions](Runtime/Extensions/Vector2Extensions.cs)
-* [Vector3 Extensions](Runtime/Extensions/Vector3Extensions.cs)
-* [Collider2D Extensions](Runtime/Extensions/Collider2DExtensions.cs)
+* [Vector2 & Vector3 Extensions](Runtime/Extensions/VectorExtensions.cs)
+* [Collider & Collider2D Extensions](Runtime/Extensions/ColliderExtensions.cs)
+* [List Extensions](Runtime/Extensions/ListExtensions.cs)
 
 ### Property Attributes
 ```csharp
