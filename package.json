@@ -1,12 +1,14 @@
 {
   "name": "com.skallu.skallu-utils",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "displayName": "Skallu Utils",
   "description": "Package of extensions and stuff, which I find useful.",
   "unity": "2020.3",
   "keywords": [
     "Skallu",
-    "utils"
+    "utils",
+    "extensions",
+    "tools"
   ],
   "author": {
     "name": "Skallu",

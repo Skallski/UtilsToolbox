@@ -16,11 +16,10 @@
 
 My package of Unity [extensions](http://en.wikipedia.org/wiki/Extension_method) and stuff, which I find useful.
 
-All the extensions, attributes and utils here are under development.
-
-## Usage
+Keep in mind that everything here is under development, so things may change in the future :)
 
 ### Extensions
+Bunch of very useful extension methods
 ```csharp
 using SkalluUtils.Extensions;
 ```
@@ -31,12 +30,14 @@ using SkalluUtils.Extensions;
 * [List Extensions](Runtime/Extensions/ListExtensions.cs)
 
 ### Property Attributes
+Bunch of custom property attributes
 ```csharp
 using SkalluUtils.PropertyAttributes;
 ```
 * [PropertyAttributes](Runtime/PropertyAttributes)
 
 ### Utils
+Some utils that i often implement
 ```csharp
 using SkalluUtils.Utils;
 ```

@@ -2,7 +2,9 @@
     "name": "skallu.skallu-utils",
     "rootNamespace": "SkalluUtils",
     "references": [
-        
+        "com.unity.cinemachine",
+        "com.unity.cinemachine.editor",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
