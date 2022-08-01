@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils
 {
-    public class FieldOfView : MonoBehaviour
+    public class TopDownFov2D : MonoBehaviour
     {
         #region FIELD OF VIEW STATES
         [ReadOnlyInspector] public bool targetInsideViewOuterRadius;

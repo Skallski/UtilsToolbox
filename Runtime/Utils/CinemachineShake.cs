@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils
 {
+    [RequireComponent(typeof(CinemachineVirtualCamera))]
     public class CinemachineShake : MonoBehaviour
     {
          public static CinemachineShake Self { get; private set; }
@@ -12,6 +13,14 @@ namespace SkalluUtils.Utils
          private float startMagnitude;
          private float shakeTimer;
          private float shakeTimerTotal;
+
+         #region INSPECTOR FIELDS
+         [SerializeField, Range(0, 10)]private float shakeMagnitude = 2.5f;
+         public float ShakeMagnitude => shakeMagnitude;
+         
+         [SerializeField, Range(0, 10)]private float shakeTime = 0.1f;
+         public float ShakeTime => shakeTime;
+         #endregion
 
          private void Awake()
          {

@@ -5,10 +5,10 @@ using UnityEditorInternal;
 
 namespace SkalluUtils.Editor.Utils
 {
-    [CustomEditor(typeof(FieldOfView)), CanEditMultipleObjects]
-    public class FieldOfViewEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TopDownFov2D)), CanEditMultipleObjects]
+    public class TopDownFov2DEditor : UnityEditor.Editor
     {
-        private FieldOfView fov;
+        private TopDownFov2D fov;
 
         #region GROUP WRAPPING RELATED FIELDS
         private bool showFovParameters = true; // is "FOV Parameters" foldout header group unwrapped
@@ -19,7 +19,7 @@ namespace SkalluUtils.Editor.Utils
 
         private void OnEnable()
         {
-            fov = (FieldOfView) target;
+            fov = (TopDownFov2D) target;
             useSpecialZones = serializedObject.FindProperty("useSpecialZones");
         }
 
