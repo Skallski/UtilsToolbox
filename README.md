@@ -42,4 +42,4 @@ Some utils that i often implement
 using SkalluUtils.Utils;
 ```
 * [Utils](Runtime/Utils)
-* [Sound Utils](Runtime/Utils/SoundUtils.cs)
+* [Editor GUI Utils](Editor/Utils/EditorGUIUtils.cs)
