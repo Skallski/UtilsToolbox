@@ -10,16 +10,16 @@ public class MultiSoundPlayer : MonoBehaviour
     [Serializable]
     public class SoundClip
     {
-        [SerializeField] internal AudioClip audioClip;
-
+        public AudioClip audioClip;
+    
         [Space]
-        [SerializeField, Range(0, 1)] internal float volume;
-        [SerializeField, Range(0, 1)] internal float volumeRandomRange;
-
+        [Range(0, 1)] public float volume;
+        [Range(0, 1)] public float volumeRandomRange;
+    
         [Space]
-        [SerializeField, Range(-3, 3)] internal float pitch;
-        [SerializeField, Range(0, 1)] internal float pitchRandomRange;
-
+        [Range(-3, 3)] public float pitch;
+        [Range(0, 1)] public float pitchRandomRange;
+    
         internal float[] samples;
         internal float[,] channelSamples;
         internal int channels;
@@ -166,7 +166,6 @@ public class MultiSoundPlayer : MonoBehaviour
                         channelData[c, s] = 0;
                     }
                 }
-
 
                 for (var s = 0; s < (data.Length / channels); s++)
                 {

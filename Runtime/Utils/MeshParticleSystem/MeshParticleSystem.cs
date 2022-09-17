@@ -78,17 +78,16 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             var textureWidth = mainTexture.width;
             var textureHeight = mainTexture.height;
             
+            // creates uv coordinates and adds them to the list
             var uvCoordinatesList = new List<UvCoordinates>();
             foreach (var particleUvPixels in particleUvPixelsArray)
             {
-                UvCoordinates uvCoordinates = new UvCoordinates
+                uvCoordinatesList.Add(new UvCoordinates
                 {
                     // calculates normalized texture UV Coordinates
                     uv00 = new Vector2((float) particleUvPixels.uv00Pixels.x / textureWidth, (float) particleUvPixels.uv00Pixels.y / textureHeight),
                     uv11 = new Vector2((float) particleUvPixels.uv11Pixels.x / textureWidth, (float) particleUvPixels.uv11Pixels.y / textureHeight)
-                };
-                
-                uvCoordinatesList.Add(uvCoordinates); // adds created uv coordinates to list
+                }); 
             }
 
             uvCoordinatesArray = uvCoordinatesList.ToArray();
@@ -127,14 +126,14 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         /// <summary>
         /// Updates quad values
         /// </summary>
-        /// <param name="quadIdx"> index to identify quad </param>
+        /// <param name="quadIdx"> index to identify quad to update </param>
         /// <param name="newPosition"> position to set </param>
         /// <param name="newRotation"> rotation to set </param>
         /// <param name="newSize"> size to set </param>
         /// <param name="uvIndex"> uv index to set </param>
         public void UpdateQuad(int quadIdx, Vector3 newPosition, float newRotation, Vector2 newSize, int uvIndex)
         {
-            // relocate vertices
+            // update vertices
             var vIdx = quadIdx * 4;
             var vIdx0 = vIdx;
             var vIdx1 = vIdx + 1;
@@ -146,14 +145,14 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             verts[vIdx2] = newPosition + Quaternion.Euler(0, 0, newRotation - 0) * newSize; // right-top corner
             verts[vIdx3] = newPosition + Quaternion.Euler(0, 0, newRotation - 90) * newSize; // right-bottom corner
 
-            // uv
+            // update uvs
             var uvCoordinates = uvCoordinatesArray[uvIndex];
             uv[vIdx0] = uvCoordinates.uv00;
             uv[vIdx1] = new Vector2(uvCoordinates.uv00.x, uvCoordinates.uv11.y);
             uv[vIdx2] = uvCoordinates.uv11;
             uv[vIdx3] = new Vector2(uvCoordinates.uv11.x, uvCoordinates.uv00.y);
                 
-            // create triangles
+            // update triangles
             var tIdx = quadIdx * 6;
 
             tris[tIdx + 0] = vIdx0;
@@ -168,6 +167,27 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             updateVerts = true;
             updateUv = true;
             updateTris = true;
+        }
+        
+        /// <summary>
+        /// Destroys quad
+        /// </summary>
+        /// <param name="quadIdx"> index to identify the quad to destroy</param>
+        public void DestroyQuad(int quadIdx)
+        {
+            // destroy vertices
+            var vIdx = quadIdx * 4;
+            var vIdx0 = vIdx;
+            var vIdx1 = vIdx + 1;
+            var vIdx2 = vIdx + 2;
+            var vIdx3 = vIdx + 3;
+            
+            verts[vIdx0] = Vector3.zero; // left-bottom corner
+            verts[vIdx1] = Vector3.zero; // left-top corner
+            verts[vIdx2] = Vector3.zero; // right-top corner
+            verts[vIdx3] = Vector3.zero; // right-bottom corner
+            
+            updateVerts = true;
         }
 
         /// <summary>
@@ -205,5 +225,6 @@ namespace SkalluUtils.Utils.MeshParticleSystem
                 updateBounds = false;
             }
         }
+        
     }
 }
