@@ -1,6 +1,6 @@
 {
   "name": "com.skallu.skallu-utils",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "displayName": "Skallu Utils",
   "description": "Package of extensions and stuff, which I find useful.",
   "unity": "2020.3",
