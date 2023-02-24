@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace SkalluUtils.Editor.PropertyDrawers
 {
-    [CustomPropertyDrawer(typeof(ReadOnlyInspectorAttribute))]
-    public class ReadOnlyInspectorDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
+    public class ReadOnlyDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {

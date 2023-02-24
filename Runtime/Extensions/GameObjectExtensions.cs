@@ -16,8 +16,11 @@ namespace SkalluUtils.Extensions
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
 
-                foreach (var component in allComponents)
+                int len = allComponents.Length;
+                for (var i = 0; i < len; i++)
                 {
+                    Component component = allComponents[i];
+                    
                     if (component != null)
                     {
                         if (component.GetType() != componentToKeep.GetType() && component.GetType() != typeof(Transform)) // Transform component cannot be destroyed
@@ -35,8 +38,10 @@ namespace SkalluUtils.Extensions
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
 
-                foreach (var component in allComponents)
+                int len = allComponents.Length;
+                for (int i = 0; i < len; i++)
                 {
+                    Component component = allComponents[i];
                     if (component != null && !componentsToKeep.Contains(component))
                     {
                         if (component.GetType() != typeof(Transform)) // Transform component cannot be destroyed
@@ -52,9 +57,11 @@ namespace SkalluUtils.Extensions
             public static void DestroyAllComponents(this GameObject gameObject)
             {
                 var allComponents = gameObject.GetComponents(typeof(Component));
-        
-                foreach (var component in allComponents)
+
+                int len = allComponents.Length;
+                for (int i = 0; i < len; i++)
                 {
+                    Component component = allComponents[i];
                     if (component != null)
                     {
                         if (component.GetType() != typeof(Transform)) // Transform component cannot be destroyed

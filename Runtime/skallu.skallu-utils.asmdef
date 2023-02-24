@@ -2,9 +2,8 @@
     "name": "skallu.skallu-utils",
     "rootNamespace": "SkalluUtils",
     "references": [
-        "com.unity.cinemachine",
-        "com.unity.cinemachine.editor",
-        "Cinemachine"
+        "Unity.TextMeshPro",
+        "Unity.TextMeshPro.Editor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

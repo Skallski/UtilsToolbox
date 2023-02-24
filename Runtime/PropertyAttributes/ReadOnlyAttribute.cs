@@ -7,5 +7,5 @@ namespace SkalluUtils.PropertyAttributes
     /// This attribute makes field readonly in inspector
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class ReadOnlyInspectorAttribute : PropertyAttribute {}
+    public class ReadOnlyAttribute : PropertyAttribute {}
 }

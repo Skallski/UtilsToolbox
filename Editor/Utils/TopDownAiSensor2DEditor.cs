@@ -1,7 +1,6 @@
 ﻿using SkalluUtils.Utils;
 using UnityEngine;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEditorInternal;
 
 namespace SkalluUtils.Editor.Utils
@@ -9,13 +8,13 @@ namespace SkalluUtils.Editor.Utils
     [CustomEditor(typeof(TopDownAiSensor2D)), CanEditMultipleObjects]
     public class TopDownAiSensor2DEditor : UnityEditor.Editor
     {
-        private TopDownAiSensor2D aiSensor;
+        private TopDownAiSensor2D _aiSensor;
         
         #region PROPERTIES AND GUI CONTENT
         private SerializedProperty
-            viewOuterRadius, viewInnerRadius, viewAngle, useSpecialZones, safeZoneRadius, attackRangeRadius, sensorTick, obstacleLayerMask, targetObject,
-            mainColor, safeZoneColor, attackRangeColor, thickness,
-            targetInsideViewOuterRadius, targetSpotted, targetInsideSafeZone, targetInsideAttackRange;
+            _viewOuterRadius, _viewInnerRadius, _viewAngle, _useSpecialZones, _safeZoneRadius, _attackRangeRadius, _sensorTick, _obstacleLayerMask, _targetObject,
+            _mainColor, _safeZoneColor, _attackRangeColor, _thickness,
+            _targetInsideViewOuterRadius, _targetSpotted, _targetInsideSafeZone, _targetInsideAttackRange;
         
         private static readonly GUIContent ViewOuterRadiusContent = new GUIContent("Outer view radius", "Circular detection area max border");
         private static readonly GUIContent ViewInnerRadiusContent = new GUIContent("Inner view radius", "Circular detection area min border");
@@ -26,39 +25,39 @@ namespace SkalluUtils.Editor.Utils
         #endregion
 
         #region GROUP WRAPPING RELATED FIELDS
-        private bool showSensorParameters = true; // is "Sensor Parameters" foldout header group unwrapped
-        private bool showSceneGuiParameters = true; // is "Scene GUI Parameters" foldout header group unwrapped
-        private bool showSensorFlags = false; // is "Sensor Flags" foldout header group unwrapped
+        private bool _showSensorParameters = true; // is "Sensor Parameters" foldout header group unwrapped
+        private bool _showSceneGuiParameters = true; // is "Scene GUI Parameters" foldout header group unwrapped
+        private bool _showSensorFlags = false; // is "Sensor Flags" foldout header group unwrapped
         #endregion
 
         private void OnEnable()
         {
-            aiSensor = (TopDownAiSensor2D) target;
+            _aiSensor = (TopDownAiSensor2D) target;
 
-            viewOuterRadius = serializedObject.FindProperty("viewOuterRadius");
-            viewInnerRadius = serializedObject.FindProperty("viewInnerRadius");
-            viewAngle = serializedObject.FindProperty("viewAngle");
-            useSpecialZones = serializedObject.FindProperty("useSpecialZones");
-            safeZoneRadius = serializedObject.FindProperty("safeZoneRadius");
-            attackRangeRadius = serializedObject.FindProperty("attackRangeRadius");
-            sensorTick = serializedObject.FindProperty("sensorTick");
-            obstacleLayerMask = serializedObject.FindProperty("obstacleLayerMask");
-            targetObject = serializedObject.FindProperty("targetObject");
+            _viewOuterRadius = serializedObject.FindProperty("_viewOuterRadius");
+            _viewInnerRadius = serializedObject.FindProperty("_viewInnerRadius");
+            _viewAngle = serializedObject.FindProperty("_viewAngle");
+            _useSpecialZones = serializedObject.FindProperty("_useSpecialZones");
+            _safeZoneRadius = serializedObject.FindProperty("_safeZoneRadius");
+            _attackRangeRadius = serializedObject.FindProperty("_attackRangeRadius");
+            _sensorTick = serializedObject.FindProperty("_sensorTick");
+            _obstacleLayerMask = serializedObject.FindProperty("_obstacleLayerMask");
+            _targetObject = serializedObject.FindProperty("_targetObject");
             
-            mainColor = serializedObject.FindProperty("mainColor");
-            safeZoneColor = serializedObject.FindProperty("safeZoneColor");
-            attackRangeColor = serializedObject.FindProperty("attackRangeColor");
-            thickness = serializedObject.FindProperty("thickness");
+            _mainColor = serializedObject.FindProperty("_mainColor");
+            _safeZoneColor = serializedObject.FindProperty("_safeZoneColor");
+            _attackRangeColor = serializedObject.FindProperty("_attackRangeColor");
+            _thickness = serializedObject.FindProperty("_thickness");
 
-            targetInsideViewOuterRadius = serializedObject.FindProperty("targetInsideViewOuterRadius");
-            targetSpotted = serializedObject.FindProperty("targetSpotted");
-            targetInsideSafeZone = serializedObject.FindProperty("targetInsideSafeZone");
-            targetInsideAttackRange = serializedObject.FindProperty("targetInsideAttackRange");
+            _targetInsideViewOuterRadius = serializedObject.FindProperty("_targetInsideViewOuterRadius");
+            _targetSpotted = serializedObject.FindProperty("_targetSpotted");
+            _targetInsideSafeZone = serializedObject.FindProperty("_targetInsideSafeZone");
+            _targetInsideAttackRange = serializedObject.FindProperty("_targetInsideAttackRange");
         }
 
         public override void OnInspectorGUI()
         {
-            if (aiSensor == null) return;
+            if (_aiSensor == null) return;
 
             // default "script" object field
             EditorGUIUtils.DefaultScriptField(MonoScript.FromMonoBehaviour((MonoBehaviour)target));
@@ -67,43 +66,43 @@ namespace SkalluUtils.Editor.Utils
             EditorGUILayout.BeginVertical();
             
             #region SENSOR PARAMETERS GROUP
-            showSensorParameters = EditorGUILayout.BeginFoldoutHeaderGroup(showSensorParameters, "Main sensor parameters");
-            if (showSensorParameters)
+            _showSensorParameters = EditorGUILayout.BeginFoldoutHeaderGroup(_showSensorParameters, "Main sensor parameters");
+            if (_showSensorParameters)
             {
-                EditorGUIUtils.PropertySliderField(viewOuterRadius, 0, 20, ViewOuterRadiusContent);
-                EditorGUIUtils.PropertySliderField(viewInnerRadius, 0, 10, ViewInnerRadiusContent);
-                EditorGUIUtils.PropertySliderField(viewAngle, 0, 360, ViewAngleContent);
+                EditorGUIUtils.PropertySliderField(_viewOuterRadius, 0, 20, ViewOuterRadiusContent);
+                EditorGUIUtils.PropertySliderField(_viewInnerRadius, 0, 10, ViewInnerRadiusContent);
+                EditorGUIUtils.PropertySliderField(_viewAngle, 0, 360, ViewAngleContent);
 
                 // shows "Special Zones" main parameters
-                EditorGUILayout.PropertyField(useSpecialZones);
-                if (EditorGUILayout.BeginFadeGroup(useSpecialZones.boolValue ? 1 : 0))
+                EditorGUILayout.PropertyField(_useSpecialZones);
+                if (EditorGUILayout.BeginFadeGroup(_useSpecialZones.boolValue ? 1 : 0))
                 {
-                    EditorGUIUtils.PropertySliderField(safeZoneRadius, 0, 10, SafeZoneRadiusContent);
-                    EditorGUIUtils.PropertySliderField(attackRangeRadius, 0, 10, AttackRangeRadiusContent);
+                    EditorGUIUtils.PropertySliderField(_safeZoneRadius, 0, 10, SafeZoneRadiusContent);
+                    EditorGUIUtils.PropertySliderField(_attackRangeRadius, 0, 10, AttackRangeRadiusContent);
                 }
                 EditorGUILayout.EndFadeGroup();
                 EditorGUILayout.Space();
 
-                EditorGUIUtils.PropertySliderField(sensorTick, 0.001f, 1, SensorTickContent);
-                EditorGUILayout.PropertyField(obstacleLayerMask);
-                EditorGUILayout.PropertyField(targetObject);
+                EditorGUIUtils.PropertySliderField(_sensorTick, 0.001f, 1, SensorTickContent);
+                EditorGUILayout.PropertyField(_obstacleLayerMask);
+                EditorGUILayout.PropertyField(_targetObject);
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
             EditorGUILayout.Space();
             #endregion
 
             #region SCENE GUI PARAMETERS GROUP
-            showSceneGuiParameters = EditorGUILayout.BeginFoldoutHeaderGroup(showSceneGuiParameters, "Scene GUI Parameters");
-            if (showSceneGuiParameters)
+            _showSceneGuiParameters = EditorGUILayout.BeginFoldoutHeaderGroup(_showSceneGuiParameters, "Scene GUI Parameters");
+            if (_showSceneGuiParameters)
             {
-                 EditorGUIUtils.PropertySliderField(thickness, 0.5f, 2, default);
-                 EditorGUILayout.PropertyField(mainColor);
+                 EditorGUIUtils.PropertySliderField(_thickness, 0.5f, 2, default);
+                 EditorGUILayout.PropertyField(_mainColor);
 
                  // shows "Special Zones" visual parameters
-                if (EditorGUILayout.BeginFadeGroup(useSpecialZones.boolValue ? 1 : 0))
+                if (EditorGUILayout.BeginFadeGroup(_useSpecialZones.boolValue ? 1 : 0))
                 {
-                    EditorGUILayout.PropertyField(safeZoneColor);
-                    EditorGUILayout.PropertyField(attackRangeColor);
+                    EditorGUILayout.PropertyField(_safeZoneColor);
+                    EditorGUILayout.PropertyField(_attackRangeColor);
                 }
                 EditorGUILayout.EndFadeGroup();
             }
@@ -112,18 +111,18 @@ namespace SkalluUtils.Editor.Utils
             #endregion
 
             #region SENSOR FLAGS GROUP
-            showSensorFlags = EditorGUILayout.BeginFoldoutHeaderGroup(showSensorFlags, "Sensor Flags");
-            if (showSensorFlags)
+            _showSensorFlags = EditorGUILayout.BeginFoldoutHeaderGroup(_showSensorFlags, "Sensor Flags");
+            if (_showSensorFlags)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.PropertyField(targetInsideViewOuterRadius);
-                EditorGUILayout.PropertyField(targetSpotted);
+                EditorGUILayout.PropertyField(_targetInsideViewOuterRadius);
+                EditorGUILayout.PropertyField(_targetSpotted);
 
                 // shows "Special Zones" debug checks
-                if (EditorGUILayout.BeginFadeGroup(useSpecialZones.boolValue ? 1 : 0))
+                if (EditorGUILayout.BeginFadeGroup(_useSpecialZones.boolValue ? 1 : 0))
                 {
-                    EditorGUILayout.PropertyField(targetInsideSafeZone);
-                    EditorGUILayout.PropertyField(targetInsideAttackRange);
+                    EditorGUILayout.PropertyField(_targetInsideSafeZone);
+                    EditorGUILayout.PropertyField(_targetInsideAttackRange);
                 }
                 EditorGUILayout.EndFadeGroup();
                 EditorGUI.EndDisabledGroup();
@@ -141,35 +140,35 @@ namespace SkalluUtils.Editor.Utils
 
         private void OnSceneGUI()
         {
-            if (aiSensor == null) return;
+            if (_aiSensor == null) return;
             
-            var pos = aiSensor.transform.position;
+            var pos = _aiSensor.transform.position;
 
             // draws outer and inner view radius
-            DrawZone(pos, 360f, viewOuterRadius.floatValue, thickness.floatValue, mainColor.colorValue);
-            DrawZone(pos, 360f, viewInnerRadius.floatValue, thickness.floatValue, mainColor.colorValue);
+            DrawZone(pos, 360f, _viewOuterRadius.floatValue, _thickness.floatValue, _mainColor.colorValue);
+            DrawZone(pos, 360f, _viewInnerRadius.floatValue, _thickness.floatValue, _mainColor.colorValue);
 
             // calculates and draws view angle cone
-            var eulerAngles = aiSensor.transform.eulerAngles;
-            var viewAngleLeft = CalculateDirectionFromAngle((-viewAngle.floatValue + 180) * 0.5f, eulerAngles.z); // left view angle: \|
-            var viewAngleRight = CalculateDirectionFromAngle((viewAngle.floatValue + 180) * 0.5f, eulerAngles.z); // right view angle: |/
+            var eulerAngles = _aiSensor.transform.eulerAngles;
+            var viewAngleLeft = CalculateDirectionFromAngle((-_viewAngle.floatValue + 180) * 0.5f, eulerAngles.z); // left view angle: \|
+            var viewAngleRight = CalculateDirectionFromAngle((_viewAngle.floatValue + 180) * 0.5f, eulerAngles.z); // right view angle: |/
             
-            Handles.color = mainColor.colorValue;
-            Handles.DrawLine(pos, pos + viewAngleLeft * viewOuterRadius.floatValue, thickness.floatValue);
-            Handles.DrawLine(pos, pos + viewAngleRight * viewOuterRadius.floatValue, thickness.floatValue);
+            Handles.color = _mainColor.colorValue;
+            Handles.DrawLine(pos, pos + viewAngleLeft * _viewOuterRadius.floatValue, _thickness.floatValue);
+            Handles.DrawLine(pos, pos + viewAngleRight * _viewOuterRadius.floatValue, _thickness.floatValue);
             
             // draws special zones if used
-            if (useSpecialZones.boolValue is true)
+            if (_useSpecialZones.boolValue is true)
             {
-                DrawZone(pos, 360f, safeZoneRadius.floatValue, thickness.floatValue, safeZoneColor.colorValue); // draws safe zone radius
-                DrawZone(pos, 360f, attackRangeRadius.floatValue, thickness.floatValue, attackRangeColor.colorValue); // draws attack range radius
+                DrawZone(pos, 360f, _safeZoneRadius.floatValue, _thickness.floatValue, _safeZoneColor.colorValue); // draws safe zone radius
+                DrawZone(pos, 360f, _attackRangeRadius.floatValue, _thickness.floatValue, _attackRangeColor.colorValue); // draws attack range radius
             }
             
             // draws line from character to spotted target
-            if (aiSensor.TargetInsideViewOuterRadius)
+            if (_aiSensor.TargetInsideViewOuterRadius)
             {
-                Handles.color = aiSensor.TargetSpotted ? Color.green : Color.red;
-                Handles.DrawLine(pos, aiSensor.TargetObject.transform.position, thickness.floatValue);
+                Handles.color = _aiSensor.TargetSpotted ? Color.green : Color.red;
+                Handles.DrawLine(pos, _aiSensor.TargetObject.transform.position, _thickness.floatValue);
             }
         }
 

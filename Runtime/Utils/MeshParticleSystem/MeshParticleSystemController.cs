@@ -57,7 +57,7 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             float movementSpeed = 0, Vector3 moveDirection = default, float rotationSpeed = 0, float animationFrameRate = 0, float despawnTime = 0)
         {
             SpawnSingleParticle(new SingleParticle(spawnPosition, rotation, size, meshParticleSystem,
-                Random.Range(0, meshParticleSystem.particleUvPixelsArray.Length), movementSpeed, moveDirection, rotationSpeed, animationFrameRate, despawnTime));
+                Random.Range(0, meshParticleSystem.ParticleUvPixelsArray.Length), movementSpeed, moveDirection, rotationSpeed, animationFrameRate, despawnTime));
         }
 
         public void SpawnSingleParticleAnimated(Vector3 spawnPosition, float rotation, Vector2 size, float animationFrameRate)
@@ -98,7 +98,7 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             public SingleParticle(Vector3 position, float rotation, Vector2 size, MeshParticleSystem meshParticleSystem, int uvIdx = 0,
                 float movementSpeed = 0, Vector3 moveDirection = default, float rotationSpeed = 0, float animationTick = 0, float despawnTime = 0)
             {
-                this.uvIdx = uvIdx >= 0 && uvIdx < meshParticleSystem.particleUvPixelsArray.Length ? uvIdx : 0;
+                this.uvIdx = uvIdx >= 0 && uvIdx < meshParticleSystem.ParticleUvPixelsArray.Length ? uvIdx : 0;
                 this.position = position;
                 this.rotation = rotation;
                 this.size = size;

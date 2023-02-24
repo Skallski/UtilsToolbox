@@ -5,37 +5,38 @@ namespace SkalluUtils.Utils
     [ExecuteAlways]
     public class ObjectShake : MonoBehaviour
     {
-        private Vector3 startPosition;
-        private Quaternion startRotation;
-
-        [SerializeField, Range(0.05f, 0.3f)] private float shakeIntensity = 0.1f; 
-        private readonly float shakeDecreaseRate = 0.002f;
-        private readonly float multiplier = 0.2f;
-
-        private float currentShakeIntensity = 0;
+        private const float SHAKE_DECREASE_RATE = 0.002f;
+        private const float MULTIPLIER = 0.2f;
+        
+        [SerializeField, Range(0.05f, 0.3f)] private float _shakeIntensity = 0.1f;
+        
+        private float _currentShakeIntensity = 0;
+        private Vector3 _startPosition;
+        private Quaternion _startRotation;
 
         private void Update()
         {
-            if (currentShakeIntensity > 0)
-            {
-                transform.position = startPosition + Random.insideUnitSphere * currentShakeIntensity;
+            if (!(_currentShakeIntensity > 0)) return;
+            
+            transform.position = _startPosition + Random.insideUnitSphere * _currentShakeIntensity;
         
-                transform.rotation = new Quaternion(
-                    startRotation.x + Random.Range(-currentShakeIntensity, currentShakeIntensity) * multiplier, 
-                    startRotation.y + Random.Range(-currentShakeIntensity, currentShakeIntensity) * multiplier,
-                    startRotation.z + Random.Range(-currentShakeIntensity, currentShakeIntensity) * multiplier, 
-                    startRotation.w + Random.Range(-currentShakeIntensity, currentShakeIntensity) * multiplier
-                );
+            transform.rotation = new Quaternion(
+                _startRotation.x + Random.Range(-_currentShakeIntensity, _currentShakeIntensity) * MULTIPLIER, 
+                _startRotation.y + Random.Range(-_currentShakeIntensity, _currentShakeIntensity) * MULTIPLIER,
+                _startRotation.z + Random.Range(-_currentShakeIntensity, _currentShakeIntensity) * MULTIPLIER, 
+                _startRotation.w + Random.Range(-_currentShakeIntensity, _currentShakeIntensity) * MULTIPLIER
+            );
         
-                currentShakeIntensity -= shakeDecreaseRate;
-            }
+            _currentShakeIntensity -= SHAKE_DECREASE_RATE;
         }
 
         public void Shake()
         {
-            startPosition = transform.position;
-            startRotation = transform.rotation;
-            currentShakeIntensity = shakeIntensity;
+            var t = transform;
+            
+            _startPosition = t.position;
+            _startRotation = t.rotation;
+            _currentShakeIntensity = _shakeIntensity;
         }
     }
 }

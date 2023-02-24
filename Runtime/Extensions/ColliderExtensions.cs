@@ -12,10 +12,12 @@ namespace SkalluUtils.Extensions
             /// <param name="col"> collider on which the method will be called </param>
             public static Vector3 RandomPointInsideBounds(this Collider col)
             {
+                Bounds bounds = col.bounds;
+                
                 return new Vector3(
-                    Random.Range(col.bounds.min.x, col.bounds.max.x),
-                    Random.Range(col.bounds.min.y, col.bounds.max.y),
-                    Random.Range(col.bounds.min.z, col.bounds.max.z));
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    Random.Range(bounds.min.y, bounds.max.y),
+                    Random.Range(bounds.min.z, bounds.max.z));
             }
         }
     }
@@ -30,9 +32,11 @@ namespace SkalluUtils.Extensions
             /// <param name="col"> collider2D on which the method will be called </param>
             public static Vector2 RandomPointInsideBounds(this Collider2D col)
             {
+                Bounds bounds = col.bounds;
+                
                 return new Vector2(
-                    Random.Range(col.bounds.min.x, col.bounds.max.x),
-                    Random.Range(col.bounds.min.y, col.bounds.max.y));
+                    Random.Range(bounds.min.x, bounds.max.x),
+                    Random.Range(bounds.min.y, bounds.max.y));
             }
         }
     }

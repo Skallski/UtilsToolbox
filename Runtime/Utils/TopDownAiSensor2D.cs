@@ -6,35 +6,30 @@ namespace SkalluUtils.Utils
 {
     public class TopDownAiSensor2D : MonoBehaviour
     {
-        #region SENSOR FLAGS
-        [SerializeField, ReadOnlyInspector] private bool targetInsideViewOuterRadius, targetSpotted, targetInsideSafeZone, targetInsideAttackRange;
-        public bool TargetInsideViewOuterRadius => targetInsideViewOuterRadius;
-        public bool TargetSpotted => targetSpotted;
-        public bool TargetInsideSafeZone => targetInsideSafeZone;
-        public bool TargetInsideAttackRange => targetInsideAttackRange;
-        #endregion
+        [SerializeField, ReadOnly] private bool _targetInsideViewOuterRadius, _targetSpotted, _targetInsideSafeZone, _targetInsideAttackRange;
+        [SerializeField] private float _viewOuterRadius, _viewInnerRadius, _viewAngle;
+        [SerializeField] private bool _useSpecialZones;
+        [SerializeField] private float _safeZoneRadius, _attackRangeRadius;
+        [SerializeField] private float _sensorTick = 0.02f;
+        [SerializeField] private LayerMask _obstacleLayerMask;
+        [SerializeField] private GameObject _targetObject;
 
-        #region SENSOR PARAMETERS
-        [SerializeField] private float viewOuterRadius, viewInnerRadius, viewAngle;
-        [SerializeField] private bool useSpecialZones;
-        [SerializeField] private float safeZoneRadius, attackRangeRadius;
-        
-        [SerializeField] private float sensorTick = 0.02f;
-        [SerializeField] private LayerMask obstacleLayerMask;
-        [SerializeField] private GameObject targetObject;
-        public GameObject TargetObject => targetObject;
-        #endregion
-        
         #region SCENE GUI PARAMETERS
         // these variables are used by custom editor, so do not delete them even though the IDE says they are never used
-        [SerializeField] private Color mainColor, safeZoneColor, attackRangeColor;
-        [SerializeField] private float thickness = 0.5f;
+        [SerializeField] private Color _mainColor, _safeZoneColor, _attackRangeColor;
+        [SerializeField] private float _thickness = 0.5f;
         #endregion
+        
+        public bool TargetInsideViewOuterRadius => _targetInsideViewOuterRadius;
+        public bool TargetSpotted => _targetSpotted;
+        public bool TargetInsideSafeZone => _targetInsideSafeZone;
+        public bool TargetInsideAttackRange => _targetInsideAttackRange;
+        public GameObject TargetObject => _targetObject;
 
         private void Awake()
         {
-            if (targetObject == null)
-                targetObject = GameObject.FindGameObjectWithTag("Player");
+            if (_targetObject == null)
+                _targetObject = GameObject.FindGameObjectWithTag("Player");
         }
 
         private void Start() => StartCoroutine(ScanForTargetRoutine());
@@ -48,13 +43,13 @@ namespace SkalluUtils.Utils
             {
                 CheckForVisibleTarget();
 
-                if (useSpecialZones) // do not perform "safe zone" and "attack range" checks if they aren't used
+                if (_useSpecialZones) // do not perform "safe zone" and "attack range" checks if they aren't used
                 {
-                    if (safeZoneRadius > 0) CheckSafeZone();
-                    if (attackRangeRadius > 0) CheckAttackRange();
+                    if (_safeZoneRadius > 0) CheckSafeZone();
+                    if (_attackRangeRadius > 0) CheckAttackRange();
                 }
 
-                yield return new WaitForSeconds(sensorTick);
+                yield return new WaitForSeconds(_sensorTick);
             }
         }
         
@@ -64,31 +59,31 @@ namespace SkalluUtils.Utils
         private void CheckForVisibleTarget()
         {
             var currentPos = transform.position;
-            var targetPos = targetObject.transform.position;
+            var targetPos = _targetObject.transform.position;
             
-            if (Vector2.SqrMagnitude(targetPos - currentPos) <= viewOuterRadius * viewOuterRadius) // when target is inside outer view radius
+            if (Vector2.SqrMagnitude(targetPos - currentPos) <= _viewOuterRadius * _viewOuterRadius) // when target is inside outer view radius
             {
-                targetInsideViewOuterRadius = true;
+                _targetInsideViewOuterRadius = true;
             
                 var directionToTarget = (targetPos - currentPos).normalized;
                 var distanceToTarget = Vector2.Distance(currentPos, targetPos);
                 
-                if (Vector2.SqrMagnitude(targetPos - currentPos) <= viewInnerRadius * viewInnerRadius) // when target is inside inner view radius
+                if (Vector2.SqrMagnitude(targetPos - currentPos) <= _viewInnerRadius * _viewInnerRadius) // when target is inside inner view radius
                 {
                     // when raycast doesn't collide with any object from obstacle mask, it means, that target is spotted
-                    targetSpotted = !Physics2D.Raycast(currentPos, directionToTarget, distanceToTarget, obstacleLayerMask);
+                    _targetSpotted = !Physics2D.Raycast(currentPos, directionToTarget, distanceToTarget, _obstacleLayerMask);
                 }
                 else
                 {
                     // when the target is inside view angle and raycast doesn't collide with any object from obstacle mask, it means, that target is spotted
-                    targetSpotted = Vector3.Angle(transform.right, directionToTarget) < viewAngle * 0.5f
-                                    && !Physics2D.Raycast(currentPos, directionToTarget, distanceToTarget, obstacleLayerMask);
+                    _targetSpotted = Vector3.Angle(transform.right, directionToTarget) < _viewAngle * 0.5f
+                                    && !Physics2D.Raycast(currentPos, directionToTarget, distanceToTarget, _obstacleLayerMask);
                 }
             }
             else
             {
-                targetInsideViewOuterRadius = false;
-                targetSpotted = false;
+                _targetInsideViewOuterRadius = false;
+                _targetSpotted = false;
             }
         }
         
@@ -100,7 +95,7 @@ namespace SkalluUtils.Utils
         private bool CheckIfTargetIsInsideSpecificRadius(float radius, LayerMask obstacleMask)
         {
             var currentPos = transform.position;
-            var targetPos = targetObject.transform.position;
+            var targetPos = _targetObject.transform.position;
             
             if (Vector2.SqrMagnitude(targetPos - currentPos) <= radius * radius) // when target is inside inner view radius
             {
@@ -116,12 +111,12 @@ namespace SkalluUtils.Utils
         /// <summary>
         /// Checks if player is inside character's "safe zone". Value of "target inside safe zone" flag is the result of check action.
         /// </summary>
-        private void CheckSafeZone() => targetInsideSafeZone = CheckIfTargetIsInsideSpecificRadius(safeZoneRadius, obstacleLayerMask);
+        private void CheckSafeZone() => _targetInsideSafeZone = CheckIfTargetIsInsideSpecificRadius(_safeZoneRadius, _obstacleLayerMask);
 
         /// <summary>
         /// Checks if player is inside character's "attack range". Value of "target inside attack range" flag is the result of check action
         /// </summary>
-        private void CheckAttackRange() => targetInsideAttackRange = CheckIfTargetIsInsideSpecificRadius(attackRangeRadius, obstacleLayerMask);
+        private void CheckAttackRange() => _targetInsideAttackRange = CheckIfTargetIsInsideSpecificRadius(_attackRangeRadius, _obstacleLayerMask);
         
     }
 }

@@ -10,8 +10,8 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         [Serializable]
         public struct ParticleUvPixels
         {
-            public Vector2Int uv00Pixels; // left-bottom texture corner (in pixels)
-            public Vector2Int uv11Pixels; // right-top texture corner (in pixels)
+            public Vector2Int _uv00Pixels; // left-bottom texture corner (in pixels)
+            public Vector2Int _uv11Pixels; // right-top texture corner (in pixels)
         }
         
         private struct UvCoordinates
@@ -20,38 +20,29 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             public Vector2 uv11; // right-top texture corner (normalized value)
         }
 
-        [SerializeField] private int sortingOrder = 1;
+        #region INSPECTOR VARIABLES
+        [SerializeField] private int _sortingOrder = 1;
         [Space]
-
-        #region UV RELATED VARIABLES
-        public ParticleUvPixels[] particleUvPixelsArray;
-        private UvCoordinates[] uvCoordinatesArray;
-        #endregion
-
-        #region MESH RELATED VARIABLES
-        private MeshRenderer meshRenderer;
-        private Mesh mesh;
-        private Vector3[] verts;
-        private Vector2[] uv;
-        private int[] tris;
-        #endregion
-
-        #region QUAD INDEX AND LIMITER
-        private int currentQuadIdx;
-        private const int maxQuadIdx = 15000; // limiter
-        #endregion
-
-        #region MESH ARRAYS UPDATER FLAGS
-        private bool updateVerts = false;
-        private bool updateUv = false;
-        private bool updateTris = false;
-        private bool updateBounds = false;
+        [SerializeField] private ParticleUvPixels[] _particleUvPixelsArray;
         #endregion
         
+        private MeshRenderer _meshRenderer;
+        private Mesh _mesh;
+        private Vector3[] _verts;
+        private Vector2[] _uv;
+        private int[] _tris;
+        
+        private UvCoordinates[] _uvCoordinatesArray;
+        private int _currentQuadIdx;
+        private const int MAX_QUAD_IDX = 15000; // limiter
+        private bool _updateVerts, _updateUv, _updateTris, _updateBounds = false;
+        
+        public ParticleUvPixels[] ParticleUvPixelsArray => _particleUvPixelsArray;
+
         private void Awake()
         {
-            meshRenderer = GetComponent<MeshRenderer>();
-            meshRenderer.sortingOrder = sortingOrder;
+            _meshRenderer = GetComponent<MeshRenderer>();
+            _meshRenderer.sortingOrder = _sortingOrder;
             
             Setup();
         }
@@ -64,33 +55,33 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         private void Setup()
         {
             // calculates mesh related arrays
-            verts = new Vector3[4 * maxQuadIdx];
-            uv = new Vector2[4 * maxQuadIdx];
-            tris = new int[6 * maxQuadIdx];
+            _verts = new Vector3[4 * MAX_QUAD_IDX];
+            _uv = new Vector2[4 * MAX_QUAD_IDX];
+            _tris = new int[6 * MAX_QUAD_IDX];
 
             // creates new mesh and apply calculated values to it
-            mesh = new Mesh {vertices = verts, uv = uv, triangles = tris};
-            GetComponent<MeshFilter>().mesh = mesh;
+            _mesh = new Mesh {vertices = _verts, uv = _uv, triangles = _tris};
+            GetComponent<MeshFilter>().mesh = _mesh;
             
             // sets up UV Normalized Array
-            var material = meshRenderer.material;
+            var material = _meshRenderer.material;
             var mainTexture = material.mainTexture;
             var textureWidth = mainTexture.width;
             var textureHeight = mainTexture.height;
             
             // creates uv coordinates and adds them to the list
             var uvCoordinatesList = new List<UvCoordinates>();
-            foreach (var particleUvPixels in particleUvPixelsArray)
+            foreach (var particleUvPixels in _particleUvPixelsArray)
             {
                 uvCoordinatesList.Add(new UvCoordinates
                 {
                     // calculates normalized texture UV Coordinates
-                    uv00 = new Vector2((float) particleUvPixels.uv00Pixels.x / textureWidth, (float) particleUvPixels.uv00Pixels.y / textureHeight),
-                    uv11 = new Vector2((float) particleUvPixels.uv11Pixels.x / textureWidth, (float) particleUvPixels.uv11Pixels.y / textureHeight)
+                    uv00 = new Vector2((float) particleUvPixels._uv00Pixels.x / textureWidth, (float) particleUvPixels._uv00Pixels.y / textureHeight),
+                    uv11 = new Vector2((float) particleUvPixels._uv11Pixels.x / textureWidth, (float) particleUvPixels._uv11Pixels.y / textureHeight)
                 }); 
             }
 
-            uvCoordinatesArray = uvCoordinatesList.ToArray();
+            _uvCoordinatesArray = uvCoordinatesList.ToArray();
         }
         
         /// <summary>
@@ -98,7 +89,7 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         /// </summary>
         public void ResetMesh()
         {
-            currentQuadIdx = 0;
+            _currentQuadIdx = 0;
             Setup();
         }
 
@@ -112,13 +103,13 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         /// <returns> index of spawned quad </returns>
         public int AddQuad(Vector3 position, float rotation, Vector2 size, int uvIndex)
         {
-            if (currentQuadIdx >= maxQuadIdx) // reset current quad index, when mesh is full
-                currentQuadIdx = 0;
+            if (_currentQuadIdx >= MAX_QUAD_IDX) // reset current quad index, when mesh is full
+                _currentQuadIdx = 0;
 
-            UpdateQuad(currentQuadIdx, position, rotation, size, uvIndex);
+            UpdateQuad(_currentQuadIdx, position, rotation, size, uvIndex);
                 
-            var spawnedQuadIdx = currentQuadIdx;
-            currentQuadIdx += 1;
+            var spawnedQuadIdx = _currentQuadIdx;
+            _currentQuadIdx += 1;
 
             return spawnedQuadIdx;
         }
@@ -140,33 +131,33 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             var vIdx2 = vIdx + 2;
             var vIdx3 = vIdx + 3;
             
-            verts[vIdx0] = newPosition + Quaternion.Euler(0, 0, newRotation - 180) * newSize; // left-bottom corner
-            verts[vIdx1] = newPosition + Quaternion.Euler(0, 0, newRotation - 270) * newSize; // left-top corner
-            verts[vIdx2] = newPosition + Quaternion.Euler(0, 0, newRotation - 0) * newSize; // right-top corner
-            verts[vIdx3] = newPosition + Quaternion.Euler(0, 0, newRotation - 90) * newSize; // right-bottom corner
+            _verts[vIdx0] = newPosition + Quaternion.Euler(0, 0, newRotation - 180) * newSize; // left-bottom corner
+            _verts[vIdx1] = newPosition + Quaternion.Euler(0, 0, newRotation - 270) * newSize; // left-top corner
+            _verts[vIdx2] = newPosition + Quaternion.Euler(0, 0, newRotation - 0) * newSize; // right-top corner
+            _verts[vIdx3] = newPosition + Quaternion.Euler(0, 0, newRotation - 90) * newSize; // right-bottom corner
 
             // update uvs
-            var uvCoordinates = uvCoordinatesArray[uvIndex];
-            uv[vIdx0] = uvCoordinates.uv00;
-            uv[vIdx1] = new Vector2(uvCoordinates.uv00.x, uvCoordinates.uv11.y);
-            uv[vIdx2] = uvCoordinates.uv11;
-            uv[vIdx3] = new Vector2(uvCoordinates.uv11.x, uvCoordinates.uv00.y);
+            var uvCoordinates = _uvCoordinatesArray[uvIndex];
+            _uv[vIdx0] = uvCoordinates.uv00;
+            _uv[vIdx1] = new Vector2(uvCoordinates.uv00.x, uvCoordinates.uv11.y);
+            _uv[vIdx2] = uvCoordinates.uv11;
+            _uv[vIdx3] = new Vector2(uvCoordinates.uv11.x, uvCoordinates.uv00.y);
                 
             // update triangles
             var tIdx = quadIdx * 6;
 
-            tris[tIdx + 0] = vIdx0;
-            tris[tIdx + 1] = vIdx1;
-            tris[tIdx + 2] = vIdx2;
+            _tris[tIdx + 0] = vIdx0;
+            _tris[tIdx + 1] = vIdx1;
+            _tris[tIdx + 2] = vIdx2;
 
-            tris[tIdx + 3] = vIdx0;
-            tris[tIdx + 4] = vIdx2;
-            tris[tIdx + 5] = vIdx3;
+            _tris[tIdx + 3] = vIdx0;
+            _tris[tIdx + 4] = vIdx2;
+            _tris[tIdx + 5] = vIdx3;
             
             // set flags to update mesh arrays
-            updateVerts = true;
-            updateUv = true;
-            updateTris = true;
+            _updateVerts = true;
+            _updateUv = true;
+            _updateTris = true;
         }
         
         /// <summary>
@@ -182,12 +173,12 @@ namespace SkalluUtils.Utils.MeshParticleSystem
             var vIdx2 = vIdx + 2;
             var vIdx3 = vIdx + 3;
             
-            verts[vIdx0] = Vector3.zero; // left-bottom corner
-            verts[vIdx1] = Vector3.zero; // left-top corner
-            verts[vIdx2] = Vector3.zero; // right-top corner
-            verts[vIdx3] = Vector3.zero; // right-bottom corner
+            _verts[vIdx0] = Vector3.zero; // left-bottom corner
+            _verts[vIdx1] = Vector3.zero; // left-top corner
+            _verts[vIdx2] = Vector3.zero; // right-top corner
+            _verts[vIdx3] = Vector3.zero; // right-bottom corner
             
-            updateVerts = true;
+            _updateVerts = true;
         }
 
         /// <summary>
@@ -195,34 +186,34 @@ namespace SkalluUtils.Utils.MeshParticleSystem
         /// </summary>
         private void UpdateMeshArrays()
         {
-            if (updateVerts)
+            if (_updateVerts)
             {
-                mesh.vertices = verts;
-                updateVerts = false;
+                _mesh.vertices = _verts;
+                _updateVerts = false;
 
-                updateBounds = true;
+                _updateBounds = true;
             }
 
-            if (updateUv)
+            if (_updateUv)
             {
-                mesh.uv = uv;
-                updateUv = false;
+                _mesh.uv = _uv;
+                _updateUv = false;
                 
-                updateBounds = true;
+                _updateBounds = true;
             }
             
-            if (updateTris)
+            if (_updateTris)
             {
-                mesh.triangles = tris;
-                updateTris = false;
+                _mesh.triangles = _tris;
+                _updateTris = false;
                 
-                updateBounds = true;
+                _updateBounds = true;
             }
 
-            if (updateBounds)
+            if (_updateBounds)
             {
-                mesh.RecalculateBounds();
-                updateBounds = false;
+                _mesh.RecalculateBounds();
+                _updateBounds = false;
             }
         }
         
