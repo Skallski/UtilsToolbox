@@ -5,7 +5,23 @@ namespace SkalluUtils.Utils
 {
     public class VolumeManager : MonoBehaviour
     {
+        public static VolumeManager Instance { get; private set; }
+
         [SerializeField] private AudioMixer _volumeAudioMixer;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+                
+                DontDestroyOnLoad(gameObject);
+            }
+        }
 
         private void Start()
         {
