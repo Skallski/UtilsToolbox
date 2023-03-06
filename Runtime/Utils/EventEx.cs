@@ -34,11 +34,11 @@ namespace SkalluUtils.Utils
         
         public void RemoveListener(Action<T1, T2> listener) => _action -= listener;
     }
+    
+    // event manager class example:
+    // public static class EventManager
+    // {
+    //     public static readonly EventEx sampleEvent = new EventEx();
+    //     public static readonly EventEx<int> sampleEventWithParameter = new EventEx<int>();
+    // }
 }
-
-/* event manager class example
-public static class EventManager
-    {
-        public static readonly EventEx<int> onGameOver = new EventEx<int>();
-    }
-*/

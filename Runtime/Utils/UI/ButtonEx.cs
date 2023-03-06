@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Wrappers.UI
 {
     public class ButtonEx : MonoBehaviour, IPointerEnterHandler, IPointerDownHandler, IPointerExitHandler
     {
