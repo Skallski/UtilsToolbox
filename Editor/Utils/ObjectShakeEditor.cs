@@ -1,18 +1,17 @@
-﻿using SkalluUtils.Utils;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.Utils
+namespace SkalluUtils.Utils
 {
     /// <summary>
     /// Test object shake inside editor and during play mode
     /// </summary>
     [CustomEditor(typeof(ObjectShake))]
-    public class ObjectShakeEditor : UnityEditor.Editor
+    public class ObjectShakeEditor : Editor
     {
-        private ObjectShake objectShake;
+        private ObjectShake _objectShake;
 
-        private void OnEnable() => objectShake = (ObjectShake) target;
+        private void OnEnable() => _objectShake = (ObjectShake) target;
 
         public override void OnInspectorGUI()
         {
@@ -21,7 +20,7 @@ namespace SkalluUtils.Editor.Utils
             EditorGUILayout.Space();
 
             if (GUILayout.Button("Test Shake"))
-                objectShake.Shake();
+                _objectShake.Shake();
         }
 
         private void OnSceneGUI()

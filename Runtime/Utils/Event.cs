@@ -2,7 +2,7 @@
 
 namespace SkalluUtils.Utils
 {
-    public class EventEx
+    public class Event
     {
         private event Action _action = delegate { };
 
@@ -13,7 +13,7 @@ namespace SkalluUtils.Utils
         public void RemoveListener(Action listener) => _action -= listener;
     }
 
-    public class EventEx<T>
+    public class Event<T>
     {
         private event Action<T> _action = delegate { };
 
@@ -24,7 +24,7 @@ namespace SkalluUtils.Utils
         public void RemoveListener(Action<T> listener) => _action -= listener;
     }
     
-    public class EventEx<T1, T2>
+    public class Event<T1, T2>
     {
         private event Action<T1, T2> _action = delegate { };
 

@@ -32,25 +32,49 @@ namespace SkalluUtils.Utils.UI
         private bool IsOpened() => _content.activeSelf;
 
         /// <summary>
-        /// Display background and open context menu
+        /// Opens panel
         /// </summary>
         protected virtual void OpenSelf()
         {
-            if (_background != null) _background.SetActive(true);
-            _content.SetActive(true);
+            ForceOpen();
             
             _opened?.Invoke();
         }
 
         /// <summary>
-        /// Hides background and closes context menu
+        /// Closes panel
         /// </summary>
         protected virtual void CloseSelf()
         {
-            if (_background != null) _background.SetActive(false);
-            _content.SetActive(false);
+            ForceClose();
             
             _closed?.Invoke();
+        }
+
+        /// <summary>
+        /// Opens panel without invoking event
+        /// </summary>
+        public void ForceOpen()
+        {
+            if (_background != null)
+            {
+                _background.SetActive(true);
+            }
+            
+            _content.SetActive(true);
+        }
+
+        /// <summary>
+        /// Closes panel without invoking event
+        /// </summary>
+        public void ForceClose()
+        {
+            if (_background != null)
+            {
+                _background.SetActive(false);
+            }
+
+            _content.SetActive(false);
         }
     }
 }

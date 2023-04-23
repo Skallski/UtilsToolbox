@@ -15,11 +15,11 @@ namespace SkalluUtils.Utils
     {
         public static UpdateManager Instance { get; private set; }
         
-        private List<Action> _fixedUpdateList = new List<Action>();
-        private List<Action> _updateList = new List<Action>();
-        private List<Action> _lateUpdateList = new List<Action>();
+        private readonly List<Action> _fixedUpdateList = new List<Action>();
+        private readonly List<Action> _updateList = new List<Action>();
+        private readonly List<Action> _lateUpdateList = new List<Action>();
 
-        [SerializeField] protected bool paused;
+        [SerializeField] protected bool _paused;
 
         private void Awake()
         {
@@ -35,7 +35,7 @@ namespace SkalluUtils.Utils
 
         private void FixedUpdate()
         {
-            if (paused)
+            if (_paused)
             {
                 return;
             }
@@ -48,7 +48,7 @@ namespace SkalluUtils.Utils
 
         private void Update()
         {
-            if (paused)
+            if (_paused)
             {
                 return;
             }
@@ -61,7 +61,7 @@ namespace SkalluUtils.Utils
 
         private void LateUpdate()
         {
-            if (paused)
+            if (_paused)
             {
                 return;
             }

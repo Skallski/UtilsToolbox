@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.Utils
+namespace SkalluUtils.Utils
 {
     public static class EditorGUIUtils
     {

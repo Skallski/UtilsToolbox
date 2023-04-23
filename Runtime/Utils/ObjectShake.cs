@@ -16,8 +16,11 @@ namespace SkalluUtils.Utils
 
         private void Update()
         {
-            if (!(_currentShakeIntensity > 0)) return;
-            
+            if (!(_currentShakeIntensity > 0))
+            {
+                return;
+            }
+
             transform.position = _startPosition + Random.insideUnitSphere * _currentShakeIntensity;
         
             transform.rotation = new Quaternion(

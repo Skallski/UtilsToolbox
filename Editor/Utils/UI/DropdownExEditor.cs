@@ -2,9 +2,9 @@
 
 namespace SkalluUtils.Utils.UI
 {
-    [CustomEditor(typeof(DropdownEx))]
+    [CustomEditor(typeof(DropdownTmp))]
     [CanEditMultipleObjects]
-    public class DropdownExEditor : UnityEditor.Editor
+    public class DropdownExEditor : Editor
     {
         public override void OnInspectorGUI()
         {

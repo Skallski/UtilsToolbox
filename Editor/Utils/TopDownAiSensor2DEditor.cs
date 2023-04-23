@@ -1,12 +1,11 @@
-﻿using SkalluUtils.Utils;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
+using UnityEngine;
 
-namespace SkalluUtils.Editor.Utils
+namespace SkalluUtils.Utils
 {
     [CustomEditor(typeof(TopDownAiSensor2D)), CanEditMultipleObjects]
-    public class TopDownAiSensor2DEditor : UnityEditor.Editor
+    public class TopDownAiSensor2DEditor : Editor
     {
         private TopDownAiSensor2D _aiSensor;
         

@@ -2,42 +2,36 @@
 
 namespace SkalluUtils.Extensions
 {
-    namespace ColliderExtensions
+    public static class ColliderExtensions
     {
-        public static class ColliderExtensions
+        /// <summary>
+        /// Gets random point inside collider bounds
+        /// </summary>
+        /// <param name="col"> collider on which the method will be called </param>
+        public static Vector3 RandomPointInsideBounds(this Collider col)
         {
-            /// <summary>
-            /// Gets random point inside collider bounds
-            /// </summary>
-            /// <param name="col"> collider on which the method will be called </param>
-            public static Vector3 RandomPointInsideBounds(this Collider col)
-            {
-                Bounds bounds = col.bounds;
+            Bounds bounds = col.bounds;
                 
-                return new Vector3(
-                    Random.Range(bounds.min.x, bounds.max.x),
-                    Random.Range(bounds.min.y, bounds.max.y),
-                    Random.Range(bounds.min.z, bounds.max.z));
-            }
+            return new Vector3(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y),
+                Random.Range(bounds.min.z, bounds.max.z));
         }
     }
     
-    namespace Collider2DExtensions
+    public static class Collider2DExtensions
     {
-        public static class Collider2DExtensions
+        /// <summary>
+        /// Gets random point inside collider bounds
+        /// </summary>
+        /// <param name="col"> collider2D on which the method will be called </param>
+        public static Vector2 RandomPointInsideBounds(this Collider2D col)
         {
-            /// <summary>
-            /// Gets random point inside collider bounds
-            /// </summary>
-            /// <param name="col"> collider2D on which the method will be called </param>
-            public static Vector2 RandomPointInsideBounds(this Collider2D col)
-            {
-                Bounds bounds = col.bounds;
+            Bounds bounds = col.bounds;
                 
-                return new Vector2(
-                    Random.Range(bounds.min.x, bounds.max.x),
-                    Random.Range(bounds.min.y, bounds.max.y));
-            }
+            return new Vector2(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y));
         }
     }
 }

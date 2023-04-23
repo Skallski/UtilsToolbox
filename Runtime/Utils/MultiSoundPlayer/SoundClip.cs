@@ -1,20 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SkalluUtils.Utils
+namespace SkalluUtils.Utils.MultiSoundPlayer
 {
     [Serializable]
     public class SoundClip
     {
-        #region INSPECTOR FIELDS
         [SerializeField] private AudioClip _audioClip;
-        [Space]
         [SerializeField, Range(0, 1)] private float _volume = 1;
-        [SerializeField, Range(0, 1)] private float _volumeRandomRange;
-        [Space]
         [SerializeField, Range(-3, 3)] private float _pitch = 1;
+        [Header("Random Range")]
+        [SerializeField, Range(0, 1)] private float _volumeRandomRange;
         [SerializeField, Range(0, 1)] private float _pitchRandomRange;
-        #endregion
 
         public AudioClip AudioClip => _audioClip;
         public float Volume => _volume;
@@ -29,12 +26,14 @@ namespace SkalluUtils.Utils
         public int SampleRate { get; set; }
         public float PlayBackRate { get; set; }
 
-        public SoundClip(AudioClip audioClip, float volume, float volumeRandomRange, float pitch, float pitchRandomRange)
+        public SoundClip() {}
+
+        public SoundClip(AudioClip audioClip, float volume, float pitch, float volumeRandomRange = 0, float pitchRandomRange = 0)
         {
             _audioClip = audioClip;
             _volume = volume;
-            _volumeRandomRange = volumeRandomRange;
             _pitch = pitch;
+            _volumeRandomRange = volumeRandomRange;
             _pitchRandomRange = pitchRandomRange;
         }
     }
