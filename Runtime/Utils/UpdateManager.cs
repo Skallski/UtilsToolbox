@@ -13,33 +13,16 @@ namespace SkalluUtils.Utils
 
     public class UpdateManager : MonoBehaviour
     {
-        public static UpdateManager Instance { get; private set; }
-        
         private readonly List<Action> _fixedUpdateList = new List<Action>();
         private readonly List<Action> _updateList = new List<Action>();
         private readonly List<Action> _lateUpdateList = new List<Action>();
 
         [SerializeField] protected bool _paused;
 
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                Instance = this;
-            }
-        }
-
         private void FixedUpdate()
         {
-            if (_paused)
-            {
-                return;
-            }
-            
+            if (_paused) return;
+
             for (var i = 0; i < _fixedUpdateList.Count; i++)
             {
                 _fixedUpdateList[i].Invoke();
@@ -48,11 +31,8 @@ namespace SkalluUtils.Utils
 
         private void Update()
         {
-            if (_paused)
-            {
-                return;
-            }
-            
+            if (_paused) return;
+
             for (var i = 0; i < _updateList.Count; i++)
             {
                 _updateList[i].Invoke();
@@ -61,11 +41,8 @@ namespace SkalluUtils.Utils
 
         private void LateUpdate()
         {
-            if (_paused)
-            {
-                return;
-            }
-            
+            if (_paused) return;
+
             for (int i = 0; i < _lateUpdateList.Count; i++)
             {
                 _lateUpdateList[i].Invoke();
@@ -73,7 +50,7 @@ namespace SkalluUtils.Utils
         }
 
         #region PUBLIC METHODS
-        public void AddUpdateEvent(UpdateType updateType, Action updateAction)
+        public void AddListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
                 return;
@@ -106,7 +83,7 @@ namespace SkalluUtils.Utils
             }
         }
 
-        public void RemoveUpdateEvent(UpdateType updateType, Action updateAction)
+        public void RemoveListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
                 return;

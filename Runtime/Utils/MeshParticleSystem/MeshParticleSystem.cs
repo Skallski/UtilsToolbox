@@ -216,6 +216,5 @@ namespace SkalluUtils.Utils.MeshParticleSystem
                 _updateBounds = false;
             }
         }
-        
     }
 }

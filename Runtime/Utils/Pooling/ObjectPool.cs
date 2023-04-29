@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameManager.Pooling
+namespace SkalluUtils.Utils.Pooling
 {
     public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
     {
@@ -14,10 +14,10 @@ namespace GameManager.Pooling
         /// </summary>
         /// <param name="pooledObject"> object on which the pool will be created</param>
         /// <param name="quantityToSpawn"> pool size </param>
-        public ObjectPool(GameObject pooledObject, int quantityToSpawn = 0)
+        public ObjectPool(GameObject pooledObject, int quantityToSpawn = 0, Transform parent = null)
         {
             _prefab = pooledObject;
-            SpawnObjects(quantityToSpawn);
+            SpawnObjects(quantityToSpawn, parent);
         }
         
         /// <summary>
@@ -69,7 +69,7 @@ namespace GameManager.Pooling
         /// <param name="position"> spawn position </param>
         /// <param name="rotation"> spawn rotation </param>
         /// <returns></returns>
-        public T Pull(Transform parent = null, Vector3 position = default, Quaternion rotation = default)
+        public T Pull(Vector3 position = default, Quaternion rotation = default, Transform parent = null)
         {
             T t = _pooledObjects.Count > 0 
                 ? _pooledObjects.Pop()

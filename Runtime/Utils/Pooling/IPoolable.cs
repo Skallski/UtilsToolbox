@@ -1,4 +1,6 @@
-﻿namespace GameManager.Pooling
+﻿using System.Collections;
+
+namespace SkalluUtils.Utils.Pooling
 {
     public interface IPoolable<T>
     {
@@ -12,7 +14,7 @@
         /// This method will be called everytime object is pushed to the pool (like OnDisable)
         /// </summary>
         void ReturnToPool();
-        
+
         // basic implementation sample:
         // public class PoolableObject : MonoBehaviour, IPoolable<PoolableObject>
         // {
