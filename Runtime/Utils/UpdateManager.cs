@@ -13,9 +13,9 @@ namespace SkalluUtils.Utils
 
     public class UpdateManager : MonoBehaviour
     {
-        private readonly List<Action> _fixedUpdateList = new List<Action>();
-        private readonly List<Action> _updateList = new List<Action>();
-        private readonly List<Action> _lateUpdateList = new List<Action>();
+        private static readonly List<Action> FixedUpdateList = new List<Action>();
+        private static readonly List<Action> UpdateList = new List<Action>();
+        private static readonly List<Action> LateUpdateList = new List<Action>();
 
         [SerializeField] protected bool _paused;
 
@@ -23,9 +23,9 @@ namespace SkalluUtils.Utils
         {
             if (_paused) return;
 
-            for (var i = 0; i < _fixedUpdateList.Count; i++)
+            foreach (var fixedUpdateAction in FixedUpdateList)
             {
-                _fixedUpdateList[i].Invoke();
+                fixedUpdateAction?.Invoke();
             }
         }
 
@@ -33,9 +33,9 @@ namespace SkalluUtils.Utils
         {
             if (_paused) return;
 
-            for (var i = 0; i < _updateList.Count; i++)
+            foreach (var updateAction in UpdateList)
             {
-                _updateList[i].Invoke();
+                updateAction?.Invoke();
             }
         }
 
@@ -43,14 +43,14 @@ namespace SkalluUtils.Utils
         {
             if (_paused) return;
 
-            for (int i = 0; i < _lateUpdateList.Count; i++)
+            foreach (var lateUpdateAction in LateUpdateList)
             {
-                _lateUpdateList[i].Invoke();
+                lateUpdateAction?.Invoke();
             }
         }
 
         #region PUBLIC METHODS
-        public void AddListener(UpdateType updateType, Action updateAction)
+        public static void AddListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
                 return;
@@ -59,31 +59,29 @@ namespace SkalluUtils.Utils
             {
                 case UpdateType.FixedUpdate:
                 {
-                    if (_fixedUpdateList.Contains(updateAction) == false)
-                        _fixedUpdateList.Add(updateAction);
+                    if (FixedUpdateList.Contains(updateAction) == false)
+                        FixedUpdateList.Add(updateAction);
                     
                     break;
                 }
-                    
                 case UpdateType.Update:
                 {
-                    if (_updateList.Contains(updateAction) == false)
-                        _updateList.Add(updateAction);
+                    if (UpdateList.Contains(updateAction) == false)
+                        UpdateList.Add(updateAction);
                     
                     break;
                 }
-                    
                 case UpdateType.LateUpdate:
                 {
-                    if (_lateUpdateList.Contains(updateAction) == false)
-                        _lateUpdateList.Add(updateAction);
+                    if (LateUpdateList.Contains(updateAction) == false)
+                        LateUpdateList.Add(updateAction);
                     
                     break;
                 }
             }
         }
 
-        public void RemoveListener(UpdateType updateType, Action updateAction)
+        public static void RemoveListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
                 return;
@@ -92,48 +90,27 @@ namespace SkalluUtils.Utils
             {
                 case UpdateType.FixedUpdate:
                 {
-                    if (_fixedUpdateList.Contains(updateAction))
-                        _fixedUpdateList.Remove(updateAction);
+                    if (FixedUpdateList.Contains(updateAction))
+                        FixedUpdateList.Remove(updateAction);
                     
                     break;
                 }
-                
                 case UpdateType.Update:
                 {
-                    if (_updateList.Contains(updateAction))
-                        _updateList.Remove(updateAction);
+                    if (UpdateList.Contains(updateAction))
+                        UpdateList.Remove(updateAction);
                     
                     break;
                 }
-                
                 case UpdateType.LateUpdate:
                 {
-                    if (_lateUpdateList.Contains(updateAction))
-                        _lateUpdateList.Remove(updateAction);
+                    if (LateUpdateList.Contains(updateAction))
+                        LateUpdateList.Remove(updateAction);
                     
                     break;
                 }
-            }
-        }
-
-        public void Clear(UpdateType updateType)
-        {
-            switch (updateType)
-            {
-                case UpdateType.FixedUpdate:
-                    _fixedUpdateList.Clear();
-                    break;
-
-                case UpdateType.Update:
-                    _updateList.Clear();
-                    break;
-
-                case UpdateType.LateUpdate:
-                    _lateUpdateList.Clear();
-                    break;
             }
         }
         #endregion
-        
     }
 }
