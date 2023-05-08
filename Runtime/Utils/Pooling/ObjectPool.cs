@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SkalluUtils.Utils.Pooling
 {
@@ -14,9 +15,22 @@ namespace SkalluUtils.Utils.Pooling
         /// </summary>
         /// <param name="pooledObject"> object on which the pool will be created</param>
         /// <param name="quantityToSpawn"> pool size </param>
+        /// <param name="parent"></param>
         public ObjectPool(GameObject pooledObject, int quantityToSpawn = 0, Transform parent = null)
         {
             _prefab = pooledObject;
+            SpawnObjects(quantityToSpawn, parent);
+        }
+
+        /// <summary>
+        /// Creates object pool of selected poolable object
+        /// </summary>
+        /// <param name="pooledComponentObject"> object on which the pool will be created</param>
+        /// <param name="quantityToSpawn"> pool size </param>
+        /// <param name="parent"></param>
+        public ObjectPool(Component pooledComponentObject, int quantityToSpawn = 0, Transform parent = null)
+        {
+            _prefab = pooledComponentObject.gameObject;
             SpawnObjects(quantityToSpawn, parent);
         }
         
@@ -25,7 +39,7 @@ namespace SkalluUtils.Utils.Pooling
         /// </summary>
         /// <param name="objects"> list of objects from which the pool will be created </param>
         /// <exception cref="Exception"></exception>
-        public ObjectPool(List<T> objects)
+        public ObjectPool(IReadOnlyList<T> objects)
         {
             var len = objects.Count;
 
@@ -52,13 +66,11 @@ namespace SkalluUtils.Utils.Pooling
         /// <param name="parent"> parent of the object that will be spawned </param>
         private void SpawnObjects(int quantity, Transform parent = null)
         {
-            T t;
-
             for (int i = 0; i < quantity; i++)
             {
-                t = GameObject.Instantiate(_prefab, parent).GetComponent<T>();
-                _pooledObjects.Push(t);
-                t.gameObject.SetActive(false);
+                T tComponent = Object.Instantiate(_prefab, parent).GetComponent<T>();
+                _pooledObjects.Push(tComponent);
+                tComponent.gameObject.SetActive(false);
             }
         }
 
@@ -71,19 +83,19 @@ namespace SkalluUtils.Utils.Pooling
         /// <returns></returns>
         public T Pull(Vector3 position = default, Quaternion rotation = default, Transform parent = null)
         {
-            T t = _pooledObjects.Count > 0 
+            T tComponent = _pooledObjects.Count > 0 
                 ? _pooledObjects.Pop()
-                : GameObject.Instantiate(_prefab).GetComponent<T>();
+                : Object.Instantiate(_prefab).GetComponent<T>();
 
-            var obj = t.gameObject;
+            var obj = tComponent.gameObject;
             obj.SetActive(true);
             obj.transform.SetParent(parent);
             obj.transform.position = position;
             obj.transform.rotation = rotation;
             
-            t.Initialize(Push);
+            tComponent.Initialize(Push);
 
-            return t;
+            return tComponent;
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils.Utils
+namespace SkalluUtils.Utils.UpdateManager
 {
     public enum UpdateType
     {
@@ -21,31 +21,34 @@ namespace SkalluUtils.Utils
 
         private void FixedUpdate()
         {
-            if (_paused) return;
+            if (_paused) 
+                return;
 
-            foreach (var fixedUpdateAction in FixedUpdateList)
+            for (int i = 0; i < FixedUpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
             {
-                fixedUpdateAction?.Invoke();
+                FixedUpdateList[i]?.Invoke();
             }
         }
 
         private void Update()
         {
-            if (_paused) return;
-
-            foreach (var updateAction in UpdateList)
+            if (_paused) 
+                return;
+            
+            for (int i = 0; i < UpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
             {
-                updateAction?.Invoke();
+                UpdateList[i]?.Invoke();
             }
         }
 
         private void LateUpdate()
         {
-            if (_paused) return;
-
-            foreach (var lateUpdateAction in LateUpdateList)
+            if (_paused)
+                return;
+            
+            for (int i = 0; i < LateUpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
             {
-                lateUpdateAction?.Invoke();
+                LateUpdateList[i]?.Invoke();
             }
         }
 
