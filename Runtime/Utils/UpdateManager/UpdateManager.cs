@@ -19,6 +19,8 @@ namespace SkalluUtils.Utils.UpdateManager
 
         [SerializeField] protected bool _paused;
 
+        public bool Paused => _paused;
+
         private void FixedUpdate()
         {
             if (_paused) 
