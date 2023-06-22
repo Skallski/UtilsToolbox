@@ -9,15 +9,16 @@ namespace SkalluUtils.Utils.ObjectCulling
     public class ObjectCuller : MonoBehaviour
     {
         [SerializeField, Range(0.001f, 1f)] private float _visibilityCheckRate = 0.1f;
-        [SerializeField] private Vector3 _boundingBoxSize;
+        [SerializeField] private CullingBoundingBox _cullingBoundingBox;
         [SerializeField] private bool _isObjectMovable;
-        [SerializeField, ReadOnly] private bool _isObjectVisible = true;
+        [SerializeField, ReadOnly] private bool _isObjectVisible;
+        [Space]
+        [SerializeField] private bool _showGizmos = true;
 
         private Camera _camera;
         private readonly UnityEvent _onVisible = new UnityEvent();
         private readonly UnityEvent _onInvisible = new UnityEvent();
-        private Bounds _bounds;
-        
+
         public void AddCuller([NotNull] ICullable iCullable)
         {
             _onVisible.AddListener(iCullable.OnVisible);
@@ -42,8 +43,10 @@ namespace SkalluUtils.Utils.ObjectCulling
         
             if (!_isObjectMovable)
             {
-                _bounds = new Bounds(transform.position, _boundingBoxSize);
+                _cullingBoundingBox.Setup(transform.position);
             }
+
+            _isObjectVisible = _camera.IsObjectVisible(_cullingBoundingBox.Bounds);
 
             InvokeRepeating(nameof(CheckForVisibility), 0, _visibilityCheckRate);
         }
@@ -52,14 +55,14 @@ namespace SkalluUtils.Utils.ObjectCulling
         {
             if (_isObjectMovable)
             {
-                _bounds = new Bounds(transform.position, _boundingBoxSize);
+                _cullingBoundingBox.Setup(transform.position);
             }
         
-            if (_camera.IsObjectVisible(_bounds))
+            if (_camera.IsObjectVisible(_cullingBoundingBox.Bounds))
             {
                 if (_isObjectVisible)
                     return;
-
+                
                 _onVisible?.Invoke();
                 _isObjectVisible = true;
             }
@@ -67,7 +70,7 @@ namespace SkalluUtils.Utils.ObjectCulling
             {
                 if (!_isObjectVisible)
                     return;
-
+                
                 _onInvisible?.Invoke();
                 _isObjectVisible = false;
             }
@@ -75,7 +78,12 @@ namespace SkalluUtils.Utils.ObjectCulling
 
         private void OnDrawGizmosSelected()
         {
-            Gizmos.DrawWireCube(transform.position, _boundingBoxSize);
+            if (!_showGizmos)
+            {
+                return;
+            }
+            
+            _cullingBoundingBox.DrawBoundingBox(transform.position);
         }
     }
 } 

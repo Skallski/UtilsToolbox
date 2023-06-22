@@ -1,8 +1,9 @@
-﻿using UnityEditor;
+﻿using SkalluUtils.Utils.MultiSoundPlayer;
+using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSoundPlayer
+namespace SkalluUtils.CustomEditors
 {
     [CustomEditor(typeof(MultiSoundPlayer))]
     public class MultiSoundPlayerEditor : Editor
@@ -62,6 +63,10 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                 EditorGUILayout.HelpBox("Sound can be played only during runtime", MessageType.Warning);
                 GUI.enabled = false;
             }
+            else
+            {
+                GUI.enabled = true;
+            }
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Play", GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
@@ -69,10 +74,32 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                 _multiSoundPlayer.PlaySingleSound(_soundIndexToPlay);
             }
             
-            GUI.enabled = true;
+            if (GUILayout.Button("-", GUILayout.MinWidth(10), GUILayout.MaxWidth(20), GUILayout.ExpandWidth(true)))
+            {
+                if (_soundIndexToPlay > 0)
+                {
+                    _soundIndexToPlay--;
+                }
+            }
             
             _soundIndexToPlay = EditorGUILayout.IntField(_soundIndexToPlay, GUILayout.MinWidth(50), GUILayout.ExpandWidth(true));
+            
+            if (GUILayout.Button("+", GUILayout.MinWidth(10), GUILayout.MaxWidth(20), GUILayout.ExpandWidth(true)))
+            {
+                if (_soundIndexToPlay < _multiSoundPlayer.Sounds.Count - 1)
+                {
+                    _soundIndexToPlay++;
+                }
+            }
+
+            GUI.enabled = true;
+            
             EditorGUILayout.EndHorizontal();
+            
+            if (_soundIndexToPlay >= _multiSoundPlayer.Sounds.Count)
+            {
+                EditorGUILayout.HelpBox($"Sound with id {_soundIndexToPlay} does not exist!", MessageType.Error);
+            }
             #endregion
             
             EditorGUILayout.EndVertical();

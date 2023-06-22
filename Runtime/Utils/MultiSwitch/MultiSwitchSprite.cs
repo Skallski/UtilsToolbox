@@ -8,6 +8,12 @@ namespace SkalluUtils.Utils.MultiSwitch
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Sprite[] _sprites;
 
+        protected SpriteRenderer SpriteRenderer
+        {
+            get => _spriteRenderer;
+            set => _spriteRenderer = value;
+        }
+
         protected override void SetstateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _spriteRenderer == null)

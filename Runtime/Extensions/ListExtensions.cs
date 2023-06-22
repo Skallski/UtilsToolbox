@@ -50,7 +50,7 @@ namespace SkalluUtils.Extensions
         }
         
         /// <summary>
-        /// Check if list contains all elements of second list
+        /// Check if the list contains all elements of second list
         /// </summary>
         /// <param name="a"> list on which the method will be called </param>
         /// <param name="b"> list to check if "A" contains all of its elements </param>
@@ -95,6 +95,27 @@ namespace SkalluUtils.Extensions
                     origin.Remove(t);
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if the list is null or empty
+        /// </summary>
+        /// <param name="list"> list on which the method will be called </param>
+        /// <typeparam name="T"> type of list </typeparam>
+        /// <returns> true or false, depending on whether the list is null or empty </returns>
+        public static bool IsNullOrEmpty<T>(this IList<T> list)
+        {
+            if (list == null)
+            {
+                return true;
+            }
+
+            if (list.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace SkalluUtils.Utils.MultiSwitch
         private const int MAX_UPDATE_PER_FRAME = 10;
     
         public abstract int State { get; }
-    
+
         internal void SetStateSafe(int value)
         {
             var currentFrameCount = Time.frameCount;
