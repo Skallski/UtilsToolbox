@@ -12,14 +12,20 @@ namespace SkalluUtils.Extensions
         /// <param name="text"> string on which the method will be called </param>
         /// <param name="color"> color to set </param>
         /// <returns> colored text </returns>
-        public static string Color(this string text, Color color) => $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{text}</color>";
-            
+        public static string Color(this string text, Color color)
+        {
+            return $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{text}</color>";
+        }
+
         /// <summary>
         /// Makes log message bold.
         /// </summary>
         /// <param name="text"> string on which the method will be called </param>
         /// <returns> bold text </returns>
-        public static string Bold(this string text) => $"<b>{text}</b>";
+        public static string Bold(this string text)
+        {
+            return $"<b>{text}</b>";
+        }
 
         /// <summary>
         /// Sets size of log message to one provided as method parameter.
@@ -27,7 +33,11 @@ namespace SkalluUtils.Extensions
         /// <param name="text"> string on which the method will be called </param>
         /// <param name="size"> size to set </param>
         /// <returns> text of provided size </returns>
-        public static string Size(this string text, int size) => $"<size={size}>{text}</size>";
+        public static string Size(this string text, int size)
+        {
+            return $"<size={size}>{text}</size>";
+        }
+
         #endregion
     }
 }

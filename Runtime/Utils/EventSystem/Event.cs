@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SkalluUtils.Utils
+namespace SkalluUtils.Utils.EventSystem
 {
     public class Event
     {
@@ -29,16 +29,17 @@ namespace SkalluUtils.Utils
         private event Action<T1, T2> _action = delegate { };
 
         public void Invoke(T1 param1, T2 param2) => _action.Invoke(param1, param2);
-        
+
         public void AddListener(Action<T1, T2> listener) => _action += listener;
         
         public void RemoveListener(Action<T1, T2> listener) => _action -= listener;
     }
-    
-    // event manager class example:
-    // public static class EventManager
+
+    // EventStorage class example:
+    // public static class EventStorage
     // {
     //     public static readonly EventEx sampleEvent = new EventEx();
     //     public static readonly EventEx<int> sampleEventWithParameter = new EventEx<int>();
+    //     public static readonly EventEx<int, int> sampleEventWithParameter = new EventEx<int, int>();
     // }
 }

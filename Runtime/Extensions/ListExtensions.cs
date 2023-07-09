@@ -117,5 +117,28 @@ namespace SkalluUtils.Extensions
 
             return false;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="valueToCompare"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetEqualElement<T>(this IList<T> list, T valueToCompare)
+        {
+            EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
+            for (int i = 0, c = list.Count; i < c; ++i)
+            {
+                T currentElement = list[i];
+                
+                if (equalityComparer.Equals(currentElement, valueToCompare))
+                {
+                    return currentElement;
+                }
+            }
+            
+            return default;
+        }
     }
 }

@@ -8,49 +8,56 @@ namespace SkalluUtils.Utils.UpdateManager
     {
         FixedUpdate,
         Update,
-        LateUpdate
+        LateUpdate,
+        FixedUpdateUnscaled,
+        UpdateUnscaled,
+        LateUpdateUnscaled,
     }
 
     public class UpdateManager : MonoBehaviour
     {
-        private static readonly List<Action> FixedUpdateList = new List<Action>();
-        private static readonly List<Action> UpdateList = new List<Action>();
-        private static readonly List<Action> LateUpdateList = new List<Action>();
+        private static readonly Dictionary<UpdateType, List<Action>> UpdateLists = new Dictionary<UpdateType, List<Action>>();
 
-        [SerializeField] protected bool _paused;
-
-        public bool Paused => _paused;
+        [field: SerializeField] public bool Paused { get; protected set; }
 
         private void FixedUpdate()
         {
-            if (_paused) 
-                return;
-
-            for (int i = 0; i < FixedUpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
+            if (Paused == false)
             {
-                FixedUpdateList[i]?.Invoke();
+                InvokeActions(UpdateType.FixedUpdate);
             }
+
+            InvokeActions(UpdateType.FixedUpdateUnscaled);
         }
 
         private void Update()
         {
-            if (_paused) 
-                return;
-            
-            for (int i = 0; i < UpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
+            if (Paused == false)
             {
-                UpdateList[i]?.Invoke();
+                InvokeActions(UpdateType.Update);
             }
+
+            InvokeActions(UpdateType.UpdateUnscaled);
         }
 
         private void LateUpdate()
         {
-            if (_paused)
-                return;
-            
-            for (int i = 0; i < LateUpdateList.Count; ++i) // HAS TO BE FOR LOOP. DON"T CONVERT TO FOREACH!!!
+            if (Paused == false)
             {
-                LateUpdateList[i]?.Invoke();
+                InvokeActions(UpdateType.LateUpdate);
+            }
+
+            InvokeActions(UpdateType.LateUpdateUnscaled);
+        }
+
+        private void InvokeActions(UpdateType updateType)
+        {
+            if (UpdateLists.TryGetValue(updateType, out List<Action> actions))
+            {
+                for (int i = 0; i < actions.Count; i++)
+                {
+                    actions[i]?.Invoke();
+                }
             }
         }
 
@@ -60,29 +67,15 @@ namespace SkalluUtils.Utils.UpdateManager
             if (updateAction == null)
                 return;
 
-            switch (updateType)
+            if (!UpdateLists.ContainsKey(updateType))
             {
-                case UpdateType.FixedUpdate:
-                {
-                    if (FixedUpdateList.Contains(updateAction) == false)
-                        FixedUpdateList.Add(updateAction);
-                    
-                    break;
-                }
-                case UpdateType.Update:
-                {
-                    if (UpdateList.Contains(updateAction) == false)
-                        UpdateList.Add(updateAction);
-                    
-                    break;
-                }
-                case UpdateType.LateUpdate:
-                {
-                    if (LateUpdateList.Contains(updateAction) == false)
-                        LateUpdateList.Add(updateAction);
-                    
-                    break;
-                }
+                UpdateLists[updateType] = new List<Action>();
+            }
+
+            List<Action> actions = UpdateLists[updateType];
+            if (!actions.Contains(updateAction))
+            {
+                actions.Add(updateAction);
             }
         }
 
@@ -90,30 +83,10 @@ namespace SkalluUtils.Utils.UpdateManager
         {
             if (updateAction == null)
                 return;
-            
-            switch (updateType)
+
+            if (UpdateLists.TryGetValue(updateType, out List<Action> actions))
             {
-                case UpdateType.FixedUpdate:
-                {
-                    if (FixedUpdateList.Contains(updateAction))
-                        FixedUpdateList.Remove(updateAction);
-                    
-                    break;
-                }
-                case UpdateType.Update:
-                {
-                    if (UpdateList.Contains(updateAction))
-                        UpdateList.Remove(updateAction);
-                    
-                    break;
-                }
-                case UpdateType.LateUpdate:
-                {
-                    if (LateUpdateList.Contains(updateAction))
-                        LateUpdateList.Remove(updateAction);
-                    
-                    break;
-                }
+                actions.Remove(updateAction);
             }
         }
         #endregion

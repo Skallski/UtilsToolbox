@@ -3,7 +3,7 @@
 namespace SkalluUtils.Utils.Pooling
 {
     /// <summary>
-    /// Interface to implement if you wish to use pooling on the object.
+    /// Interface to implement if you wish to use more generic pooling on the object.
     /// </summary>
     /// <example>
     /// <code>
