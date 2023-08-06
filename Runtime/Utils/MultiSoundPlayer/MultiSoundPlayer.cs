@@ -296,7 +296,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             }
         }
 
-        public void LoadSounds(IEnumerable<SoundClip> sounds)
+        internal void LoadSounds(IEnumerable<SoundClip> sounds)
         {
             foreach (var sound in sounds)
             {

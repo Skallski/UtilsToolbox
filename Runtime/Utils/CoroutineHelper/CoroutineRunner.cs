@@ -23,6 +23,7 @@ namespace SkalluUtils.Utils.CoroutineHelper
             {
                 caller.StopCoroutine(coroutine); // stop current coroutine, when new one is called
             }
+            
             coroutine = caller.StartCoroutine(iEnumerator);
         }
         
@@ -43,6 +44,7 @@ namespace SkalluUtils.Utils.CoroutineHelper
             {
                 caller.StopCoroutine(coroutine); // stop current coroutine, when new one is called
             }
+            
             coroutine = caller.StartCoroutine(methodName);
         }
 
