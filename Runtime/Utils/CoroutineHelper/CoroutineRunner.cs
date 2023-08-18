@@ -49,31 +49,12 @@ namespace SkalluUtils.Utils.CoroutineHelper
         }
 
         /// <summary>
-        /// Stops coroutine
-        /// </summary>
-        /// <param name="caller"> MonoBehaviour, on which coroutine stop will be called </param>
-        /// <param name="coroutine"> coroutine to stop </param>
-        /// <param name="onStop"> callback that will be invoked after stopping the coroutine </param>
-        public static void Stop(MonoBehaviour caller, Coroutine coroutine)
-        {
-            if (caller == null)
-            {
-                return;
-            }
-
-            if (coroutine != null)
-            {
-                caller.StopCoroutine(coroutine);
-            }
-        }
-        
-        /// <summary>
         /// Stops coroutine with invoking a callback afterwards
         /// </summary>
         /// <param name="caller"> MonoBehaviour, on which coroutine stop will be called </param>
         /// <param name="coroutine"> coroutine to stop </param>
         /// <param name="onStop"> callback that will be invoked after stopping the coroutine </param>
-        public static void Stop(MonoBehaviour caller, Coroutine coroutine, Action onStop)
+        public static void Stop(MonoBehaviour caller, Coroutine coroutine, Action onStop = null)
         {
             if (caller == null)
             {

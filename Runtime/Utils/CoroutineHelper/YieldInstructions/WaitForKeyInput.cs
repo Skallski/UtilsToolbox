@@ -13,13 +13,7 @@ namespace SkalluUtils.Utils.CoroutineHelper.YieldInstructions
 
         private readonly KeyCode _keyCode;
         private readonly InputType _inputType;
-
-        public WaitForKeyInput(KeyCode keyCode, InputType inputType)
-        {
-            _keyCode = keyCode;
-            _inputType = inputType;
-        }
-
+        
         public override bool keepWaiting
         {
             get
@@ -32,6 +26,17 @@ namespace SkalluUtils.Utils.CoroutineHelper.YieldInstructions
                     _ => !Input.GetKeyDown(_keyCode)
                 };
             }
+        }
+
+        /// <summary>
+        /// Creates a new yield-instruction
+        /// </summary>
+        /// <param name="keyCode">  </param>
+        /// <param name="inputType">  </param>
+        public WaitForKeyInput(KeyCode keyCode, InputType inputType)
+        {
+            _keyCode = keyCode;
+            _inputType = inputType;
         }
     }
 }
