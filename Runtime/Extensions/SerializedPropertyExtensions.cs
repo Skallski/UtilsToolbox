@@ -9,11 +9,11 @@ namespace SkalluUtils.Extensions
             object obj = property.serializedObject.targetObject;
  
             System.Reflection.FieldInfo field = null;
-            foreach( var path in property.propertyPath.Split( '.' ) )
+            foreach (var path in property.propertyPath.Split('.'))
             {
                 var type = obj.GetType();
-                field = type.GetField( path );
-                obj = field.GetValue( obj );
+                field = type.GetField(path);
+                obj = field.GetValue(obj);
             }
             
             return obj;

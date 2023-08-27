@@ -1,10 +1,48 @@
-﻿namespace SkalluUtils.Utils.MultiSoundPlayer
+﻿using System.Collections.Generic;
+
+namespace SkalluUtils.Utils.MultiSoundPlayer
 {
     public static class SoundLoader
     {
-        public static void LoadSounds(MultiSoundPlayer multiSoundPlayer, System.Collections.Generic.List<SoundClip> sounds)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="multiSoundPlayer"></param>
+        public static void ClearSounds(this MultiSoundPlayer multiSoundPlayer)
         {
-            if (sounds == null || sounds.Count == 0)
+            multiSoundPlayer.Sounds.Clear();
+        }
+
+        /// <summary>
+        /// Loads list of sound clips into the MultiSoundPlayer
+        /// </summary>
+        /// <param name="multiSoundPlayer"> multi sound player on which the method will be called </param>
+        /// <param name="soundsClips"> list of sound clips to load </param>
+        public static void LoadSounds(this MultiSoundPlayer multiSoundPlayer, List<SoundClip> soundsClips)
+        {
+            ClearSounds(multiSoundPlayer);
+            AddSounds(multiSoundPlayer, soundsClips);
+        }
+        
+        /// <summary>
+        /// Loads sound clips into the MultiSoundPlayer
+        /// </summary>
+        /// <param name="multiSoundPlayer"> multi sound player on which the method will be called </param>
+        /// <param name="soundsClips"> sound clips to load </param>
+        public static void LoadSounds(this MultiSoundPlayer multiSoundPlayer, params SoundClip[] soundsClips)
+        {
+            ClearSounds(multiSoundPlayer);
+            AddSounds(multiSoundPlayer, soundsClips);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="multiSoundPlayer"></param>
+        /// <param name="soundsClips"></param>
+        public static void AddSounds(this MultiSoundPlayer multiSoundPlayer, List<SoundClip> soundsClips)
+        {
+            if (soundsClips == null || soundsClips.Count == 0)
             {
                 UnityEngine.Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
                 return;
@@ -16,7 +54,29 @@
                 return;
             }
             
-            multiSoundPlayer.LoadSounds(sounds);
+            multiSoundPlayer.Sounds.AddRange(soundsClips);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="multiSoundPlayer"></param>
+        /// <param name="soundsClips"></param>
+        public static void AddSounds(this MultiSoundPlayer multiSoundPlayer, params SoundClip[] soundsClips)
+        {
+            if (soundsClips == null || soundsClips.Length == 0)
+            {
+                UnityEngine.Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
+                return;
+            }
+
+            if (multiSoundPlayer == null)
+            {
+                UnityEngine.Debug.LogError($"Cannot load sounds, because MultiSoundPlayer is null!");
+                return;
+            }
+            
+            multiSoundPlayer.Sounds.AddRange(soundsClips);
         }
     }
 }

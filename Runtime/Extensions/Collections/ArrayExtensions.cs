@@ -1,5 +1,5 @@
 ﻿
-namespace SkalluUtils.Extensions
+namespace SkalluUtils.Extensions.Collections
 {
     public static class ArrayExtensions
     {

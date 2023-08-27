@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using SkalluUtils.PropertyAttributes;
+using JetBrains.Annotations;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace SkalluUtils.Utils.MultiSoundPlayer
 {
@@ -11,7 +10,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private List<SoundClip> _sounds = new List<SoundClip>();
         [SerializeField, Min(1)] private int _playbackVoices = 6;
-        [SerializeField, ReadOnly] private int _currentVoice;
+        [SerializeField, PropertyAttributes.ReadOnly] private int _currentVoice;
         [SerializeField] private bool _paused;
 
         private int[] _voiceClipIndex;
@@ -20,11 +19,9 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         private int _sampleRate;
         private bool _loaded;
         private bool _playingAnything;
-        private readonly List<int> _indexesToPlay = new List<int>();
        
-        public AudioSource AudioSource => _audioSource;
-        public List<SoundClip> Sounds => _sounds;
-        public bool Paused => _paused;
+        internal List<SoundClip> Sounds => _sounds;
+        public int SoundsCount => _sounds.Count;
 
 #if UNITY_EDITOR
         private void Reset()
@@ -35,14 +32,6 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             }
         }
 #endif
-
-        private void Awake()
-        {
-            if (_audioSource == null)
-            {
-                _audioSource = GetComponent<AudioSource>();
-            }
-        }
 
         private void Start()
         {
@@ -82,7 +71,6 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
 
                 soundClip.SampleRate = soundClip.AudioClip.frequency;
                 soundClip.Length = soundClip.AudioClip.length;
-
                 soundClip.PlayBackRate = soundClip.SampleRate / (float) _sampleRate;
             }
 
@@ -96,31 +84,29 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             for (int i = 0; i <_playbackVoices; i++)
             {
                 if (_voicePlaying[i])
+                {
                     _playingAnything = true;
+                }
             }
 
-            if (_paused == false)
+            if (_paused)
             {
-                if (_audioSource.isPlaying && !_playingAnything)
+                if (_audioSource.isPlaying && _playingAnything)
+                {
                     _audioSource.Stop();
-
-                if (!_audioSource.isPlaying && _playingAnything)
-                    _audioSource.Play();
+                }
             }
             else
             {
-                if (_audioSource.isPlaying && _playingAnything)
-                    _audioSource.Stop();
-            }
-
-            if (_indexesToPlay.Count > 0)
-            {
-                for (var i = 0; i < _indexesToPlay.Count; i++)
+                if (_audioSource.isPlaying && !_playingAnything)
                 {
-                    PlaySingleSound(_indexesToPlay[i]);
+                    _audioSource.Stop();
                 }
 
-                _indexesToPlay.Clear();
+                if (!_audioSource.isPlaying && _playingAnything)
+                {
+                    _audioSource.Play();
+                }
             }
         }
     
@@ -146,7 +132,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                     }
                 }
 
-                var inv = 1 / (float) _sampleRate;
+                var invertedSampleRate = 1 / (float) _sampleRate;
 
                 var channelData = new float[channels, data.Length / channels];
                 var channelLength = data.Length / channels;
@@ -187,7 +173,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                     {
                         if (_voicePlaying[v] && _voiceStarted[v])
                         {
-                            _voiceTimer[v] += _voicePitch[v] * inv / _sounds[_voiceClipIndex[v]].Length *
+                            _voiceTimer[v] += _voicePitch[v] * invertedSampleRate / _sounds[_voiceClipIndex[v]].Length *
                                               _sounds[_voiceClipIndex[v]].PlayBackRate;
                         }
 
@@ -236,7 +222,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                 _currentVoice += 1;
             }
         }
-
+        
         public void PlaySingleSound(int soundIndex)
         {
             if (soundIndex >= _sounds.Count)
@@ -247,17 +233,10 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             
             PlaySingleSoundInternal(soundIndex);
         }
-
-        public void PlaySingleSound(SoundClip soundClip)
+        
+        public void PlaySingleSound([NotNull] SoundClip soundClip)
         {
-            if (soundClip == null)
-            {
-                Debug.LogError("provided sound clip is null!");
-                return;
-            }
-
-            var soundIndex = GetSoundClipIndex(soundClip);
-            if (soundIndex > -1)
+            if (TryGetSoundClipIndex(soundClip, out int soundIndex))
             {
                 PlaySingleSoundInternal(soundIndex);
             }
@@ -267,20 +246,28 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             }
         }
 
-        private int GetSoundClipIndex(SoundClip soundClip)
+        /// <summary>
+        /// Tries to get index from sound clip
+        /// </summary>
+        /// <param name="clip"> sound clip, whom index is to be found </param>
+        /// <param name="clipIndex"> expected index of sound clip </param>
+        /// <returns> true or false, depending on whether index has been found or not </returns>
+        private bool TryGetSoundClipIndex([NotNull] SoundClip clip, out int clipIndex)
         {
-            if (_sounds.Contains(soundClip))
+            if (_sounds.Contains(clip))
             {
-                for (int i = 0; i < _sounds.Count; i++)
+                for (int i = 0, c = _sounds.Count; i < c; i++)
                 {
-                    if (_sounds[i] == soundClip)
+                    if (_sounds[i] == clip)
                     {
-                        return i;
+                        clipIndex = i;
+                        return true;
                     }
                 }
             }
 
-            return -1;
+            clipIndex = -1; // 
+            return false;
         }
 
         public void Pause(bool value)
@@ -293,14 +280,6 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             if (_audioSource.isPlaying && _playingAnything)
             {
                 _audioSource.Stop();
-            }
-        }
-
-        internal void LoadSounds(IEnumerable<SoundClip> sounds)
-        {
-            foreach (var sound in sounds)
-            {
-                _sounds.Add(sound);
             }
         }
     }

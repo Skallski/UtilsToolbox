@@ -1,14 +1,13 @@
-﻿using SkalluUtils.Utils.MultiSoundPlayer;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors
+namespace SkalluUtils.CustomEditors.MultiSoundPlayer
 {
-    [CustomEditor(typeof(MultiSoundPlayer))]
+    [CustomEditor(typeof(Utils.MultiSoundPlayer.MultiSoundPlayer))]
     public class MultiSoundPlayerEditor : Editor
     {
-        private MultiSoundPlayer _multiSoundPlayer;
+        private Utils.MultiSoundPlayer.MultiSoundPlayer _multiSoundPlayer;
 
         private SerializedProperty _audioSource;
         private SerializedProperty _sounds;
@@ -20,7 +19,7 @@ namespace SkalluUtils.CustomEditors
 
         private void OnEnable()
         {
-            _multiSoundPlayer = (MultiSoundPlayer) target;
+            _multiSoundPlayer = (Utils.MultiSoundPlayer.MultiSoundPlayer) target;
             
             _audioSource = serializedObject.FindProperty("_audioSource");
             _sounds = serializedObject.FindProperty("_sounds");
@@ -60,7 +59,7 @@ namespace SkalluUtils.CustomEditors
 
             if (!Application.isPlaying)
             {
-                EditorGUILayout.HelpBox("Sound can be played only during runtime", MessageType.Warning);
+                EditorGUILayout.HelpBox("Sound can be played only in runtime", MessageType.Warning);
                 GUI.enabled = false;
             }
             else
@@ -86,7 +85,7 @@ namespace SkalluUtils.CustomEditors
             
             if (GUILayout.Button("+", GUILayout.MinWidth(10), GUILayout.MaxWidth(20), GUILayout.ExpandWidth(true)))
             {
-                if (_soundIndexToPlay < _multiSoundPlayer.Sounds.Count - 1)
+                if (_soundIndexToPlay < _multiSoundPlayer.SoundsCount - 1)
                 {
                     _soundIndexToPlay++;
                 }
@@ -96,9 +95,12 @@ namespace SkalluUtils.CustomEditors
             
             EditorGUILayout.EndHorizontal();
             
-            if (_soundIndexToPlay >= _multiSoundPlayer.Sounds.Count)
+            if (Application.isPlaying)
             {
-                EditorGUILayout.HelpBox($"Sound with id {_soundIndexToPlay} does not exist!", MessageType.Error);
+                if (_soundIndexToPlay >= _multiSoundPlayer.SoundsCount)
+                {
+                    EditorGUILayout.HelpBox($"Sound with id {_soundIndexToPlay} does not exist!", MessageType.Error);
+                }
             }
             #endregion
             

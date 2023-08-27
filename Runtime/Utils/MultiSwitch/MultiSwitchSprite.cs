@@ -1,4 +1,5 @@
 ﻿using SkalluUtils.Extensions;
+using SkalluUtils.Extensions.Collections;
 using UnityEngine;
 
 namespace SkalluUtils.Utils.MultiSwitch

@@ -1,5 +1,5 @@
 ﻿using System;
-using SkalluUtils.Utils.EditorGuiUtils;
+using SkalluUtils.Utils;
 using SkalluUtils.Utils.FovSensorTopDown2D;
 using UnityEditor;
 using UnityEngine;
@@ -84,7 +84,7 @@ namespace SkalluUtils.CustomEditors
             EditorGUILayout.PropertyField(TargetObject);
             EditorGUILayout.PropertyField(ScanRate);
 
-            EditorGUILayoutUtils.HorizontalLine(new Vector2(10f, 10f));
+            EditorGUIExtensions.HorizontalLine(new Vector2(10f, 10f));
             
             ToolbarInt = GUILayout.Toolbar(ToolbarInt, ToolbarHeaders);
             switch (ToolbarInt)
@@ -117,7 +117,7 @@ namespace SkalluUtils.CustomEditors
                 }
             }
             
-            EditorGUILayoutUtils.HorizontalLine(new Vector2(10f, 10f));
+            EditorGUIExtensions.HorizontalLine(new Vector2(10f, 10f));
             
             UnwrapDebugParams = EditorGUILayout.BeginFoldoutHeaderGroup(UnwrapDebugParams, "Debug");
             if (UnwrapDebugParams)

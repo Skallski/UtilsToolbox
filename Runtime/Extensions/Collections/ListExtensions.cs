@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace SkalluUtils.Extensions
+namespace SkalluUtils.Extensions.Collections
 {
     public static class ListExtensions
     {
@@ -13,7 +14,9 @@ namespace SkalluUtils.Extensions
         public static T RandomItem<T>(this IList<T> list)
         {
             if (list.Count == 0)
+            {
                 throw new System.IndexOutOfRangeException("Cannot select random item from empty list!");
+            }
 
             return list[UnityEngine.Random.Range(0, list.Count)];
         }
@@ -27,7 +30,9 @@ namespace SkalluUtils.Extensions
         public static int RandomIndex<T>(this IList<T> list)
         {
             if (list.Count == 0)
+            {
                 throw new System.IndexOutOfRangeException("Cannot select random index from empty list!");
+            }
 
             return UnityEngine.Random.Range(0, list.Count);
         }
@@ -43,9 +48,7 @@ namespace SkalluUtils.Extensions
             for (int i = len - 1; i > 1; i--)
             {
                 int j = UnityEngine.Random.Range(0, i + 1);
-                T value = list[j];
-                list[j] = list[i];
-                list[i] = value;
+                (list[j], list[i]) = (list[i], list[j]);
             }
         }
         
@@ -119,26 +122,43 @@ namespace SkalluUtils.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets element
         /// </summary>
         /// <param name="list"></param>
-        /// <param name="valueToCompare"></param>
+        /// <param name="desiredElement"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetEqualElement<T>(this IList<T> list, T valueToCompare)
+        public static T GetElement<[CanBeNull] T>(this IList<T> list, T desiredElement)
         {
             EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
-            for (int i = 0, c = list.Count; i < c; ++i)
+            
+            for (int i = 0, c = list.Count; i < c; i++)
             {
                 T currentElement = list[i];
-                
-                if (equalityComparer.Equals(currentElement, valueToCompare))
+                if (equalityComparer.Equals(currentElement, desiredElement))
                 {
                     return currentElement;
                 }
             }
             
             return default;
+        }
+
+        public static List<T> GetElements<[CanBeNull] T>(this IList<T> list, T desiredElement)
+        {
+            List<T> elements = new List<T>();
+            EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
+            
+            for (int i = 0, c = list.Count; i < c; i++)
+            {
+                T currentElement = list[i];
+                if (equalityComparer.Equals(currentElement, desiredElement))
+                {
+                    elements.Add(currentElement);
+                }
+            }
+            
+            return elements;
         }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace SkalluUtils.Wrappers.UI
+namespace SkalluUtils.Utils.UI
 {
     public class Button :
         MonoBehaviour,
