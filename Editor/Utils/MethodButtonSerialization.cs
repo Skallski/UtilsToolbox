@@ -72,7 +72,7 @@ namespace SkalluUtils.Utils
             {
                 methodsToShow = targetObj.GetType().GetMethods(DEFAULT_BINDING_FLAGS)
                     .Where(m => m.GetParameters().Length == 0 && m.IsAbstract == false && m.IsStatic == false && m.ReturnType == typeof(void))
-                    .Where(m => m.GetCustomAttributes<PropertyAttributes.SerializeMethod>().Any())
+                    .Where(m => m.GetCustomAttributes<PropertyAttributes.SerializeMethodAttribute>().Any())
                     .Select(m =>
                         new CustomMethodInfo
                         {
@@ -87,7 +87,7 @@ namespace SkalluUtils.Utils
         
         private static string GetMethodSignature(MethodBase method)
         {
-            var buttonName = method.GetCustomAttribute<PropertyAttributes.SerializeMethod>().ButtonName;
+            var buttonName = method.GetCustomAttribute<PropertyAttributes.SerializeMethodAttribute>().ButtonName;
 
             if (buttonName == string.Empty)
             {

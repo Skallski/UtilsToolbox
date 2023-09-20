@@ -8,7 +8,7 @@ namespace SkalluUtils.Utils.MultiSwitch
         [SerializeField] private Image _image;
         [SerializeField] private Sprite[] _sprites;
 
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _image == null)
             {

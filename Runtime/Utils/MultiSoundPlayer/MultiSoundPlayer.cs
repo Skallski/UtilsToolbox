@@ -223,6 +223,10 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             }
         }
         
+        /// <summary>
+        /// Plays sound at index
+        /// </summary>
+        /// <param name="soundIndex"> sound index to play </param>
         public void PlaySingleSound(int soundIndex)
         {
             if (soundIndex >= _sounds.Count)
@@ -234,8 +238,31 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
             PlaySingleSoundInternal(soundIndex);
         }
         
+        /// <summary>
+        /// Plays sound by finding it's index
+        /// </summary>
+        /// <param name="soundClip"> sound clip to play </param>
         public void PlaySingleSound([NotNull] SoundClip soundClip)
         {
+            // Tries to get index from SoundClip
+            bool TryGetSoundClipIndex(SoundClip clip, out int clipIndex)
+            {
+                if (_sounds.Contains(clip))
+                {
+                    for (int i = 0, c = _sounds.Count; i < c; i++)
+                    {
+                        if (_sounds[i] == clip)
+                        {
+                            clipIndex = i;
+                            return true;
+                        }
+                    }
+                }
+
+                clipIndex = -1;
+                return false;
+            } 
+            
             if (TryGetSoundClipIndex(soundClip, out int soundIndex))
             {
                 PlaySingleSoundInternal(soundIndex);
@@ -247,34 +274,17 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         }
 
         /// <summary>
-        /// Tries to get index from sound clip
+        /// Pauses/Unpauses
         /// </summary>
-        /// <param name="clip"> sound clip, whom index is to be found </param>
-        /// <param name="clipIndex"> expected index of sound clip </param>
-        /// <returns> true or false, depending on whether index has been found or not </returns>
-        private bool TryGetSoundClipIndex([NotNull] SoundClip clip, out int clipIndex)
-        {
-            if (_sounds.Contains(clip))
-            {
-                for (int i = 0, c = _sounds.Count; i < c; i++)
-                {
-                    if (_sounds[i] == clip)
-                    {
-                        clipIndex = i;
-                        return true;
-                    }
-                }
-            }
-
-            clipIndex = -1; // 
-            return false;
-        }
-
+        /// <param name="value"> true - pause, false - unpause </param>
         public void Pause(bool value)
         {
             _paused = value;
         }
 
+        /// <summary>
+        /// Stops every sound playing
+        /// </summary>
         public void Stop()
         {
             if (_audioSource.isPlaying && _playingAnything)

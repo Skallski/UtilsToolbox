@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 namespace SkalluUtils.Utils.MultiSwitch
 {
     public class MultiSwitchColor : BasicMultiSwitch
     {
-        [SerializeField] private Graphic _graphic;
+        [SerializeField] private UnityEngine.UI.Graphic _graphic;
         [SerializeField] private Color[] _colors;
 
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _graphic == null)
             {

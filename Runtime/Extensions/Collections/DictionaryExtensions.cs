@@ -12,7 +12,7 @@ namespace SkalluUtils.Extensions.Collections
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
-        public static List<T> GetKeysByValue<T, TValue>(this IDictionary<T, TValue> dict, TValue value)
+        public static List<T> GetAllKeysByValue<T, TValue>(this IDictionary<T, TValue> dict, TValue value)
         {
             List<T> keys = new List<T>();
             

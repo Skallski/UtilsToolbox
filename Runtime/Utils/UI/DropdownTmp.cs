@@ -9,11 +9,11 @@ namespace SkalluUtils.Utils.UI
         [SerializeField] private UnityEvent _onDropdownListCreated;
         [SerializeField] private UnityEvent _onDropdownListDestroyed;
 
-        protected override GameObject CreateDropdownList(GameObject temp)
+        protected override GameObject CreateDropdownList(GameObject dropdownList)
         {
             _onDropdownListCreated?.Invoke();
             
-            return base.CreateDropdownList(temp);
+            return base.CreateDropdownList(dropdownList);
         }
 
         protected override void DestroyDropdownList(GameObject dropdownList)

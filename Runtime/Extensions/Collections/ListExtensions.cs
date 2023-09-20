@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace SkalluUtils.Extensions.Collections
 {
@@ -22,22 +21,6 @@ namespace SkalluUtils.Extensions.Collections
         }
 
         /// <summary>
-        /// Gets random index from list
-        /// </summary>
-        /// <param name="list"> list on which the method will be called </param>
-        /// <typeparam name="T"> type of list </typeparam>
-        /// <returns> random index from list </returns>
-        public static int RandomIndex<T>(this IList<T> list)
-        {
-            if (list.Count == 0)
-            {
-                throw new System.IndexOutOfRangeException("Cannot select random index from empty list!");
-            }
-
-            return UnityEngine.Random.Range(0, list.Count);
-        }
-
-        /// <summary>
         /// Shuffles list
         /// </summary>
         /// <param name="list"> list on which the method will be called </param>
@@ -51,21 +34,21 @@ namespace SkalluUtils.Extensions.Collections
                 (list[j], list[i]) = (list[i], list[j]);
             }
         }
-        
+
         /// <summary>
-        /// Check if the list contains all elements of second list
+        /// Check if list is a subset of other list
         /// </summary>
-        /// <param name="a"> list on which the method will be called </param>
-        /// <param name="b"> list to check if "A" contains all of its elements </param>
-        /// <typeparam name="T"> type of list </typeparam>
-        /// <returns> true or false, depending on whether the list contains all elements of the second list </returns>
-        public static bool ContainsAll<T>(this IList<T> a, IEnumerable<T> b)
+        /// <param name="subset"> list on which the method will be called </param>
+        /// <param name="set"> list to check if it contains whole subset </param>
+        /// <typeparam name="T"> type of both lists </typeparam>
+        /// <returns> true or false, depending on whether the list is a subset of second list </returns>
+        public static bool IsSubsetOf<T>(this IList<T> subset, IList<T> set)
         {
             bool contains = false;
-
-            foreach (T element in b)
+            
+            foreach (T element in subset)
             {
-                if (a.Contains(element))
+                if (set.Contains(element))
                 {
                     contains = true;
                 }
@@ -121,44 +104,5 @@ namespace SkalluUtils.Extensions.Collections
             return false;
         }
 
-        /// <summary>
-        /// Gets element
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="desiredElement"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T GetElement<[CanBeNull] T>(this IList<T> list, T desiredElement)
-        {
-            EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
-            
-            for (int i = 0, c = list.Count; i < c; i++)
-            {
-                T currentElement = list[i];
-                if (equalityComparer.Equals(currentElement, desiredElement))
-                {
-                    return currentElement;
-                }
-            }
-            
-            return default;
-        }
-
-        public static List<T> GetElements<[CanBeNull] T>(this IList<T> list, T desiredElement)
-        {
-            List<T> elements = new List<T>();
-            EqualityComparer<T> equalityComparer = EqualityComparer<T>.Default;
-            
-            for (int i = 0, c = list.Count; i < c; i++)
-            {
-                T currentElement = list[i];
-                if (equalityComparer.Equals(currentElement, desiredElement))
-                {
-                    elements.Add(currentElement);
-                }
-            }
-            
-            return elements;
-        }
     }
 }

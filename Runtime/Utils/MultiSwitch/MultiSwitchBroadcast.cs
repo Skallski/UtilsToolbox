@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.MultiSwitch
 {
+    /// <summary>
+    /// Allows to set state of multiple multi switches
+    /// </summary>
     public class MultiSwitchBroadcast : MultiSwitch
     {
         [SerializeField] private int _defaultValueOnAwake = -1;

@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using SkalluUtils.PropertyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,28 +10,30 @@ namespace SkalluUtils.Utils.UI
         [SerializeField] private GameObject _content;
         [CanBeNull, SerializeField] private GameObject _background;
 
-        [Space]
+        [Header("Events")]
         [SerializeField] private UnityEvent _opened;
         [SerializeField] private UnityEvent _closed;
+        
+        private bool IsOpened => _content.activeSelf;
 
+        [SerializeMethod]
         public void Open()
         {
-            if (!IsOpened())
+            if (!IsOpened)
             {
                 OpenSelf();
             }
         }
 
+        [SerializeMethod]
         public void Close()
         {
-            if (IsOpened())
+            if (IsOpened)
             {
                 CloseSelf();
             }
         }
-
-        private bool IsOpened() => _content.activeSelf;
-
+        
         /// <summary>
         /// Opens panel
         /// </summary>

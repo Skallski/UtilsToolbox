@@ -7,7 +7,7 @@ namespace SkalluUtils.Utils.MultiSwitch
         [SerializeField] private Transform _transform;
         [SerializeField] private Vector3[] _scales;
         
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _transform == null)
             {

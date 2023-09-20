@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.MultiSwitch
 {
+    /// <summary>
+    /// Generic multi switch. A base for all multi switches
+    /// </summary>
     public abstract class MultiSwitch : MonoBehaviour
     {
         private int _lastUpdatedFrame;

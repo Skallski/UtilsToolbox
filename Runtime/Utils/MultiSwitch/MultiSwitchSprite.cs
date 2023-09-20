@@ -15,7 +15,7 @@ namespace SkalluUtils.Utils.MultiSwitch
             set => _spriteRenderer = value;
         }
 
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _spriteRenderer == null)
             {
@@ -29,7 +29,7 @@ namespace SkalluUtils.Utils.MultiSwitch
 
             _spriteRenderer.sprite = _sprites[newValue];
         }
-        
-        public int GetRandomState() => _sprites.RandomIndex();
+
+        public int GetRandomState() => _sprites.IndexOf(_sprites.RandomItem());
     }
 }

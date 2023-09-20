@@ -1,54 +1,10 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace SkalluUtils.Extensions
 {
     public static class GameObjectExtensions
     {
-        /// <summary>
-        /// Destroys all components of gameObject except the one provided as method parameter
-        /// </summary>
-        /// <param name="gameObject"> gameObject on which the method will be called </param>
-        /// <param name="componentToKeep"> component to not destroy </param>
-        public static void DestroyComponentsExceptProvided(this GameObject gameObject, Component componentToKeep)
-        {
-            Component[] allComponents = gameObject.GetComponents(typeof(Component));
-
-            foreach (Component component in allComponents)
-            {
-                if (component != null)
-                {
-                    // Transform component cannot be destroyed
-                    if (component.GetType() != componentToKeep.GetType() && component.GetType() != typeof(Transform)) 
-                    {
-                        Object.Destroy(component);
-                    }
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Destroys all components of gameObject except the list of those provided as method parameter
-        /// </summary>
-        /// <param name="gameObject"> gameObject on which the method will be called </param>
-        /// <param name="componentsToKeep"> list of components to not destroy </param>
-        public static void DestroyComponentsExceptProvided(this GameObject gameObject, IList<Component> componentsToKeep)
-        {
-            Component[] allComponents = gameObject.GetComponents(typeof(Component));
-
-            foreach (Component component in allComponents)
-            {
-                if (component != null && !componentsToKeep.Contains(component))
-                {
-                    // Transform component cannot be destroyed
-                    if (component.GetType() != typeof(Transform)) 
-                    {
-                        Object.Destroy(component);
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Destroys provided components of gameObject
         /// </summary>
@@ -61,27 +17,6 @@ namespace SkalluUtils.Extensions
                 if (component != null && component.GetType() != typeof(Transform))
                 {
                     Object.Destroy(component);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Destroys all components of gameObject
-        /// </summary>
-        /// <param name="gameObject"> gameObject on which the method will be called </param>
-        public static void DestroyAllComponents(this GameObject gameObject)
-        {
-            Component[] allComponents = gameObject.GetComponents(typeof(Component));
-
-            foreach (Component component in allComponents)
-            {
-                if (component != null)
-                {
-                    // Transform component cannot be destroyed
-                    if (component.GetType() != typeof(Transform)) 
-                    {
-                        Object.Destroy(component);
-                    }
                 }
             }
         }
@@ -119,6 +54,71 @@ namespace SkalluUtils.Extensions
             }
 
             return children;
+        }
+
+        /// <summary>
+        /// Tries to find component of provided type inside gameObject's children
+        /// </summary>
+        /// <param name="gameObject"> gameObject on which the method will be called </param>
+        /// <param name="component"> desired component to find </param>
+        /// <typeparam name="T"> generic component type </typeparam>
+        /// <returns> true or false, depending on whether component is found or not </returns>
+        public static bool TryGetComponentInChildren<T>(this GameObject gameObject, out T component) where T : Component
+        {
+            component = gameObject.GetComponentInChildren<T>();
+            return component != null;
+        }
+
+        /// <summary>
+        /// Tries to find component of provided type inside gameObject's parent
+        /// </summary>
+        /// <param name="gameObject"> gameObject on which the method will be called </param>
+        /// <param name="component"> desired component to find </param>
+        /// <typeparam name="T"> generic component type </typeparam>
+        /// <returns> true or false, depending on whether component is found or not </returns>
+        public static bool TryGetComponentInParent<T>(this GameObject gameObject, out T component) where T : Component
+        {
+            component = gameObject.GetComponentInParent<T>();
+            return component != null;
+        }
+        
+        /// <summary>
+        /// Tries to find component of provided type inside gameObject and it's children
+        /// </summary>
+        /// <param name="gameObject"> gameObject on which the method will be called </param>
+        /// <param name="component"> desired component to find </param>
+        /// <typeparam name="T"> generic component type </typeparam>
+        /// <returns> true or false, depending on whether component is found or not </returns>
+        public static bool TryGetComponentInLocalHierarchy<T>(this GameObject gameObject, out T component) where T : Component
+        {
+            component = gameObject.GetComponentInLocalHierarchy<T>();
+            return component != null;
+        }
+        
+        /// <summary>
+        /// Finds component of provided type inside gameObject and it's children
+        /// </summary>
+        /// <param name="gameObject"> gameObject on which the method will be called </param>
+        /// <typeparam name="T"> generic component type </typeparam>
+        /// <returns> found component </returns>
+        public static T GetComponentInLocalHierarchy<T>(this GameObject gameObject) where T : Component
+        {
+            T component = gameObject.GetComponent<T>();
+            if (component != null)
+            {
+                return component;
+            }
+
+            foreach (Transform child in gameObject.transform)
+            {
+                component = child.gameObject.GetComponentInLocalHierarchy<T>();
+                if (component != null)
+                {
+                    return component;
+                }
+            }
+
+            return null;
         }
     }
 }

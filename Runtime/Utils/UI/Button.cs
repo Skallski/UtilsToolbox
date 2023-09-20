@@ -21,8 +21,6 @@ namespace SkalluUtils.Utils.UI
         }
 
         [SerializeField, ReadOnly] private ButtonState _state = ButtonState.PointerEnter;
-
-        [Space]
         [SerializeField] private UnityEvent _onPointerEnter;
         [SerializeField] private UnityEvent _onPointerDown;
         [SerializeField] private UnityEvent _onPointerUp;
@@ -62,4 +60,4 @@ namespace SkalluUtils.Utils.UI
             _state = ButtonState.PointerExit;
         }
     }
-} 
+}

@@ -5,7 +5,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
     public static class SoundLoader
     {
         /// <summary>
-        /// 
+        /// Clears list of MultiSoundPlayer's sound clips
         /// </summary>
         /// <param name="multiSoundPlayer"></param>
         public static void ClearSounds(this MultiSoundPlayer multiSoundPlayer)
@@ -36,7 +36,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         }
 
         /// <summary>
-        /// 
+        /// Adds list of sounds clips into the MultiSoundPlayer
         /// </summary>
         /// <param name="multiSoundPlayer"></param>
         /// <param name="soundsClips"></param>
@@ -58,7 +58,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         }
 
         /// <summary>
-        /// 
+        /// Adds sound clipt into the MultiSoundPlayer
         /// </summary>
         /// <param name="multiSoundPlayer"></param>
         /// <param name="soundsClips"></param>

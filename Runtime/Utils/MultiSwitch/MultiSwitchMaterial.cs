@@ -7,7 +7,7 @@ namespace SkalluUtils.Utils.MultiSwitch
         [SerializeField] private Renderer _renderer;
         [SerializeField] private Material[] _materials;
 
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _renderer == null)
             {

@@ -3,16 +3,16 @@ using System;
 namespace SkalluUtils.PropertyAttributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class SerializeMethod : Attribute
+    public class SerializeMethodAttribute : Attribute
     {
         public readonly string ButtonName;
 
-        public SerializeMethod()
+        public SerializeMethodAttribute()
         {
             ButtonName = string.Empty;
         }
         
-        public SerializeMethod(string buttonName)
+        public SerializeMethodAttribute(string buttonName)
         {
             ButtonName = buttonName;
         }

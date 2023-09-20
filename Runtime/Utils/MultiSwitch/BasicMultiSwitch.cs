@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.MultiSwitch
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class BasicMultiSwitch : MultiSwitch
     {
         [SerializeField] private int _defaultValueOnAwake = -1;
@@ -22,9 +25,9 @@ namespace SkalluUtils.Utils.MultiSwitch
         {
             var oldValue = _state;
             _state = value;
-            SetstateInternal(oldValue, value);
+            SetStateInternal(oldValue, value);
         }
 
-        protected abstract void SetstateInternal(int oldValue, int newValue);
+        protected abstract void SetStateInternal(int oldValue, int newValue);
     }
 } 

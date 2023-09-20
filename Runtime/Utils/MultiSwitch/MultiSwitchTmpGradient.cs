@@ -8,7 +8,7 @@ namespace SkalluUtils.Utils.MultiSwitch
         [SerializeField] private TextMeshProUGUI _tmp;
         [SerializeField] private VertexGradient[] _gradients;
 
-        protected override void SetstateInternal(int oldValue, int newValue)
+        protected override void SetStateInternal(int oldValue, int newValue)
         {
             if (oldValue == newValue || _tmp == null)
             {
