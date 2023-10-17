@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using SkalluUtils.PropertyAttributes;
+﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,6 +7,9 @@ namespace SkalluUtils.Utils.UI
 {
     public abstract class Panel : MonoBehaviour
     {
+        internal static event Action<Panel> OnPanelOpened;
+        internal static event Action<Panel> OnPanelClosed;
+        
         [SerializeField] private GameObject _content;
         [CanBeNull, SerializeField] private GameObject _background;
 
@@ -15,8 +18,7 @@ namespace SkalluUtils.Utils.UI
         [SerializeField] private UnityEvent _closed;
         
         private bool IsOpened => _content.activeSelf;
-
-        [SerializeMethod]
+        
         public void Open()
         {
             if (!IsOpened)
@@ -24,8 +26,7 @@ namespace SkalluUtils.Utils.UI
                 OpenSelf();
             }
         }
-
-        [SerializeMethod]
+        
         public void Close()
         {
             if (IsOpened)
@@ -42,6 +43,7 @@ namespace SkalluUtils.Utils.UI
             ForceOpen();
             
             _opened?.Invoke();
+            OnPanelOpened?.Invoke(this);
         }
 
         /// <summary>
@@ -52,12 +54,13 @@ namespace SkalluUtils.Utils.UI
             ForceClose();
             
             _closed?.Invoke();
+            OnPanelClosed?.Invoke(this);
         }
 
         /// <summary>
-        /// Opens panel without invoking event
+        /// Opens panel without invoking an event
         /// </summary>
-        public void ForceOpen()
+        protected void ForceOpen()
         {
             if (_background != null)
             {
@@ -68,9 +71,9 @@ namespace SkalluUtils.Utils.UI
         }
 
         /// <summary>
-        /// Closes panel without invoking event
+        /// Closes panel without invoking an event
         /// </summary>
-        public void ForceClose()
+        protected void ForceClose()
         {
             if (_background != null)
             {

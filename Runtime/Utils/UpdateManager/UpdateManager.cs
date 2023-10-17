@@ -4,16 +4,6 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.UpdateManager
 {
-    public enum UpdateType
-    {
-        FixedUpdate,
-        Update,
-        LateUpdate,
-        FixedUpdateUnscaled,
-        UpdateUnscaled,
-        LateUpdateUnscaled,
-    }
-
     public class UpdateManager : MonoBehaviour
     {
         private static readonly Dictionary<UpdateType, List<Action>> UpdateLists = new Dictionary<UpdateType, List<Action>>();
@@ -65,7 +55,9 @@ namespace SkalluUtils.Utils.UpdateManager
         public static void AddListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
+            {
                 return;
+            }
 
             if (!UpdateLists.ContainsKey(updateType))
             {
@@ -82,7 +74,9 @@ namespace SkalluUtils.Utils.UpdateManager
         public static void RemoveListener(UpdateType updateType, Action updateAction)
         {
             if (updateAction == null)
+            {
                 return;
+            }
 
             if (UpdateLists.TryGetValue(updateType, out List<Action> actions))
             {

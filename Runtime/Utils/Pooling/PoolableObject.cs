@@ -6,7 +6,7 @@ namespace SkalluUtils.Utils.Pooling
     /// <summary>
     /// Class to inherit from if you wish to use simple pooling on the object.
     /// </summary>
-    public class PoolableObject : MonoBehaviour, IPoolable<PoolableObject>
+    public abstract class PoolableObject : MonoBehaviour, IPoolable<PoolableObject>
     {
         private Action<PoolableObject> _onPushInternal;
 

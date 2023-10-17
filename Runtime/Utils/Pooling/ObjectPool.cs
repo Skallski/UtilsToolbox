@@ -11,7 +11,7 @@ namespace SkalluUtils.Utils.Pooling
     /// <typeparam name="T"> Generic type of poolable object </typeparam>
     public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
     {
-        private readonly GameObject _prefab;
+        private readonly T _prefab;
         private readonly Stack<T> _pooledObjects = new Stack<T>();
 
         /// <summary>
@@ -20,24 +20,12 @@ namespace SkalluUtils.Utils.Pooling
         /// <param name="pooledObject"> object on which the pool will be created</param>
         /// <param name="quantityToSpawn"> pool size </param>
         /// <param name="parent"></param>
-        public ObjectPool(GameObject pooledObject, int quantityToSpawn = 0, Transform parent = null)
+        public ObjectPool(T pooledObject, int quantityToSpawn = 0, Transform parent = null)
         {
             _prefab = pooledObject;
             SpawnObjects(quantityToSpawn, parent);
         }
 
-        /// <summary>
-        /// Creates object pool of selected poolable object
-        /// </summary>
-        /// <param name="pooledComponent"> object on which the pool will be created</param>
-        /// <param name="quantityToSpawn"> pool size </param>
-        /// <param name="parent"></param>
-        public ObjectPool(Component pooledComponent, int quantityToSpawn = 0, Transform parent = null)
-        {
-            _prefab = pooledComponent.gameObject;
-            SpawnObjects(quantityToSpawn, parent);
-        }
-        
         /// <summary>
         /// Creates object pool from list of existing poolable objects
         /// </summary>
@@ -45,17 +33,17 @@ namespace SkalluUtils.Utils.Pooling
         /// <exception cref="Exception"></exception>
         public ObjectPool(IReadOnlyList<T> objects)
         {
-            var len = objects.Count;
+            int len = objects.Count;
             if (len < 1)
             {
                 throw new Exception("Object pool list is empty!");
             }
             
-            _prefab = objects[0].gameObject;
+            _prefab = objects[0]; // get first object in pool as prefab
                 
             for (int i = 0; i < len; i++)
             {
-                var obj = objects[i];
+                T obj = objects[i];
                 _pooledObjects.Push(obj);
                 obj.gameObject.SetActive(false);
             }
@@ -88,7 +76,7 @@ namespace SkalluUtils.Utils.Pooling
                 throw new Exception("Prefab inside object pool is null!");
             }
             
-            return Object.Instantiate(_prefab, parent).GetComponent<T>();
+            return Object.Instantiate(_prefab, parent);
         }
 
         /// <summary>
@@ -100,13 +88,16 @@ namespace SkalluUtils.Utils.Pooling
         /// <returns></returns>
         public T Pull(Vector3 position = default, Quaternion rotation = default, Transform parent = null)
         {
-            T tComponent = _pooledObjects.Count > 0 ? _pooledObjects.Pop() : SpawnSingleObject(parent);
+            T tComponent = _pooledObjects.Count > 0 
+                ? _pooledObjects.Pop() 
+                : SpawnSingleObject(parent);
             
-            var obj = tComponent.gameObject;
-            obj.SetActive(true);
-            obj.transform.SetParent(parent);
-            obj.transform.position = position;
-            obj.transform.rotation = rotation;
+            // set transform and set active
+            Transform objTransform = tComponent.transform;
+            objTransform.SetParent(parent);
+            objTransform.position = position;
+            objTransform.rotation = rotation;
+            tComponent.gameObject.SetActive(true);
             
             tComponent.Pull(Push);
 
@@ -116,11 +107,11 @@ namespace SkalluUtils.Utils.Pooling
         /// <summary>
         /// Pushes object back to pool
         /// </summary>
-        /// <param name="t"> poolable object to push </param>
-        private void Push(T t)
+        /// <param name="poolableObject"> poolable object to push </param>
+        public void Push(T poolableObject)
         {
-            _pooledObjects.Push(t);
-            t.gameObject.SetActive(false);
+            poolableObject.gameObject.SetActive(false);
+            _pooledObjects.Push(poolableObject);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace SkalluUtils.Utils.MultiSoundPlayer
 {
@@ -44,13 +45,13 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         {
             if (soundsClips == null || soundsClips.Count == 0)
             {
-                UnityEngine.Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
+                Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
                 return;
             }
 
             if (multiSoundPlayer == null)
             {
-                UnityEngine.Debug.LogError($"Cannot load sounds, because MultiSoundPlayer is null!");
+                Debug.LogError($"Cannot load sounds, because MultiSoundPlayer is null!");
                 return;
             }
             
@@ -66,13 +67,13 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         {
             if (soundsClips == null || soundsClips.Length == 0)
             {
-                UnityEngine.Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
+                Debug.LogError($"Cannot load sounds, because sound list is null or empty!");
                 return;
             }
 
             if (multiSoundPlayer == null)
             {
-                UnityEngine.Debug.LogError($"Cannot load sounds, because MultiSoundPlayer is null!");
+                Debug.LogError($"Cannot load sounds, because MultiSoundPlayer is null!");
                 return;
             }
             

@@ -44,37 +44,27 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
 
             for (int i = 0; i < _playbackVoices; i++)
             {
-                _voiceClipIndex[i] = -1;
-                _voiceTimer[i] = 0;
-                _voiceVolume[i] = 0;
-                _voicePitch[i] = 0;
-                _voicePlaying[i] = false;
-                _voiceStarted[i] = false;
+                ResetVoice(i);
             }
 
             _sampleRate = AudioSettings.outputSampleRate;
 
             foreach (var soundClip in _sounds)
             {
-                soundClip.Samples = new float[soundClip.AudioClip.samples*soundClip.AudioClip.channels];
-                soundClip.AudioClip.GetData(soundClip.Samples, 0);
-                soundClip.Channels = soundClip.AudioClip.channels;
-                soundClip.ChannelSamples = new float[soundClip.Channels, (soundClip.Samples.Length / soundClip.Channels)];
-                
-                for (var c = 0; c < soundClip.Channels; c++)
-                {
-                    for (var s = 0; s < soundClip.Samples.Length / soundClip.Channels; s++)
-                    {
-                        soundClip.ChannelSamples[c, s] = soundClip.Samples[s * soundClip.Channels + c];
-                    }
-                }
-
-                soundClip.SampleRate = soundClip.AudioClip.frequency;
-                soundClip.Length = soundClip.AudioClip.length;
-                soundClip.PlayBackRate = soundClip.SampleRate / (float) _sampleRate;
+                soundClip.LoadData(_sampleRate);
             }
 
             _loaded = true;
+        }
+
+        private void ResetVoice(int index)
+        {
+            _voiceClipIndex[index] = -1;
+            _voiceTimer[index] = 0;
+            _voiceVolume[index] = 0;
+            _voicePitch[index] = 0;
+            _voicePlaying[index] = false;
+            _voiceStarted[index] = false;
         }
 
         private void Update()
@@ -209,18 +199,19 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                 _currentVoice = 0;
             }
 
-            if (_voicePlaying[_currentVoice] == false)
+            if (_voicePlaying[_currentVoice])
             {
-                var sound = _sounds[soundIndex];
-                
-                _voiceClipIndex[_currentVoice] = soundIndex;
-                _voicePitch[_currentVoice] = sound.Pitch + Random.Range(-sound.PitchRandomRange, sound.PitchRandomRange);
-                _voiceVolume[_currentVoice] = sound.Volume + Random.Range(-sound.VolumeRandomRange, sound.VolumeRandomRange);
-                _voiceTimer[_currentVoice] = 0;
-                _voicePlaying[_currentVoice] = true;
-
-                _currentVoice += 1;
+                return;
             }
+
+            var sound = _sounds[soundIndex];
+            _voiceClipIndex[_currentVoice] = soundIndex;
+            _voicePitch[_currentVoice] = sound.Pitch + Random.Range(-sound.PitchRandomRange, sound.PitchRandomRange);
+            _voiceVolume[_currentVoice] = sound.Volume + Random.Range(-sound.VolumeRandomRange, sound.VolumeRandomRange);
+            _voiceTimer[_currentVoice] = 0;
+            _voicePlaying[_currentVoice] = true;
+
+            _currentVoice += 1;
         }
         
         /// <summary>
@@ -244,28 +235,9 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         /// <param name="soundClip"> sound clip to play </param>
         public void PlaySingleSound([NotNull] SoundClip soundClip)
         {
-            // Tries to get index from SoundClip
-            bool TryGetSoundClipIndex(SoundClip clip, out int clipIndex)
+            if (_sounds.Contains(soundClip))
             {
-                if (_sounds.Contains(clip))
-                {
-                    for (int i = 0, c = _sounds.Count; i < c; i++)
-                    {
-                        if (_sounds[i] == clip)
-                        {
-                            clipIndex = i;
-                            return true;
-                        }
-                    }
-                }
-
-                clipIndex = -1;
-                return false;
-            } 
-            
-            if (TryGetSoundClipIndex(soundClip, out int soundIndex))
-            {
-                PlaySingleSoundInternal(soundIndex);
+                PlaySingleSoundInternal(_sounds.IndexOf(soundClip));
             }
             else
             {

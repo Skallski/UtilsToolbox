@@ -6,6 +6,7 @@ using UnityEngine.Events;
 namespace SkalluUtils.CustomEditors
 {
     [CustomEditor(typeof(Utils.UI.Button))]
+    [CanEditMultipleObjects]
     public class ButtonEditor : Editor
     {
         private Utils.UI.Button _button;

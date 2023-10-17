@@ -26,12 +26,12 @@ namespace SkalluUtils.Utils.EventSystem
         }
         
         /// <summary>
-        /// Invokes event
+        /// Invokes an event
         /// </summary>
         /// <param name="myEvent"> event to invoke </param>
-        public static void InvokeEvent(Event myEvent)
+        public static void Invoke(Event myEvent)
         {
-            myEvent?.Invoke();
+            myEvent.Invoke();
         }
         #endregion
         
@@ -39,33 +39,33 @@ namespace SkalluUtils.Utils.EventSystem
         /// <summary>
         /// Adds listener to event by adding callback
         /// </summary>
-        /// <param name="myEvent"> event to add listener to </param>
+        /// <param name="myEvent"> event to add the listener to </param>
         /// <param name="callback"> callback that will be added to the event </param>
-        /// <typeparam name="T"> generic parameter type </typeparam>
+        /// <typeparam name="T"> parameter type </typeparam>
         public static void AddListener<T>(Event<T> myEvent, Action<T> callback)
         {
             myEvent.AddListener(callback);
         }
-        
+
         /// <summary>
         /// Removes listener from the event by removing callback
         /// </summary>
         /// <param name="myEvent"> event to remove listener from </param>
         /// <param name="callback"> callback that will be removed from event  </param>
-        /// <typeparam name="T"> generic parameter type </typeparam>
+        /// <typeparam name="T"> parameter type </typeparam>
         public static void RemoveListener<T>(Event<T> myEvent, Action<T> callback)
         {
             myEvent.RemoveListener(callback);
         }
 
         /// <summary>
-        /// Invokes event with parameter
+        /// Invokes an event with a parameter
         /// </summary>
         /// <param name="myEvent"> event to invoke </param>
         /// <param name="param"> parameter with which the event will be invoked </param>
-        public static void InvokeEvent<T>(Event<T> myEvent, T param)
+        public static void Invoke<T>(Event<T> myEvent, T param)
         {
-            myEvent?.Invoke(param);
+            myEvent.Invoke(param);
         }
         #endregion
 
@@ -75,34 +75,34 @@ namespace SkalluUtils.Utils.EventSystem
         /// </summary>
         /// <param name="myEvent"> event to add listener to </param>
         /// <param name="callback"> callback that will be added to the event </param>
-        /// <typeparam name="T1"> first generic parameter type </typeparam>
-        /// <typeparam name="T2"> second generic parameter type </typeparam>
+        /// <typeparam name="T1"> first parameter type </typeparam>
+        /// <typeparam name="T2"> second parameter type </typeparam>
         public static void AddListener<T1, T2>(Event<T1, T2> myEvent, Action<T1, T2> callback)
         {
             myEvent.AddListener(callback);
         }
-        
+
         /// <summary>
         /// Removes listener from the event by removing callback
         /// </summary>
         /// <param name="myEvent"> event to remove listener from </param>
         /// <param name="callback"> callback that will be removed from event </param>
-        /// <typeparam name="T1"> first generic parameter type </typeparam>
-        /// <typeparam name="T2"> second generic parameter type </typeparam>
+        /// <typeparam name="T1"> first parameter type </typeparam>
+        /// <typeparam name="T2"> second parameter type </typeparam>
         public static void RemoveListener<T1, T2>(Event<T1, T2> myEvent, Action<T1, T2> callback)
         {
             myEvent.RemoveListener(callback);
         }
 
         /// <summary>
-        /// Invokes event with two parameters
+        /// Invokes an event with two parameters
         /// </summary>
         /// <param name="myEvent"> event to invoke </param>
-        /// <param name="paramOne"> first parameter with which the event will be invoked </param>
-        /// <param name="paramTwo"> second parameter with which the event will be invoked </param>
-        public static void InvokeEvent<T1, T2>(Event<T1, T2> myEvent, T1 paramOne, T2 paramTwo)
+        /// <param name="paramOne"> first parameter, with which the event will be invoked </param>
+        /// <param name="paramTwo"> second parameter, with which the event will be invoked </param>
+        public static void Invoke<T1, T2>(Event<T1, T2> myEvent, T1 paramOne, T2 paramTwo)
         {
-            myEvent?.Invoke(paramOne, paramTwo);
+            myEvent.Invoke(paramOne, paramTwo);
         }
         #endregion
     }

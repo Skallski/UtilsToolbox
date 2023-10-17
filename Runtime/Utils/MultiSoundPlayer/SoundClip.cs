@@ -17,11 +17,36 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         public float Pitch => _pitch;
         public float PitchRandomRange => _pitchRandomRange;
 
-        public float[] Samples { get; set; }
-        public float[,] ChannelSamples { get; set; }
-        public int Channels { get; set; }
-        public float Length { get; set; }
-        public int SampleRate { get; set; }
-        public float PlayBackRate { get; set; }
+        internal float[] Samples { get; private set; }
+        internal float[,] ChannelSamples { get; private set; }
+        internal int Channels { get; private set; }
+        internal float Length { get; private set; }
+        internal int SampleRate { get; private set; }
+        internal float PlayBackRate { get; private set; }
+
+        internal void LoadData(int sampleRate)
+        {
+            if (AudioClip == null)
+            {
+                return;
+            }
+
+            Samples = new float[AudioClip.samples * AudioClip.channels];
+            AudioClip.GetData(Samples, 0);
+            Channels = AudioClip.channels;
+            ChannelSamples = new float[Channels, (Samples.Length / Channels)];
+
+            for (var c = 0; c < Channels; c++)
+            {
+                for (var s = 0; s < Samples.Length / Channels; s++)
+                {
+                    ChannelSamples[c, s] = Samples[s * Channels + c];
+                }
+            }
+
+            SampleRate = AudioClip.frequency;
+            Length = AudioClip.length;
+            PlayBackRate = SampleRate / (float) sampleRate;
+        }
     }
 }
