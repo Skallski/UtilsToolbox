@@ -14,32 +14,7 @@
 	<img alt="GitHub last commit" src ="https://img.shields.io/github/last-commit/Skallu0711/Skallu-Utils" />
 </p>
 
-My package of Unity [extensions](http://en.wikipedia.org/wiki/Extension_method) and stuff, which I find useful.
+### Description
+Custom Unity package full of [extension methods](http://en.wikipedia.org/wiki/Extension_method), editor and runtime tools, which I find useful.
 
-Keep in mind that everything here is under development, so things may change in the future :)
-
-### Extensions
-Bunch of very useful extension methods
-```csharp
-using SkalluUtils.Extensions;
-```
-* [GameObject Extensions](Runtime/Extensions/GameObjectExtensions.cs) 
-* [String Extensions](Runtime/Extensions/StringExtensions.cs)
-* [Vector2 & Vector3 Extensions](Runtime/Extensions/VectorExtensions.cs)
-* [Collider & Collider2D Extensions](Runtime/Extensions/ColliderExtensions.cs)
-* [List Extensions](Runtime/Extensions/ListExtensions.cs)
-
-### Property Attributes
-Bunch of custom property attributes
-```csharp
-using SkalluUtils.PropertyAttributes;
-```
-* [PropertyAttributes](Runtime/PropertyAttributes)
-
-### Utils
-Some utils that i often implement
-```csharp
-using SkalluUtils.Utils;
-```
-* [Utils](Runtime/Utils)
-* [Editor GUI Utils](Editor/Utils/EditorGUIUtils.cs)
+Whole package is under continuous development, so some things here may change in the future :)
