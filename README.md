@@ -1,4 +1,4 @@
-# Skallu-Utils
+# Skallu Utils
 
 <p align="center">
 	<img alt="package.json version" src ="https://img.shields.io/github/package-json/v/Skallu0711/Skallu-Utils" />
@@ -27,3 +27,13 @@ https://github.com/Skallu0711/Skallu-Utils.git
 ```
 
 * Method 2: Import package from disk by downloading this repository and choosing path to [package.json](package.json) file
+
+# Featured tools
+### [Multi Sound Player](Runtime/Utils/MultiSoundPlayer)
+Better sound player that can simultaneously play multiple sounds from single AudioSource component.
+
+### [UI Panel Switcher](Runtime/Utils/UI/PanelSystem)
+UI panel implementation (e. g. menu screens) and tool that can switch between them.
+
+### [Fov Sensor Top-Down 2D](Runtime/Utils/FovSensorTopDown2D)
+Field-of-view AI sensor that is intended to be used in 2D top-down perspective environments.
