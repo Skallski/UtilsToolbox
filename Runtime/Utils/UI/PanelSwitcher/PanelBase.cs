@@ -1,25 +1,25 @@
-﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Utils.UI.PanelSwitcher
 {
-    public abstract class Panel : MonoBehaviour
+    /// <summary>
+    /// Base panel class
+    /// </summary>
+    public abstract class PanelBase : MonoBehaviour
     {
-        internal static event Action<Panel> OnPanelOpened;
-        internal static event Action<Panel> OnPanelClosed;
+        [SerializeField] protected GameObject _content;
+        [CanBeNull, SerializeField] protected GameObject _background;
+        [SerializeField] protected UnityEvent _opened;
+        [SerializeField] protected UnityEvent _closed;
         
-        [SerializeField] private GameObject _content;
-        [CanBeNull, SerializeField] private GameObject _background;
-
-        [Header("Events")]
-        [SerializeField] private UnityEvent _opened;
-        [SerializeField] private UnityEvent _closed;
+        public bool IsOpened => _content != null && _content.activeSelf;
         
-        private bool IsOpened => _content.activeSelf;
-        
-        public void Open()
+        /// <summary>
+        /// Safe open
+        /// </summary>
+        internal void Open()
         {
             if (!IsOpened)
             {
@@ -27,7 +27,10 @@ namespace SkalluUtils.Utils.UI
             }
         }
         
-        public void Close()
+        /// <summary>
+        /// Safe close
+        /// </summary>
+        internal void Close()
         {
             if (IsOpened)
             {
@@ -43,7 +46,6 @@ namespace SkalluUtils.Utils.UI
             ForceOpen();
             
             _opened?.Invoke();
-            OnPanelOpened?.Invoke(this);
         }
 
         /// <summary>
@@ -54,7 +56,6 @@ namespace SkalluUtils.Utils.UI
             ForceClose();
             
             _closed?.Invoke();
-            OnPanelClosed?.Invoke(this);
         }
 
         /// <summary>
@@ -82,5 +83,20 @@ namespace SkalluUtils.Utils.UI
 
             _content.SetActive(false);
         }
+
+#if UNITY_EDITOR
+        
+        [ContextMenu("Open_Editor")]
+        public void Open_Editor()
+        {
+            ForceOpen();
+        }
+        
+        [ContextMenu("Close_Editor")]
+        public void Close_Editor()
+        {
+            ForceClose();
+        }
+#endif
     }
 }

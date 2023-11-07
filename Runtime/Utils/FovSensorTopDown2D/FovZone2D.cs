@@ -5,9 +5,10 @@ namespace SkalluUtils.Utils.FovSensorTopDown2D
     [System.Serializable]
     public class FovZone2D
     {
-        [SerializeField, Range(0f, 20f)] private float _radius;
-        [SerializeField] private Color _color = Color.white;
-        [SerializeField, Range(0.5f, 2f)] private float _thickness = 0.5f;
+        [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField, Range(0f, 20f)] public float Radius { get; private set; }
+        [field: SerializeField] public Color Color { get; private set; } = Color.white;
+        [field: SerializeField, Range(0.5f, 2f)] public float Thickness { get; private set; } = 0.5f;
         
         [Space]
         [SerializeField] private bool _usedByFovCone = false;
@@ -17,11 +18,7 @@ namespace SkalluUtils.Utils.FovSensorTopDown2D
         private FovSensorTopDown2D _sensor;
         private Transform _agentTransform;
         private Transform _targetTransform;
-
-        public float Radius => _radius;
-        public Color Color => _color;
-        public float Thickness => _thickness;
-
+        
         public void Setup(FovSensorTopDown2D sensor)
         {
             if (sensor == null)
@@ -41,7 +38,7 @@ namespace SkalluUtils.Utils.FovSensorTopDown2D
                 return;
             }
             
-            if ((_targetTransform.position - _agentTransform.position).sqrMagnitude <= _radius * _radius)
+            if ((_targetTransform.position - _agentTransform.position).sqrMagnitude <= Radius * Radius)
             {
                 TargetSpotted = !_usedByFovCone || _sensor.TargetSpotted;
             }

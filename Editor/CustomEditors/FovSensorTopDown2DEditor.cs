@@ -19,10 +19,10 @@ namespace SkalluUtils.CustomEditors
         private static SerializedProperty Angle;
         private static SerializedProperty Color;
         private static SerializedProperty Thickness;
-        private static SerializedProperty UseAdditionalZones;
-        private static SerializedProperty AdditionalZones;
         private static SerializedProperty TargetSpotted;
         private static SerializedProperty TargetInRange;
+        private static SerializedProperty UseAdditionalZones;
+        private static SerializedProperty AdditionalZones;
 
         private static bool UnwrapFovConeParams = true;
         private static bool UnwrapDebugParams = false;
@@ -43,10 +43,10 @@ namespace SkalluUtils.CustomEditors
             Angle = serializedObject.FindProperty("_angle");
             Color = serializedObject.FindProperty("_color");
             Thickness = serializedObject.FindProperty("_thickness");
-            UseAdditionalZones = serializedObject.FindProperty("_useAdditionalZones");
-            AdditionalZones = serializedObject.FindProperty("_additionalZones");
             TargetSpotted = serializedObject.FindProperty("_targetSpotted");
             TargetInRange = serializedObject.FindProperty("_targetInRange");
+            UseAdditionalZones = serializedObject.FindProperty("_useAdditionalZones");
+            AdditionalZones = serializedObject.FindProperty("_additionalZones");
         }
 
         private void OnDisable()
@@ -79,11 +79,11 @@ namespace SkalluUtils.CustomEditors
             
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
-            
+
             EditorGUILayout.PropertyField(ObstacleLayer);
             EditorGUILayout.PropertyField(TargetObject);
             EditorGUILayout.PropertyField(ScanRate);
-
+            
             EditorGUIExtensions.HorizontalLine(new Vector2(10f, 10f));
             
             ToolbarInt = GUILayout.Toolbar(ToolbarInt, ToolbarHeaders);
@@ -103,7 +103,7 @@ namespace SkalluUtils.CustomEditors
                     
                     break;
                 }
-
+            
                 case 1:
                 {
                     EditorGUILayout.PropertyField(UseAdditionalZones);
@@ -123,17 +123,17 @@ namespace SkalluUtils.CustomEditors
             if (UnwrapDebugParams)
             {
                 EditorGUILayout.PropertyField(TargetSpotted);
-
+            
                 if (UseAdditionalZones.boolValue)
                 {
-                    var len = _sensor.AdditionalZones.Count;
+                    var zones = _sensor.GetZones();
+                    var len = zones.Count;
                     if (len > 0)
                     {
                         GUI.enabled = false;
                         for (var i = 0; i < len; i++)
                         {
-                            EditorGUILayout.Toggle($"Zone {i + 1}: Target spotted",
-                                _sensor.AdditionalZones[i].TargetSpotted);
+                            EditorGUILayout.Toggle($"Zone {i + 1}: Target spotted", zones[i].TargetSpotted);
                         }
                         GUI.enabled = true;
                     }
@@ -199,7 +199,7 @@ namespace SkalluUtils.CustomEditors
                 return;
             }
 
-            foreach (var zone in _sensor.AdditionalZones)
+            foreach (var zone in _sensor.GetZones())
             {
                 DrawZone(agentPosition, zone.Radius, zone.Thickness, zone.Color);
             }

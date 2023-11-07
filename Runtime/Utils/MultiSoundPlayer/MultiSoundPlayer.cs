@@ -220,12 +220,12 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         /// <param name="soundIndex"> sound index to play </param>
         public void PlaySingleSound(int soundIndex)
         {
-            if (soundIndex >= _sounds.Count)
+            if (soundIndex >= _sounds.Count || _sounds[soundIndex] == null)
             {
                 Debug.LogError($"Sound with id {soundIndex} does not exist!");
                 return;
             }
-            
+
             PlaySingleSoundInternal(soundIndex);
         }
         

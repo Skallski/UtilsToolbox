@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.CustomEditors
+namespace SkalluUtils.CustomEditors.UI
 {
     [CustomEditor(typeof(Utils.UI.Button))]
     [CanEditMultipleObjects]

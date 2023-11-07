@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using SkalluUtils.PropertyAttributes;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Utils.UI.PanelSwitcher
 {
     public class PanelsManager : MonoBehaviour
     {
@@ -11,6 +11,10 @@ namespace SkalluUtils.Utils.UI
         [Space]
         [SerializeField, CanBeNull] protected Panel _homePanel;
         [SerializeField] protected List<Panel> _panels;
+
+        public Panel ActivePanel => _activePanel;
+        public Panel HomePanel => _homePanel;
+        public List<Panel> Panels => _panels;
 
         protected virtual void OnEnable()
         {
@@ -37,7 +41,7 @@ namespace SkalluUtils.Utils.UI
             }
         }
 
-        private void OpenPanel(Panel panel)
+        public void OpenPanel(Panel panel)
         {
             if (panel == null)
             {
@@ -48,7 +52,7 @@ namespace SkalluUtils.Utils.UI
             panel.Open();
         }
         
-        private void ClosePanel(Panel panel)
+        public void ClosePanel(Panel panel)
         {
             if (panel == null)
             {
@@ -59,7 +63,6 @@ namespace SkalluUtils.Utils.UI
             panel.Close();
         }
         
-        [UsedImplicitly]
         public void SwitchToPanel(Panel panel)
         {
             if (panel == null)
@@ -67,12 +70,15 @@ namespace SkalluUtils.Utils.UI
                 Debug.LogError("Panel to open is null!");
                 return;
             }
+
+            if (_activePanel != null)
+            {
+                ClosePanel(_activePanel);
+            }
             
-            ClosePanel(_activePanel);
             OpenPanel(panel);
         }
-
-        [UsedImplicitly]
+        
         public void SwitchToPanel(int panelIndex)
         {
             if (_panels.Count >= panelIndex)
@@ -81,7 +87,7 @@ namespace SkalluUtils.Utils.UI
                 return;
             }
             
-            SwitchToPanel(panel: _panels[panelIndex]);
+            SwitchToPanel(_panels[panelIndex]);
         }
     }
 }

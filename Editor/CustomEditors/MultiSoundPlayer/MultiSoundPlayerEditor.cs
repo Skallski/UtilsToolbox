@@ -40,7 +40,7 @@ namespace SkalluUtils.CustomEditors.MultiSoundPlayer
             
             EditorGUILayout.PropertyField(_audioSource);
             EditorGUILayout.PropertyField(_sounds);
-            EditorGUILayout.Space(20);
+            EditorGUILayout.Space(10);
             
             var labelGuiStyle = new GUIStyle(GUI.skin.label)
             {
