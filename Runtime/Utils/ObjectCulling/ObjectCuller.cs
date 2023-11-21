@@ -1,57 +1,44 @@
-﻿using JetBrains.Annotations;
+﻿using System;
 using SkalluUtils.Extensions;
 using SkalluUtils.PropertyAttributes;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SkalluUtils.Utils.ObjectCulling
 {
     public class ObjectCuller : MonoBehaviour
     {
-        [SerializeField, Range(0.001f, 1f)] private float _visibilityCheckRate = 0.1f;
         [SerializeField] private CullingBoundingBox _cullingBoundingBox;
         [SerializeField] private bool _isObjectMovable;
         [SerializeField, ReadOnly] private bool _isObjectVisible;
-        [Space]
-        [SerializeField] private bool _showGizmos = true;
 
         private Camera _camera;
-        private readonly UnityEvent _onVisible = new UnityEvent();
-        private readonly UnityEvent _onInvisible = new UnityEvent();
+        
+        private Action _onVisible;
+        private Action _onInvisible;
 
-        public void AddCuller([NotNull] ICullable iCullable)
+        public void AddCuller(ICullable cullable, Camera targetCamera = null)
         {
-            _onVisible.AddListener(iCullable.OnVisible);
-            _onInvisible.AddListener(iCullable.OnInvisible);
-        }
-        
-        public void RemoveCuller([NotNull] ICullable iCullable)
-        {
-            _onVisible.RemoveListener(iCullable.OnVisible);
-            _onInvisible.RemoveListener(iCullable.OnInvisible);
-        }
-        
-        public void Setup(Camera cam)
-        {
-            if (cam == null)
+            if (cullable == null)
             {
-                Debug.LogError($"{cam} cannot be found!");
                 return;
             }
-
-            _camera = cam;
-        
-            if (!_isObjectMovable)
-            {
-                _cullingBoundingBox.Setup(transform.position);
-            }
-
+            
+            _camera = targetCamera == null ? Camera.main : targetCamera;
+            _cullingBoundingBox.Setup(transform.position);
             _isObjectVisible = _camera.IsObjectVisible(_cullingBoundingBox.Bounds);
 
-            InvokeRepeating(nameof(CheckForVisibility), 0, _visibilityCheckRate);
+            _onVisible = cullable.OnVisible;
+            _onInvisible = cullable.OnInvisible;
+            
+            ObjectCullingManager.AddCuller(this);
         }
-        
-        private void CheckForVisibility()
+
+        public void RemoveCuller()
+        {
+            ObjectCullingManager.RemoveCuller(this);
+        }
+
+        internal void CheckForVisibility()
         {
             if (_isObjectMovable)
             {
@@ -78,11 +65,6 @@ namespace SkalluUtils.Utils.ObjectCulling
 
         private void OnDrawGizmosSelected()
         {
-            if (!_showGizmos)
-            {
-                return;
-            }
-            
             _cullingBoundingBox.DrawBoundingBox(transform.position);
         }
     }

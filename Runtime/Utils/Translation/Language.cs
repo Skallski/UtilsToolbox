@@ -1,4 +1,4 @@
-namespace SkalluUtils.Utils.UI.Translation
+namespace SkalluUtils.Utils.Translation
 {
     public enum Language
     {

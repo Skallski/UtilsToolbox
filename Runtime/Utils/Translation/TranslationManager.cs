@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SkalluUtils.Utils.Json;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.Translation
+namespace SkalluUtils.Utils.Translation
 {
     /// <summary>
     /// Requires execution order before TextSetter

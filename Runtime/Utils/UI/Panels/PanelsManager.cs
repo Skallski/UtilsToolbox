@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using SkalluUtils.PropertyAttributes;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.PanelSwitcher
+namespace SkalluUtils.Utils.UI.Panels
 {
     public class PanelsManager : MonoBehaviour
     {

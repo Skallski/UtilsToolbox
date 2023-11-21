@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.Translation
+namespace SkalluUtils.Utils.Translation
 {
     /// <summary>
     /// Requires execution order after TranslationManager

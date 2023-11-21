@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using SkalluUtils.Utils.UI.PanelSwitcher;
+using SkalluUtils.Utils.UI.Panels;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors.UI.PanelSwitcher
+namespace SkalluUtils.CustomEditors.UI.Panels
 {
     [CustomEditor(typeof(PanelsManager), true)]
     public class PanelsManagerEditor : Editor

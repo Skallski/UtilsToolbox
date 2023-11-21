@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.UI.PanelSwitcher
+namespace SkalluUtils.Utils.UI.Panels
 {
     /// <summary>
     /// Base panel class

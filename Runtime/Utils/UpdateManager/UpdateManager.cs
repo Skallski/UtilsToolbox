@@ -9,6 +9,20 @@ namespace SkalluUtils.Utils.UpdateManager
         private static readonly Dictionary<UpdateType, List<Action>> UpdateLists = new Dictionary<UpdateType, List<Action>>();
 
         [field: SerializeField] public bool Paused { get; protected set; }
+        
+#if UNITY_EDITOR
+        protected virtual void OnEnable() => UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+        protected virtual void OnDisable() => UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+
+        private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
+        {
+            if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+            {
+                UpdateLists.Clear();
+            }
+        }
+#endif
 
         private void FixedUpdate()
         {

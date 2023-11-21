@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.PanelSwitcher
+namespace SkalluUtils.Utils.UI.Panels
 {
     /// <summary>
     /// More concrete panel class that can be used by PanelsManager
