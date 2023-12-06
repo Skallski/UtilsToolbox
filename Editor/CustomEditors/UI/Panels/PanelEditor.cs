@@ -14,13 +14,16 @@ namespace SkalluUtils.CustomEditors.UI.Panels
         private SerializedProperty _background;
         private SerializedProperty _opened;
         private SerializedProperty _closed;
+        private SerializedProperty _animatedOpen;
+        private SerializedProperty _animatedClose;
 
+        private bool _additionalParametersUnfolded;
         private bool _eventsUnfolded;
         
         private Color _oldGuiBackgroundColor;
         
         private readonly HashSet<string> _propertyNamesToExclude = 
-            new HashSet<string>() { "m_Script", "_content", "_background", "_opened", "_closed"};
+            new HashSet<string>() { "m_Script", "_content", "_background", "_opened", "_closed", "_animatedOpen", "_animatedClose"};
 
         private void OnEnable()
         {
@@ -30,6 +33,8 @@ namespace SkalluUtils.CustomEditors.UI.Panels
             _background = serializedObject.FindProperty("_background");
             _opened = serializedObject.FindProperty("_opened");
             _closed = serializedObject.FindProperty("_closed");
+            _animatedOpen = serializedObject.FindProperty("_animatedOpen");
+            _animatedClose = serializedObject.FindProperty("_animatedClose");
         }
 
         public override void OnInspectorGUI()
@@ -68,30 +73,29 @@ namespace SkalluUtils.CustomEditors.UI.Panels
             
             EditorGUILayout.PropertyField(_background); // show background field
             EditorGUILayout.Space();
+
+            // show additional parameters
+            _additionalParametersUnfolded = EditorGUILayout.BeginFoldoutHeaderGroup(_additionalParametersUnfolded,
+                "Additional Parameters");
+            if (_additionalParametersUnfolded)
+            {
+                EditorGUILayout.PropertyField(_animatedOpen);
+                EditorGUILayout.PropertyField(_animatedClose);
+                EditorGUILayout.Space();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
             
             // show events
-            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
-            EditorGUILayout.Space();
-            
+            _eventsUnfolded = EditorGUILayout.BeginFoldoutHeaderGroup(_eventsUnfolded,
+                "Panel Events");
             if (_eventsUnfolded)
             {
-                if (GUILayout.Button("Hide Events"))
-                {
-                    _eventsUnfolded = !_eventsUnfolded;
-                }
-            
                 EditorGUILayout.Space();
                 EditorGUILayout.PropertyField(_opened);
                 EditorGUILayout.PropertyField(_closed);
             }
-            else
-            {
-                if (GUILayout.Button("Show Events"))
-                {
-                    _eventsUnfolded = !_eventsUnfolded;
-                }
-            }
-            
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
             EditorGUILayout.Space();
             EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
             EditorGUILayout.Space();

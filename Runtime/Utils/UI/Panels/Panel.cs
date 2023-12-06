@@ -1,16 +1,29 @@
-﻿using System;
+using System;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SkalluUtils.Utils.UI.Panels
 {
     /// <summary>
-    /// More concrete panel class that can be used by PanelsManager
+    /// Base panel class
     /// </summary>
-    public class Panel : PanelBase
+    public abstract class Panel : MonoBehaviour
     {
         internal static event Action<Panel> OnPanelOpened;
         internal static event Action<Panel> OnPanelClosed;
         
+        [CanBeNull, SerializeField] protected GameObject _background;
+        [SerializeField] protected GameObject _content;
+        
+        [Tooltip("Optional event called when panel is opened")]
+        [SerializeField] protected UnityEvent _opened;
+        
+        [Tooltip("Optional event called when panel is closed")]
+        [SerializeField] protected UnityEvent _closed;
+        
+        public bool IsOpened => _content != null && _content.activeSelf;
+
 #if UNITY_EDITOR
         private void Reset()
         {
@@ -32,19 +45,87 @@ namespace SkalluUtils.Utils.UI.Panels
             }
         }
 #endif
-
-        protected override void OpenSelf()
+        
+        /// <summary>
+        /// Safe open
+        /// </summary>
+        internal void Open()
         {
-            base.OpenSelf();
-            
-            OnPanelOpened?.Invoke(this);
+            if (!IsOpened)
+            {
+                OpenSelf();
+            }
+        }
+        
+        /// <summary>
+        /// Safe close
+        /// </summary>
+        internal void Close()
+        {
+            if (IsOpened)
+            {
+                CloseSelf();
+            }
         }
 
-        protected override void CloseSelf()
+        /// <summary>
+        /// Opens panel with animation
+        /// </summary>
+        protected virtual void OpenSelf()
         {
-            base.CloseSelf();
+            ForceOpen();
+            OnOpened();
+        }
+        
+        /// <summary>
+        /// Closes panel with animation
+        /// </summary>
+        protected virtual void CloseSelf()
+        {
+            OnClosed();
+            ForceClose();
+        }
+        
+        protected virtual void OnOpened()
+        {
+            OnPanelOpened?.Invoke(this);
             
+            _opened?.Invoke();
+        }
+        
+        protected virtual void OnClosed()
+        {
             OnPanelClosed?.Invoke(this);
+            
+            _closed?.Invoke();
+        }
+        
+        /// <summary>
+        /// Opens panel without invoking an event
+        /// </summary>
+        [ContextMenu("DEBUG_Open")]
+        protected void ForceOpen()
+        {
+            if (_background != null)
+            {
+                _background.SetActive(true);
+            }
+            
+            _content.SetActive(true);
+        }
+
+        /// <summary>
+        /// Closes panel without invoking an event
+        /// </summary>
+        [ContextMenu("DEBUG_Close")]
+        protected void ForceClose()
+        {
+            if (_background != null)
+            {
+                _background.SetActive(false);
+            }
+
+            _content.SetActive(false);
         }
     }
 }

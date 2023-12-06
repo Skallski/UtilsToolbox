@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using SkalluUtils.Utils.Json;
 using UnityEngine;
 
@@ -11,14 +12,19 @@ namespace SkalluUtils.Utils.Translation
     public class TranslationManager : MonoBehaviour
     {
         public static TranslationManager Instance { get; private set; }
-
+        
+#if UNITY_EDITOR
+        [SerializeField] private TextAsset _editorFile;
+#endif
+        [SerializeField, Multiline] private string _buildFilePath;
+        
+        [field: Space]
         [field: SerializeField] public Language CurrentLanguage { get; private set; }
-        [SerializeField] private JsonFileLocator _jsonFileLocator;
         
         private readonly List<TextSetter> _textSetters = new List<TextSetter>();
         private Root _translationDataRoot;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Instance != null && Instance != this)
             {
@@ -42,46 +48,53 @@ namespace SkalluUtils.Utils.Translation
 
         private void OnTextSetterSetup(TextSetter textSetter)
         {
-            _textSetters.Add(textSetter);
+            if (_textSetters.Contains(textSetter) == false)
+            {
+                _textSetters.Add(textSetter);
+            }
         }
 
         public void Setup()
         {
-            // load file
-            string filePath;
-#if UNITY_EDITOR
-            filePath = _jsonFileLocator.EditorFilePath;
-#else
-            filePath = _jsonFileLocator.BuildFilePath;
-#endif
-            _translationDataRoot = new Root();
-            JsonDataReader.Read(filePath, ref _translationDataRoot);
-
-            // initial language set for all text setters
-            ChangeLanguage(CurrentLanguage);
-        }
-
-        public void ChangeLanguage(Language language)
-        {
-            CurrentLanguage = language;
-            
-            foreach (TextSetter text in _textSetters)
+            if (LoadFile())
             {
-                text.SetText(text.Tag);
+                SetLanguage(CurrentLanguage); // initial language set for all text setters
             }
         }
 
-        public void ChangeLanguage(int languageIndex)
+        private bool LoadFile()
         {
-            ChangeLanguage((Language) languageIndex);
+            _translationDataRoot = new Root();
+            
+#if UNITY_EDITOR
+            return JsonDataReader.Read(_editorFile, ref _translationDataRoot);
+#else
+            return JsonDataReader.Read(_buildFilePath, ref _translationDataRoot);
+#endif
         }
 
-        public string LoadText(string clientStringTag)
+        public void SetLanguage(Language language)
         {
-            return LoadText(clientStringTag, CurrentLanguage);
+            CurrentLanguage = language;
+            
+            foreach (TextSetter textSetter in _textSetters)
+            {
+                textSetter.ChangeLanguage();
+            }
         }
 
-        private string LoadText(string clientStringTag, Language language)
+        [UsedImplicitly]
+        public void SetLanguage(int languageIndex)
+        {
+            SetLanguage((Language) languageIndex);
+        }
+
+        internal string GetTextFromTag(string clientStringTag)
+        {
+            return GetTextFromTag(clientStringTag, CurrentLanguage);
+        }
+
+        private string GetTextFromTag(string clientStringTag, Language language)
         {
             foreach (ClientString clientString in _translationDataRoot.ClientStrings)
             {
