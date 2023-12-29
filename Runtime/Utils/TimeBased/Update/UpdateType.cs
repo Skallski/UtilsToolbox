@@ -1,4 +1,4 @@
-namespace SkalluUtils.Utils.UpdateManager
+namespace SkalluUtils.Utils.TimeBased.UpdateManager
 {
     public enum UpdateType
     {

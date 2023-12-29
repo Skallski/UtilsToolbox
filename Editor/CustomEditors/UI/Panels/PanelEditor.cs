@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace SkalluUtils.CustomEditors.UI.Panels
 {
-    [CustomEditor(typeof(Panel), true)]
+    [CustomEditor(typeof(UiPanel), true)]
     public class PanelEditor : Editor
     {
-        private Panel _panel;
+        private UiPanel _panel;
         
         private SerializedProperty _content;
         private SerializedProperty _background;
@@ -27,7 +27,7 @@ namespace SkalluUtils.CustomEditors.UI.Panels
 
         private void OnEnable()
         {
-            _panel = target as Panel;
+            _panel = target as UiPanel;
 
             _content = serializedObject.FindProperty("_content");
             _background = serializedObject.FindProperty("_background");

@@ -19,7 +19,7 @@ namespace SkalluUtils.Utils.Translation
         [SerializeField, Multiline] private string _buildFilePath;
         
         [field: Space]
-        [field: SerializeField] public Language CurrentLanguage { get; private set; }
+        [field: SerializeField] public Language CurrentLanguage { get; protected set; }
         
         private readonly List<TextSetter> _textSetters = new List<TextSetter>();
         private Root _translationDataRoot;

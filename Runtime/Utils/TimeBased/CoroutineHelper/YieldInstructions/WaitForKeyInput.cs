@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.CoroutineHelper.YieldInstructions
+namespace SkalluUtils.Utils.TimeBased.CoroutineHelper.YieldInstructions
 {
     public sealed class WaitForKeyInput : CustomYieldInstruction
     {

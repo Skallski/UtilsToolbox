@@ -4,15 +4,16 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.CustomEditors.UI
+namespace SkalluUtils.CustomEditors.UI.Elements
 {
-    [CustomEditor(typeof(Utils.UI.Button))]
+    [CustomEditor(typeof(Utils.UI.Elements.Button))]
     [CanEditMultipleObjects]
     public class ButtonEditor : Editor
     {
-        private Utils.UI.Button _button;
+        private Utils.UI.Elements.Button _button;
 
         private SerializedProperty _state;
+        private SerializedProperty _interactible;
         private SerializedProperty _onPointerEnter;
         private SerializedProperty _onPointerDown;
         private SerializedProperty _onPointerUp;
@@ -29,9 +30,10 @@ namespace SkalluUtils.CustomEditors.UI
 
         private void OnEnable()
         {
-            _button = target as Utils.UI.Button;
+            _button = target as Utils.UI.Elements.Button;
 
             _state = serializedObject.FindProperty("_state");
+            _interactible = serializedObject.FindProperty("_interactible");
             _onPointerEnter = serializedObject.FindProperty("_onPointerEnter");
             _onPointerDown = serializedObject.FindProperty("_onPointerDown");
             _onPointerUp = serializedObject.FindProperty("_onPointerUp");
@@ -48,6 +50,8 @@ namespace SkalluUtils.CustomEditors.UI
             serializedObject.Update();
             EditorGUILayout.BeginVertical();
 
+            EditorGUILayout.PropertyField(_interactible);
+            
             GUI.enabled = false;
             EditorGUILayout.PropertyField(_state);
             GUI.enabled = true;

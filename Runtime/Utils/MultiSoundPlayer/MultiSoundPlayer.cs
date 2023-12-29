@@ -244,7 +244,7 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
                 Debug.LogError("provided sound clip is not inside sounds list!");
             }
         }
-
+        
         /// <summary>
         /// Pauses/Unpauses
         /// </summary>
@@ -255,13 +255,36 @@ namespace SkalluUtils.Utils.MultiSoundPlayer
         }
 
         /// <summary>
-        /// Stops every sound playing
+        /// Stops all currently playing sounds
         /// </summary>
         public void Stop()
         {
-            if (_audioSource.isPlaying && _playingAnything)
+            for (int i = 0; i < _playbackVoices; i++)
             {
-                _audioSource.Stop();
+                if (_voicePlaying[i])
+                {
+                    _voicePlaying[i] = false;
+                    _voiceStarted[i] = false;
+                    ResetVoice(i);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Stops the sound at a specific index if it's playing.
+        /// </summary>
+        /// <param name="soundIndex"> index of the sound to stop </param>
+        public void StopSoundAtIndex(int soundIndex)
+        {
+            for (int i = 0; i < _playbackVoices; i++)
+            {
+                if (_voicePlaying[i] && _voiceClipIndex[i] == soundIndex)
+                {
+                    _voicePlaying[i] = false;
+                    _voiceStarted[i] = false;
+                    ResetVoice(i);
+                    break;
+                }
             }
         }
     }

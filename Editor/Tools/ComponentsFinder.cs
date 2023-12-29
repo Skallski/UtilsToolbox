@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SkalluUtils.Extensions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SkalluUtils.Tools
 {
@@ -15,7 +17,10 @@ namespace SkalluUtils.Tools
         
         private Vector2 _scrollPositionComponents;
         private Vector2 _scrollPositionRelatedObjects;
-
+        
+        private int _selectedLeftButtonIndex = -1;
+        private int _selectedRightButtonIndex = -1;
+        
         [MenuItem("SkalluUtils/Tools/Components Finder")]
         private static void OpenWindow()
         {
@@ -35,21 +40,26 @@ namespace SkalluUtils.Tools
             
             EditorGUILayout.LabelField("Component:", 
                 new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontStyle = FontStyle.Bold
-            }, GUILayout.ExpandWidth(true));
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontStyle = FontStyle.Bold
+                }, GUILayout.ExpandWidth(true));
             
             EditorGUILayout.Space();
             
             // Search field
+            EditorGUI.BeginChangeCheck();
             _searchQuery = EditorGUILayout.TextField(_searchQuery, GUILayout.ExpandWidth(true));
+            if (EditorGUI.EndChangeCheck())
+            {
+                UpdateSearchField();
+            }
 
             // Display search results as buttons
             _scrollPositionComponents = EditorGUILayout.BeginScrollView(_scrollPositionComponents);
             DisplaySearchResults();
             EditorGUILayout.EndScrollView();
-            
+
             EditorGUILayout.EndVertical();
         }
 
@@ -74,29 +84,36 @@ namespace SkalluUtils.Tools
             EditorGUILayout.EndVertical();
         }
 
-        private void OnGUI()
-        {
-            if (Event.current.type == EventType.KeyDown)
-            {
-                UpdateSearchField();
-            }
-            
-            DrawGUI();
-        }
-
         private void DisplaySearchResults()
         {
             if (_searchResults == null)
             {
                 return;
             }
-
-            foreach (var type in _searchResults)
+            
+            if (_searchQuery.Length == 0)
             {
+                return;
+            }
+
+            for (var i = 0; i < _searchResults.Count; i++)
+            {
+                var type = _searchResults[i];
+                
+                if (_selectedLeftButtonIndex == i)
+                {
+                    GUI.backgroundColor = Color.yellow;
+                }
+
                 if (GUILayout.Button($"{type.Name}"))
                 {
                     _selectedComponent = type;
+
+                    _selectedLeftButtonIndex = i;
+                    _selectedRightButtonIndex = -1;
                 }
+                
+                GUI.backgroundColor = Color.white;
             }
         }
 
@@ -112,11 +129,11 @@ namespace SkalluUtils.Tools
 
             bool found = false;
 
-            // Get all GameObjects in the scene
-            GameObject[] sceneObjects = FindObjectsOfType<GameObject>();
-
-            foreach (var sceneObject in sceneObjects)
+            GameObject[] sceneObjects = SceneManager.GetActiveScene().GetAllObjects();
+            for (var i = 0; i < sceneObjects.Length; i++)
             {
+                var sceneObject = sceneObjects[i];
+                
                 // Check if the GameObject has the selected component
                 if (sceneObject.GetComponent(_selectedComponent) == null)
                 {
@@ -124,10 +141,20 @@ namespace SkalluUtils.Tools
                 }
 
                 found = true;
+                if (_selectedRightButtonIndex == i)
+                {
+                    GUI.backgroundColor = Color.yellow;
+                }
+
                 if (GUILayout.Button($"{sceneObject.name}: {_selectedComponent.Name}"))
                 {
+                    EditorGUIUtility.PingObject(sceneObject);
                     Selection.activeObject = sceneObject;
+
+                    _selectedRightButtonIndex = i;
                 }
+                
+                GUI.backgroundColor = Color.white;
             }
 
             if (found == false)
@@ -143,16 +170,14 @@ namespace SkalluUtils.Tools
 
         private void UpdateSearchField()
         {
-            if (_searchQuery.Length == 0)
-            {
-                _searchResults = new List<Type>();
-                _selectedComponent = null;
-                
-                return;
-            }
+            // reset searched objects and selection
+            _searchResults = new List<Type>();
+            _selectedComponent = null;
+            _selectedLeftButtonIndex = -1;
+            _selectedRightButtonIndex = -1;
 
+            // get search results
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
             _searchResults = assemblies
                 .SelectMany(assembly =>
                     assembly.GetTypes()

@@ -2,15 +2,10 @@
 using System.Collections;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.CoroutineHelper
+namespace SkalluUtils.Utils.TimeBased.CoroutineHelper
 {
     public static class Delayer
     {
-        public static readonly WaitForEndOfFrame WaitForFrameEnd = new WaitForEndOfFrame();
-        public static readonly WaitForSeconds WaitTwoSec = new WaitForSeconds(2f);
-        public static readonly WaitForSeconds WaitOneSec = new WaitForSeconds(1f);
-        public static readonly WaitForSeconds WaitHalfSec = new WaitForSeconds(0.5f);
-
         /// <summary>
         /// Invokes callback after coroutine is completed
         /// </summary>

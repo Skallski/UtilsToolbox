@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Tools
+namespace Utility.Editor
 {
     public class GameObjectRenamer : EditorWindow
     {
@@ -19,6 +19,9 @@ namespace SkalluUtils.Tools
         private bool _useAutonumeration;
         private NumerationOrder _numerationOrder;
         private int _startIndex = 1;
+        
+        private string _strToReplace = "";
+        private string _strReplacement = "";
 
         [MenuItem("SkalluUtils/Tools/GameObject Renamer")]
         private static void OpenWindow()
@@ -30,7 +33,14 @@ namespace SkalluUtils.Tools
 
         private void OnGUI()
         {
-            EditorGUILayout.TextField("Rename GameObjects", EditorStyles.boldLabel);
+            var labelGuiStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold
+            };
+            
+            EditorGUILayout.LabelField("Rename selected GameObjects", 
+                labelGuiStyle, GUILayout.ExpandWidth(true));
             
             EditorGUILayout.Space(5);
             _prefix = EditorGUILayout.TextField("Prefix", _prefix);
@@ -42,23 +52,60 @@ namespace SkalluUtils.Tools
 
             if (_useAutonumeration)
             {
-                _numerationOrder = (NumerationOrder) EditorGUILayout.EnumPopup("Numeration Order", _numerationOrder);
+                _numerationOrder = (NumerationOrder)EditorGUILayout.EnumPopup("Numeration Order", _numerationOrder);
                 _startIndex = EditorGUILayout.IntField("Start Index", _startIndex);
             }
 
             EditorGUILayout.Space(10);
-            
+            GUI.enabled = _baseName != string.Empty || _prefix != string.Empty || _suffix != string.Empty;
             if (GUILayout.Button("Rename GameObjects"))
             {
                 RenameGameObjects();
             }
+            
+            if (GUI.enabled == false)
+            {
+                GUI.enabled = true;
+            }
+
+            EditorGUILayout.Space(10f);
+            EditorGUI.DrawRect(
+                EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
+            EditorGUILayout.Space(10f);
+            
+            EditorGUILayout.LabelField("Replace name substrings of selected GameObjects", 
+                labelGuiStyle, GUILayout.ExpandWidth(true));
+            
+            EditorGUILayout.Space(5);
+            _strToReplace = EditorGUILayout.TextField("To Replace:", _strToReplace);
+            _strReplacement = EditorGUILayout.TextField("Replacement", _strReplacement);
+
+            EditorGUILayout.Space(10);
+            GUI.enabled = _strToReplace != string.Empty && _strReplacement != string.Empty;
+            if (GUILayout.Button("Replace Names"))
+            {
+                ReplaceNames(_strToReplace, _strReplacement);
+            }
+
+            if (GUI.enabled == false)
+            {
+                GUI.enabled = true;
+            }
         }
 
-        private GameObject[] GetSelectedObjectsSorted()
+        /// <summary>
+        /// Get the currently selected game objects
+        /// </summary>
+        /// <returns></returns>
+        private GameObject[] GetSelectedObjects()
         {
-            GameObject[] selectedObjects = Selection.gameObjects;
+            return Selection.gameObjects;
+        }
 
-            return _numerationOrder switch
+        private GameObject[] GetSelectedObjectsSorted(NumerationOrder numerationOrder)
+        {
+            GameObject[] selectedObjects = GetSelectedObjects();
+            return numerationOrder switch
             {
                 NumerationOrder.Ascending => selectedObjects.OrderBy(go => go.transform.GetSiblingIndex()).ToArray(),
                 NumerationOrder.Descending => selectedObjects.OrderByDescending(go => go.transform.GetSiblingIndex()).ToArray(),
@@ -68,8 +115,7 @@ namespace SkalluUtils.Tools
 
         private void RenameGameObjects()
         {
-            GameObject[] objects = GetSelectedObjectsSorted();
-            
+            GameObject[] objects = GetSelectedObjectsSorted(_numerationOrder);
             for (int i = 0, c = objects.Length; i < c; i++)
             {
                 GameObject obj = objects[i];
@@ -79,6 +125,17 @@ namespace SkalluUtils.Tools
                     ? $"{_prefix}{_baseName}{_suffix}{_startIndex + i}"
                         : $"{_prefix}{_baseName}{_suffix}";
 
+                obj.name = newName;
+            }
+        }
+        
+        private void ReplaceNames(string toReplace, string replacement)
+        {
+            GameObject[] selectedObjects = GetSelectedObjects();
+            foreach (GameObject obj in selectedObjects)
+            {
+                string newName = obj.name.Replace(toReplace, replacement);
+                Undo.RecordObject(obj, "Name Change");
                 obj.name = newName;
             }
         }

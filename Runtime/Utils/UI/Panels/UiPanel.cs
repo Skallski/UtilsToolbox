@@ -8,10 +8,10 @@ namespace SkalluUtils.Utils.UI.Panels
     /// <summary>
     /// Base panel class
     /// </summary>
-    public abstract class Panel : MonoBehaviour
+    public abstract class UiPanel : MonoBehaviour
     {
-        internal static event Action<Panel> OnPanelOpened;
-        internal static event Action<Panel> OnPanelClosed;
+        internal static event Action<UiPanel> OnPanelOpened;
+        internal static event Action<UiPanel> OnPanelClosed;
         
         [CanBeNull, SerializeField] protected GameObject _background;
         [SerializeField] protected GameObject _content;

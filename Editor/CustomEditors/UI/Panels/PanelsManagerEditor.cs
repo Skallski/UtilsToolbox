@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using SkalluUtils.Utils.UI.Panels;
 using UnityEditor;
 using UnityEngine;
@@ -68,7 +69,9 @@ namespace SkalluUtils.CustomEditors.UI.Panels
             {
                 if (GUILayout.Button("Close Active Panel"))
                 {
-                    _panelsManager.ClosePanel(_panelsManager.ActivePanel);
+                    _panelsManager.GetType()
+                        ?.GetMethod("ClosePanel", BindingFlags.Instance | BindingFlags.NonPublic)
+                        ?.Invoke(_panelsManager, new object[] {_panelsManager.ActivePanel});
                 }
             }
             

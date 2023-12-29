@@ -14,11 +14,17 @@ namespace SkalluUtils.Utils.Pooling
         /// initialize push callback
         /// </summary>
         /// <param name="onPush"></param>
-        public virtual void Pull(Action<PoolableObject> onPush) => _onPushInternal = onPush; 
-        
+        public virtual void OnPulledFromPool(Action<PoolableObject> onPush)
+        {
+            _onPushInternal = onPush;
+        }
+
         /// <summary>
         /// push back to pool (should be called last!)
         /// </summary>
-        public virtual void Push() => _onPushInternal?.Invoke(this);
+        public virtual void PushToPool()
+        {
+            _onPushInternal?.Invoke(this);
+        }
     }
 }

@@ -7,33 +7,32 @@ namespace SkalluUtils.Utils.UI.Panels
 {
     public class PanelsManager : MonoBehaviour
     {
-        [SerializeField, ReadOnly, CanBeNull] protected Panel _activePanel;
-        [Space]
-        [SerializeField, CanBeNull] protected Panel _homePanel;
-        [SerializeField] protected List<Panel> _panels;
+        [SerializeField, ReadOnly, CanBeNull] protected UiPanel _activePanel;
+        [SerializeField, CanBeNull] protected UiPanel _homePanel;
+        [SerializeField] protected List<UiPanel> _panels;
 
-        public Panel ActivePanel => _activePanel;
-        public Panel HomePanel => _homePanel;
-        public List<Panel> Panels => _panels;
+        public UiPanel ActivePanel => _activePanel;
+        public UiPanel HomePanel => _homePanel;
+        public List<UiPanel> Panels => _panels;
 
         protected virtual void OnEnable()
         {
-            Panel.OnPanelOpened += OnPanelOpened;
-            Panel.OnPanelClosed += OnPanelClosed;
+            UiPanel.OnPanelOpened += OnPanelOpened;
+            UiPanel.OnPanelClosed += OnPanelClosed;
         }
 
         protected virtual void OnDisable()
         {
-            Panel.OnPanelOpened -= OnPanelOpened;
-            Panel.OnPanelClosed -= OnPanelClosed;
+            UiPanel.OnPanelOpened -= OnPanelOpened;
+            UiPanel.OnPanelClosed -= OnPanelClosed;
         }
 
-        private void OnPanelOpened(Panel panel)
+        private void OnPanelOpened(UiPanel panel)
         {
             _activePanel = panel;
         }
         
-        private void OnPanelClosed(Panel panel)
+        private void OnPanelClosed(UiPanel panel)
         {
             if (panel == _activePanel)
             {
@@ -41,7 +40,7 @@ namespace SkalluUtils.Utils.UI.Panels
             }
         }
 
-        public void OpenPanel(Panel panel)
+        private void OpenPanel(UiPanel panel)
         {
             if (panel == null)
             {
@@ -52,7 +51,7 @@ namespace SkalluUtils.Utils.UI.Panels
             panel.Open();
         }
         
-        public void ClosePanel(Panel panel)
+        private void ClosePanel(UiPanel panel)
         {
             if (panel == null)
             {
@@ -63,7 +62,7 @@ namespace SkalluUtils.Utils.UI.Panels
             panel.Close();
         }
         
-        public void SwitchToPanel(Panel panel)
+        public void SwitchToPanel(UiPanel panel)
         {
             if (panel == null)
             {

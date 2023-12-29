@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Utils.UI.Elements
 {
     public class Button :
         MonoBehaviour,
@@ -22,10 +22,18 @@ namespace SkalluUtils.Utils.UI
         }
 
         [SerializeField, ReadOnly] private ButtonState _state = ButtonState.None;
+        [SerializeField] private bool _interactible = true;
+        
         [SerializeField] private UnityEvent _onPointerEnter;
         [SerializeField] private UnityEvent _onPointerDown;
         [SerializeField] private UnityEvent _onPointerUp;
         [SerializeField] private UnityEvent _onPointerExit;
+
+        public bool Interactible
+        {
+            get => _interactible;
+            set => _interactible = value;
+        }
 
         #region POINTER EVENTS
         public void OnPointerEnter(PointerEventData eventData) => OnPointerEnterInternal();
@@ -36,18 +44,33 @@ namespace SkalluUtils.Utils.UI
 
         private void OnPointerEnterInternal()
         {
+            if (_interactible == false)
+            {
+                return;
+            }
+            
             _onPointerEnter?.Invoke();
             _state = ButtonState.PointerEnter;
         }
 
         private void OnPointerDownInternal()
         {
+            if (_interactible == false)
+            {
+                return;
+            }
+            
             _onPointerDown?.Invoke();
             _state = ButtonState.PointerDown;
         }
 
         private void OnPointerUpInternal()
         {
+            if (_interactible == false)
+            {
+                return;
+            }
+            
             if (_state == ButtonState.PointerExit)
             {
                 return;
@@ -59,6 +82,11 @@ namespace SkalluUtils.Utils.UI
 
         private void OnPointerExitInternal()
         {
+            if (_interactible == false)
+            {
+                return;
+            }
+            
             _onPointerExit?.Invoke();
             _state = ButtonState.PointerExit;
         }
