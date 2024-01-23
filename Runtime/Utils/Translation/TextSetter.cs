@@ -1,4 +1,4 @@
-using SkalluUtils.Extensions.Collections;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,17 +9,14 @@ namespace SkalluUtils.Utils.Translation
     /// </summary>
     public class TextSetter : MonoBehaviour
     {
-        public static event System.Action<TextSetter> OnTextSetterSetup;
+        public static event Action<TextSetter> OnTextSetterCreated;
+        public static event Func<string ,string> OnTextSetterSet;
         
         [SerializeField] private TMP_Text _label;
         [field:Space]
-        [field: SerializeField] public string Tag { get; private set; }
+        [field: SerializeField] public string NameTag { get; private set; }
         [SerializeField, Multiline] private string _alternativeText;
         
-        private TranslationManager _translationManager;
-        private Language _language;
-        private object[] _parameters;
-
 #if UNITY_EDITOR
         private void Reset()
         {
@@ -30,63 +27,42 @@ namespace SkalluUtils.Utils.Translation
         }
 #endif
         
-        private void Awake()
+        private void Start()
         {
             if (_label == null)
             {
-                Debug.LogError($"{gameObject.name}: translator requires valid TextMeshPro component!");
+                Debug.LogError($"{gameObject.name} {name}: Label cannot be null!");
+                return;
             }
-            else
+
+            if (NameTag.Equals(string.Empty))
             {
-                _translationManager = TranslationManager.Instance;
-                _language = _translationManager.CurrentLanguage;
-                
-                OnTextSetterSetup?.Invoke(this);
+                Debug.LogError($"{gameObject.name} {name}: Name tag cannot be empty!");
+                return;
             }
+            
+            OnTextSetterCreated?.Invoke(this);
         }
 
-        private void OnEnable()
+        public void SetText(string nameTag, params object[] parameters)
         {
-            if (_translationManager.CurrentLanguage != _language)
-            {
-                ChangeLanguage();
-            }
-        }
-
-        public void SetText(string clientStringTag, params object[] parameters)
-        {
-            string text = _translationManager.GetTextFromTag(clientStringTag);
+            string text = OnTextSetterSet?.Invoke(nameTag);
             if (string.IsNullOrEmpty(text))
             {
-                Debug.LogError($"{gameObject.name}: translation error for tag '{clientStringTag}'!");
                 text = _alternativeText;
+                Debug.LogError($"{gameObject.name} {name}: Name tag: {nameTag} not found!");
             }
             else
-            {
-                Tag = clientStringTag;
-                _parameters = parameters;
-            }
-
-            // set parameters
-            if (parameters.IsNullOrEmpty() == false)
             {
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    string placeHolder = $"{{{i}}}";
-                    if (text.Contains(placeHolder))
-                    {
-                        text = text.Replace(placeHolder, parameters[i].ToString());
-                    }
+                    text = text.Replace($"{{{i}}}", parameters[i].ToString());
                 }
+                
+                NameTag = nameTag;
             }
 
             _label.SetText(text);
-        }
-
-        internal void ChangeLanguage()
-        {
-            _language = _translationManager.CurrentLanguage;
-            SetText(Tag, _parameters);
         }
 
         public string GetLabelText()

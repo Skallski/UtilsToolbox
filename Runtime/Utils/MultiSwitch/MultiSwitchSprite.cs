@@ -7,7 +7,7 @@ namespace SkalluUtils.Utils.MultiSwitch
     public class MultiSwitchSprite : BasicMultiSwitch
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
-        [SerializeField] private Sprite[] _sprites;
+        [field: SerializeField] public Sprite[] Sprites { get; private set; }
 
         protected SpriteRenderer SpriteRenderer
         {
@@ -22,14 +22,12 @@ namespace SkalluUtils.Utils.MultiSwitch
                 return;
             }
 
-            if (newValue < 0 || _sprites.Length <= newValue)
+            if (newValue < 0 || Sprites.Length <= newValue)
             {
                 return;
             }
 
-            _spriteRenderer.sprite = _sprites[newValue];
+            _spriteRenderer.sprite = Sprites[newValue];
         }
-
-        public int GetRandomState() => _sprites.IndexOf(_sprites.RandomItem());
     }
 }

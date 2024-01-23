@@ -47,8 +47,7 @@ namespace SkalluUtils.Tools
                 return;
             }
 
-            TextMeshProUGUI[] sceneObjectsWithTMP = 
-                SceneManager.GetActiveScene().GetAllObjectsOfType<TextMeshProUGUI>();
+            TextMeshProUGUI[] sceneObjectsWithTMP = FindObjectsOfType<TextMeshProUGUI>(true);
             
             _searchResults = sceneObjectsWithTMP
                 .Where(textMeshPro => textMeshPro.text.Contains(_searchText))

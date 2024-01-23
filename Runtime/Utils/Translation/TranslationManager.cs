@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
 using SkalluUtils.Utils.Json;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace SkalluUtils.Utils.Translation
         [field: Space]
         [field: SerializeField] public Language CurrentLanguage { get; protected set; }
         
-        private readonly List<TextSetter> _textSetters = new List<TextSetter>();
+        private readonly HashSet<TextSetter> _textSetters = new HashSet<TextSetter>();
         private Root _translationDataRoot;
 
         protected virtual void Awake()
@@ -38,99 +38,109 @@ namespace SkalluUtils.Utils.Translation
 
         private void OnEnable()
         {
-            TextSetter.OnTextSetterSetup += OnTextSetterSetup;
+            TextSetter.OnTextSetterCreated += OnTextSetterCreated;
+            TextSetter.OnTextSetterSet += OnTextSetterSet;
         }
 
         private void OnDisable()
         {
-            TextSetter.OnTextSetterSetup -= OnTextSetterSetup;
-        }
-
-        private void OnTextSetterSetup(TextSetter textSetter)
-        {
-            if (_textSetters.Contains(textSetter) == false)
-            {
-                _textSetters.Add(textSetter);
-            }
+            TextSetter.OnTextSetterCreated -= OnTextSetterCreated;
+            TextSetter.OnTextSetterSet -= OnTextSetterSet;
         }
 
         public void Setup()
         {
-            if (LoadFile())
+#if UNITY_EDITOR
+            JsonDataReader.Read(_editorFile, ref _translationDataRoot);
+#else
+            JsonDataReader.Read(_buildFilePath, ref _translationDataRoot);
+#endif
+            // after text file is loaded, set texts in every text setter
+            foreach (var textSetter in _textSetters)
             {
-                SetLanguage(CurrentLanguage); // initial language set for all text setters
+                textSetter.SetText(textSetter.NameTag);
             }
         }
 
-        private bool LoadFile()
+        private void OnTextSetterCreated(TextSetter textSetter)
         {
-            _translationDataRoot = new Root();
-            
-#if UNITY_EDITOR
-            return JsonDataReader.Read(_editorFile, ref _translationDataRoot);
-#else
-            return JsonDataReader.Read(_buildFilePath, ref _translationDataRoot);
-#endif
+            if (textSetter == null)
+            {
+                return;
+            }
+
+            if (_textSetters.Contains(textSetter) == false)
+            {
+                _textSetters.Add(textSetter);
+                textSetter.SetText(textSetter.NameTag);
+            }
+        }
+        
+        private string OnTextSetterSet(string nameTag)
+        {
+            return GetTranslatedText(nameTag, CurrentLanguage);
+        }
+
+        private string GetTranslatedText(string nameTag, Language language)
+        {
+            var texts = _translationDataRoot.Texts;
+            if (texts == null || texts.Length == 0 || string.IsNullOrEmpty(nameTag))
+            {
+                return null;
+            }
+
+            Text matchingText = texts.FirstOrDefault(text => text.NameTag.Equals(nameTag));
+
+            return matchingText?.Translations.FirstOrDefault(translation => translation.Language.Equals(language))
+                ?.Value ?? string.Empty;
         }
 
         public void SetLanguage(Language language)
         {
+            if (CurrentLanguage.Equals(language))
+            {
+                return;
+            }
+            
             CurrentLanguage = language;
             
-            foreach (TextSetter textSetter in _textSetters)
+            // translate text in each text setter
+            foreach (var textSetter in _textSetters)
             {
-                textSetter.ChangeLanguage();
+                textSetter.SetText(textSetter.NameTag);
             }
         }
 
-        [UsedImplicitly]
         public void SetLanguage(int languageIndex)
         {
-            SetLanguage((Language) languageIndex);
-        }
-
-        internal string GetTextFromTag(string clientStringTag)
-        {
-            return GetTextFromTag(clientStringTag, CurrentLanguage);
-        }
-
-        private string GetTextFromTag(string clientStringTag, Language language)
-        {
-            foreach (ClientString clientString in _translationDataRoot.ClientStrings)
+            if (Enum.IsDefined(typeof(Language), languageIndex))
             {
-                if (clientString.Tag.Equals(clientStringTag))
-                {
-                    foreach (Translation translation in clientString.Translations)
-                    {
-                        if (translation.Language.Equals(language.ToString()))
-                        {
-                            return translation.Value;
-                        }
-                    }
-                }
+                SetLanguage((Language)languageIndex);
             }
-
-            return string.Empty;
+            else
+            {
+                Debug.LogError($"Language with index of {languageIndex} not found!");
+            }
         }
     }
     
     [Serializable]
-    public struct Root
+    public class Root
     {
-        public ClientString[] ClientStrings;
+        public Text[] Texts;
     }
 
     [Serializable]
-    public struct ClientString
+    public class Text
     {
-        public string Tag;
+        public string NameTag;
         public Translation[] Translations;
     }
 
     [Serializable]
-    public struct Translation
+    public class Translation
     {
         public string Value;
-        public string Language;
+        public Language Language;
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using SkalluUtils.Extensions;
+﻿using SkalluUtils.Extensions;
 using SkalluUtils.PropertyAttributes;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SkalluUtils.Utils.ObjectCulling
 {
@@ -11,25 +11,18 @@ namespace SkalluUtils.Utils.ObjectCulling
         [SerializeField] private bool _isObjectMovable;
         [SerializeField, ReadOnly] private bool _isObjectVisible;
 
+        [Space]
+        [SerializeField] protected UnityEvent OnBecameVisible;
+        [SerializeField] protected UnityEvent OnBecameInvisible;
+        
         private Camera _camera;
         
-        private Action _onVisible;
-        private Action _onInvisible;
-
-        public void AddCuller(ICullable cullable, Camera targetCamera = null)
+        public void AddCuller(Camera targetCamera)
         {
-            if (cullable == null)
-            {
-                return;
-            }
-            
             _camera = targetCamera == null ? Camera.main : targetCamera;
             _cullingBoundingBox.Setup(transform.position);
             _isObjectVisible = _camera.IsObjectVisible(_cullingBoundingBox.Bounds);
 
-            _onVisible = cullable.OnVisible;
-            _onInvisible = cullable.OnInvisible;
-            
             ObjectCullingManager.AddCuller(this);
         }
 
@@ -48,17 +41,21 @@ namespace SkalluUtils.Utils.ObjectCulling
             if (_camera.IsObjectVisible(_cullingBoundingBox.Bounds))
             {
                 if (_isObjectVisible)
+                {
                     return;
-                
-                _onVisible?.Invoke();
+                }
+
+                OnBecameVisible?.Invoke();
                 _isObjectVisible = true;
             }
             else
             {
                 if (!_isObjectVisible)
+                {
                     return;
-                
-                _onInvisible?.Invoke();
+                }
+
+                OnBecameInvisible?.Invoke();
                 _isObjectVisible = false;
             }
         }

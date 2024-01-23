@@ -129,7 +129,7 @@ namespace SkalluUtils.Tools
 
             bool found = false;
 
-            GameObject[] sceneObjects = SceneManager.GetActiveScene().GetAllObjects();
+            GameObject[] sceneObjects = FindObjectsOfType<GameObject>(true);
             for (var i = 0; i < sceneObjects.Length; i++)
             {
                 var sceneObject = sceneObjects[i];

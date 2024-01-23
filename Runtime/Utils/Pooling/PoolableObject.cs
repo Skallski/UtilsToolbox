@@ -3,28 +3,23 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.Pooling
 {
-    /// <summary>
-    /// Class to inherit from if you wish to use simple pooling on the object.
-    /// </summary>
-    public abstract class PoolableObject : MonoBehaviour, IPoolable<PoolableObject>
+    public abstract class PoolableObject : MonoBehaviour
     {
-        private Action<PoolableObject> _onPushInternal;
-
-        /// <summary>
-        /// initialize push callback
-        /// </summary>
-        /// <param name="onPush"></param>
-        public virtual void OnPulledFromPool(Action<PoolableObject> onPush)
+        internal Action<PoolableObject> OnReleased { get; set; }
+        
+        internal void Get()
         {
-            _onPushInternal = onPush;
+           OnGet();
         }
-
-        /// <summary>
-        /// push back to pool (should be called last!)
-        /// </summary>
-        public virtual void PushToPool()
+        
+        public void Release()
         {
-            _onPushInternal?.Invoke(this);
+            OnRelease();
+            OnReleased?.Invoke(this);
         }
+        
+        protected virtual void OnGet() {}
+        
+        protected virtual void OnRelease() {}
     }
 }

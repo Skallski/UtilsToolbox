@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace SkalluUtils.Utils.ObjectCulling
         private static List<ObjectCuller> Cullers = new List<ObjectCuller>();
 
         [SerializeField, Range(0.001f, 1f)] private float _visibilityCheckRate = 0.1f;
+        private float _timer;
 
         internal static void AddCuller(ObjectCuller objectCuller)
         {
@@ -35,9 +37,19 @@ namespace SkalluUtils.Utils.ObjectCulling
             }
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
-            InvokeRepeating(nameof(CheckForVisibility), 0, _visibilityCheckRate);
+            while (true)
+            {
+                _timer += Time.deltaTime;
+                if (_timer >= _visibilityCheckRate)
+                {
+                    CheckForVisibility();
+                    
+                    _timer -= _timer;
+                    yield return null;
+                }
+            }
         }
 
         private void CheckForVisibility()

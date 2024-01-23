@@ -60,7 +60,7 @@ namespace SkalluUtils.PropertyDrawers
         {
             if (Show(property))
             {
-                EditorGUI.PropertyField(position, property, new GUIContent(property.displayName));
+                EditorGUI.PropertyField(position, property, new GUIContent(property.displayName), true);
             }
         }
     }

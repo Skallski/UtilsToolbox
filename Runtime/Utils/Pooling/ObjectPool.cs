@@ -5,91 +5,102 @@ using Object = UnityEngine.Object;
 
 namespace SkalluUtils.Utils.Pooling
 {
-    /// <summary>
-    /// Generic object pooling main class
-    /// </summary>
-    /// <typeparam name="T"> Generic type of poolable object </typeparam>
-    public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
+    public class ObjectPool<T> where T : PoolableObject
     {
-        private readonly T _prefabInstance;
         private readonly Stack<T> _pooledObjects = new Stack<T>();
 
-        /// <summary>
-        /// Creates object pool of selected poolable object
-        /// </summary>
-        /// <param name="prefab"> object on which the pool will be created</param>
-        /// <param name="quantityToSpawn"> pool size </param>
-        /// <param name="parent"></param>
-        public ObjectPool(T prefab, int quantityToSpawn = 0, Transform parent = null)
+        private readonly Func<T> _objectInstantiator;
+        private readonly Action<T> _onGet;
+        private readonly Action<T> _onRelease;
+
+        public ObjectPool(Func<T> objectInstantiator, int size = 0, Transform parent = null, 
+            Action<T> onGet = null, Action<T> onRelease = null)
         {
-            if (prefab == null)
+            if (objectInstantiator == null)
             {
-                Debug.LogError("Prefab cannot be null!");
+                Debug.LogError("Object instantiator function cannot be null!");
                 return;
             }
 
-            _prefabInstance = prefab;
-            
-            for (int i = 0; i < quantityToSpawn; i++)
+            _objectInstantiator = objectInstantiator;
+            _onGet = onGet;
+            _onRelease = onRelease;
+
+            for (int i = 0; i < size; i++)
             {
-                T tComponent = SpawnSingleObject(parent);
-                _pooledObjects.Push(tComponent);
-                tComponent.gameObject.SetActive(false);
+                InitializeObject(InstantiateObject(parent));
             }
         }
-
-        /// <summary>
-        /// Creates object pool from list of existing poolable objects
-        /// </summary>
-        /// <param name="objects"> list of objects from which the pool will be created </param>
-        /// <exception cref="Exception"></exception>
-        public ObjectPool(IReadOnlyList<T> objects)
+        
+        public ObjectPool(IReadOnlyList<T> objects, Action<T> onGet = null, Action<T> onRelease = null)
         {
-            if (objects == null || objects.Count < 1)
+            if (objects == null || objects.Count == 0)
             {
-                Debug.LogError("Object pool list is empty or null!");
+                Debug.LogError("Object pool cannot be empty or null!");
                 return;
             }
 
-            _prefabInstance = objects[0];
+            _objectInstantiator = () => objects[0];
+            _onGet = onGet;
+            _onRelease = onRelease;
 
             foreach (T obj in objects)
             {
-                _pooledObjects.Push(obj);
-                obj.gameObject.SetActive(false);
+                InitializeObject(obj);
             }
         }
 
         /// <summary>
-        /// Spawns single object
+        /// Initializes object
         /// </summary>
-        /// <param name="parent"> parent of the object that will be spawned </param>
-        /// <returns> prefab clone </returns>
-        private T SpawnSingleObject(Transform parent = null)
+        /// <param name="obj"></param>
+        private void InitializeObject(T obj)
         {
-            if (_prefabInstance == null)
+            if (obj == null)
             {
-                Debug.LogError("Prefab inside object pool is null!");
+                Debug.LogError("Object to initialize cannot be null!");
+                return;
+            }
+            
+            obj.OnReleased = ReleaseObject;
+            _pooledObjects.Push(obj);
+            obj.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// Instantiates single object
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        private T InstantiateObject(Transform parent = null)
+        {
+            T obj = _objectInstantiator?.Invoke();
+            
+            if (obj == null)
+            {
+                Debug.LogError("Instantiated object cannot be null!");
                 return null;
             }
 
-            return Object.Instantiate(_prefabInstance, parent);
+            return Object.Instantiate(obj, parent);
         }
 
         /// <summary>
-        /// Pulls object from pool
+        /// Gets object from pool
         /// </summary>
-        /// <param name="parent"> parent </param>
-        /// <param name="position"> spawn position </param>
-        /// <param name="rotation"> spawn rotation </param>
+        /// <param name="parent"></param>
+        /// <param name="position"></param>
+        /// <param name="rotation"></param>
         /// <returns></returns>
-        public T Pull(Vector3 position = default, Quaternion rotation = default, Transform parent = null)
+        public T GetObject(Vector3 position = default, Quaternion rotation = default, Transform parent = null)
         {
-            T obj = _pooledObjects.Count > 0 ? _pooledObjects.Pop() : SpawnSingleObject(parent);
+            T obj = _pooledObjects.Count > 0 
+                ? _pooledObjects.Pop() 
+                : InstantiateObject(parent);
 
             if (obj == null)
             {
-                Debug.LogError("Object pulled from the pool is null!");
+                Debug.LogError("Object that has been get from pool cannot be null!");
                 return null;
             }
 
@@ -97,27 +108,33 @@ namespace SkalluUtils.Utils.Pooling
             objTransform.SetParent(parent);
             objTransform.position = position;
             objTransform.rotation = rotation;
+            
             obj.gameObject.SetActive(true);
-
-            obj.OnPulledFromPool(Push);
+            
+            obj.Get();
+            _onGet?.Invoke(obj);
 
             return obj;
         }
 
         /// <summary>
-        /// Pushes object back to pool
+        /// Returns object to pool
         /// </summary>
-        /// <param name="obj"> object to push </param>
-        public void Push(T obj)
+        /// <param name="obj"></param>
+        private void ReleaseObject(PoolableObject obj)
         {
             if (obj == null)
             {
-                Debug.LogError("Object to push is null!");
+                Debug.LogError("Object to release cannot be null!");
                 return;
             }
 
             obj.gameObject.SetActive(false);
-            _pooledObjects.Push(obj);
+
+            T t = obj as T;
+            
+            _onRelease?.Invoke(t);
+            _pooledObjects.Push(t);
         }
     }
 }
