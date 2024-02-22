@@ -8,7 +8,12 @@ namespace SkalluUtils.Tools
     /// </summary>
     public abstract class ResizableWindowBase : EditorWindow
     {
-        private float _leftPaneWidth = 200f;
+        protected float leftPanelWidthMin = 250f;
+        protected float rightPanelWidthMin = 350f;
+        protected float panelHeightMin = 400f;
+        
+        protected float leftPaneWidth = 250f;
+        protected float rightPanelWidth = 350f;
         private const float SeparatorWidth = 5f;
         private bool _isResizing;
 
@@ -32,18 +37,14 @@ namespace SkalluUtils.Tools
 
         protected void DrawLeftPane()
         {
-            GUILayout.BeginArea(new Rect(0, 0, _leftPaneWidth, position.height));
+            GUILayout.BeginArea(new Rect(0, 0, leftPaneWidth, position.height));
             OnGUILeftSide();
             GUILayout.EndArea();
         }
 
         protected void DrawRightPane()
         {
-            GUILayout.BeginArea(new Rect(
-                _leftPaneWidth + SeparatorWidth,
-                0,
-                position.width - (_leftPaneWidth + SeparatorWidth), position.height));
-            
+            GUILayout.BeginArea(new Rect(leftPaneWidth + SeparatorWidth, 0, rightPanelWidth, position.height));
             OnGuiRightSide();
             GUILayout.EndArea();
         }
@@ -53,7 +54,7 @@ namespace SkalluUtils.Tools
         /// </summary>
         protected void DrawVerticalSeparator()
         {
-            Rect separatorRect = new Rect(_leftPaneWidth, 0, SeparatorWidth, position.height);
+            Rect separatorRect = new Rect(leftPaneWidth, 0, SeparatorWidth, position.height);
             EditorGUIUtility.AddCursorRect(separatorRect, MouseCursor.ResizeHorizontal);
             GUI.Box(separatorRect, GUIContent.none, EditorStyles.helpBox);
         }
@@ -71,7 +72,7 @@ namespace SkalluUtils.Tools
         private void HandleResizeEvents()
         {
             Event e = Event.current;
-            Rect separatorRect = new Rect(_leftPaneWidth, 0, SeparatorWidth, position.height);
+            Rect separatorRect = new Rect(leftPaneWidth, 0, SeparatorWidth, position.height);
 
             switch (e.type)
             {
@@ -94,7 +95,17 @@ namespace SkalluUtils.Tools
                 {
                     if (_isResizing)
                     {
-                        _leftPaneWidth += e.delta.x;
+                        float delta = e.delta.x;
+                        
+                        float newLeftWidth = Mathf.Clamp(leftPaneWidth + delta, leftPanelWidthMin,
+                            position.width - rightPanelWidthMin - SeparatorWidth);
+                        
+                        float newRightWidth = Mathf.Clamp(position.width - newLeftWidth - SeparatorWidth,
+                            rightPanelWidthMin, position.width - leftPanelWidthMin - SeparatorWidth);
+
+                        leftPaneWidth = newLeftWidth;
+                        rightPanelWidth = newRightWidth;
+                        
                         Repaint();
                     }
                     break;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SkalluUtils.Utils.TimeBased.UpdateManager;
+using SkalluUtils.Utils.TimeBased.Update;
 using UnityEngine;
 
 namespace SkalluUtils.Utils.TimeBased.Update
@@ -11,7 +11,18 @@ namespace SkalluUtils.Utils.TimeBased.Update
             new Dictionary<UpdateType, List<Action>>();
 
         [field: SerializeField] public bool Paused { get; protected set; }
+        [SerializeField] public float _timeScale;
         
+        public float TimeScale
+        {
+            get => _timeScale;
+            set
+            {
+                _timeScale = value;
+                Debug.Log("xd");
+            }
+        }
+
 #if UNITY_EDITOR
         protected virtual void OnEnable()
         {

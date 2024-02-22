@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Utility.Editor
+namespace SkalluUtils.Tools
 {
     public class GameObjectRenamer : EditorWindow
     {
@@ -11,6 +11,9 @@ namespace Utility.Editor
             Ascending = 0,
             Descending = 1
         }
+
+        private int _currentToolbarTab;
+        private string[] _toolbarHeaders = new string[] { "Rename", "Replace name" };
         
         private string _prefix = "";
         private string _baseName = "";
@@ -38,34 +41,60 @@ namespace Utility.Editor
                 alignment = TextAnchor.MiddleCenter,
                 fontStyle = FontStyle.Bold
             };
-            
-            EditorGUILayout.LabelField("Rename selected GameObjects", 
-                labelGuiStyle, GUILayout.ExpandWidth(true));
-            
-            EditorGUILayout.Space(5);
-            _prefix = EditorGUILayout.TextField("Prefix", _prefix);
-            _baseName = EditorGUILayout.TextField("Base Name", _baseName);
-            _suffix = EditorGUILayout.TextField("Suffix", _suffix);
 
-            EditorGUILayout.Space(10);
-            _useAutonumeration = EditorGUILayout.Toggle("Autonumeration", _useAutonumeration);
+            _currentToolbarTab = GUILayout.Toolbar(_currentToolbarTab, _toolbarHeaders);
 
-            if (_useAutonumeration)
+            if (_currentToolbarTab == 0)
             {
-                _numerationOrder = (NumerationOrder)EditorGUILayout.EnumPopup("Numeration Order", _numerationOrder);
-                _startIndex = EditorGUILayout.IntField("Start Index", _startIndex);
+                EditorGUILayout.LabelField("Rename selected GameObjects", 
+                    labelGuiStyle, GUILayout.ExpandWidth(true));
+                
+                EditorGUILayout.Space(5);
+                _prefix = EditorGUILayout.TextField("Prefix", _prefix);
+                _baseName = EditorGUILayout.TextField("Base Name", _baseName);
+                _suffix = EditorGUILayout.TextField("Suffix", _suffix);
+
+                EditorGUILayout.Space(10);
+                _useAutonumeration = EditorGUILayout.Toggle("Autonumeration", _useAutonumeration);
+
+                if (_useAutonumeration)
+                {
+                    _numerationOrder = (NumerationOrder)EditorGUILayout.EnumPopup("Numeration Order", _numerationOrder);
+                    _startIndex = EditorGUILayout.IntField("Start Index", _startIndex);
+                }
+
+                EditorGUILayout.Space(10);
+                GUI.enabled = _baseName != string.Empty || _prefix != string.Empty || _suffix != string.Empty;
+                if (GUILayout.Button("Rename GameObjects"))
+                {
+                    RenameGameObjects();
+                }
+            
+                if (GUI.enabled == false)
+                {
+                    GUI.enabled = true;
+                }
             }
-
-            EditorGUILayout.Space(10);
-            GUI.enabled = _baseName != string.Empty || _prefix != string.Empty || _suffix != string.Empty;
-            if (GUILayout.Button("Rename GameObjects"))
+            else
             {
-                RenameGameObjects();
-            }
+                EditorGUILayout.LabelField("Replace name substrings of selected GameObjects", 
+                    labelGuiStyle, GUILayout.ExpandWidth(true));
             
-            if (GUI.enabled == false)
-            {
-                GUI.enabled = true;
+                EditorGUILayout.Space(5);
+                _strToReplace = EditorGUILayout.TextField("To Replace:", _strToReplace);
+                _strReplacement = EditorGUILayout.TextField("Replacement", _strReplacement);
+
+                EditorGUILayout.Space(10);
+                GUI.enabled = _strToReplace != string.Empty && _strReplacement != string.Empty;
+                if (GUILayout.Button("Replace Names"))
+                {
+                    ReplaceNames(_strToReplace, _strReplacement);
+                }
+
+                if (GUI.enabled == false)
+                {
+                    GUI.enabled = true;
+                }
             }
 
             EditorGUILayout.Space(10f);
@@ -73,38 +102,13 @@ namespace Utility.Editor
                 EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
             EditorGUILayout.Space(10f);
             
-            EditorGUILayout.LabelField("Replace name substrings of selected GameObjects", 
-                labelGuiStyle, GUILayout.ExpandWidth(true));
-            
-            EditorGUILayout.Space(5);
-            _strToReplace = EditorGUILayout.TextField("To Replace:", _strToReplace);
-            _strReplacement = EditorGUILayout.TextField("Replacement", _strReplacement);
-
-            EditorGUILayout.Space(10);
-            GUI.enabled = _strToReplace != string.Empty && _strReplacement != string.Empty;
-            if (GUILayout.Button("Replace Names"))
-            {
-                ReplaceNames(_strToReplace, _strReplacement);
-            }
-
-            if (GUI.enabled == false)
-            {
-                GUI.enabled = true;
-            }
-        }
-
-        /// <summary>
-        /// Get the currently selected game objects
-        /// </summary>
-        /// <returns></returns>
-        private GameObject[] GetSelectedObjects()
-        {
-            return Selection.gameObjects;
+            EditorGUILayout.HelpBox("This will affect all selected GameObjects in the hierarchy", 
+                MessageType.Warning);
         }
 
         private GameObject[] GetSelectedObjectsSorted(NumerationOrder numerationOrder)
         {
-            GameObject[] selectedObjects = GetSelectedObjects();
+            GameObject[] selectedObjects = Selection.gameObjects;
             return numerationOrder switch
             {
                 NumerationOrder.Ascending => selectedObjects.OrderBy(go => go.transform.GetSiblingIndex()).ToArray(),
@@ -131,7 +135,7 @@ namespace Utility.Editor
         
         private void ReplaceNames(string toReplace, string replacement)
         {
-            GameObject[] selectedObjects = GetSelectedObjects();
+            GameObject[] selectedObjects = Selection.gameObjects;
             foreach (GameObject obj in selectedObjects)
             {
                 string newName = obj.name.Replace(toReplace, replacement);

@@ -1,9 +1,10 @@
+using SkalluUtils.Utils.Audio;
 using UnityEditor;
 using UnityEngine;
 
 namespace SkalluUtils.CustomEditors.MultiSoundPlayer
 {
-    [CustomPropertyDrawer(typeof(Utils.MultiSoundPlayer.SoundClip))]
+    [CustomPropertyDrawer(typeof(SoundClip))]
     public class SoundClipDrawer : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

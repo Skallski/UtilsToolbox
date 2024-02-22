@@ -11,15 +11,10 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
             Vector2 finishScale, float duration, Action onFinish = null)
         {
             caller.StartCoroutine(Tween_Coroutine(mode, duration, 
-                tickDelta =>
-                {
-                    target.transform.localScale = 
-                        Vector3.Lerp(startScale, finishScale, tickDelta);
-                },
+                tickDelta => target.transform.localScale = Vector3.Lerp(startScale, finishScale, tickDelta),
                 () =>
                 {
                     target.transform.localScale = finishScale;
-
                     onFinish?.Invoke();
                 }
             ));
@@ -29,14 +24,10 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
             float finishAlpha, float duration, Action onFinish = null)
         {
             caller.StartCoroutine(Tween_Coroutine(mode, duration, 
-                tickDelta =>
-                {
-                    target.alpha = Mathf.Lerp(startAlpha, finishAlpha, tickDelta);
-                },
+                tickDelta => target.alpha = Mathf.Lerp(startAlpha, finishAlpha, tickDelta),
                 () =>
                 {
                     target.alpha = finishAlpha;
-                    
                     onFinish?.Invoke();
                 }
             ));
@@ -46,14 +37,10 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
             Color startColor, Color finishColor, float duration, Action onFinish = null)
         {
             caller.StartCoroutine(Tween_Coroutine(mode, duration, 
-                tickDelta =>
-                {
-                    target.color = Color.Lerp(startColor, finishColor, tickDelta);
-                },
+                tickDelta => target.color = Color.Lerp(startColor, finishColor, tickDelta),
                 () =>
                 {
                     target.color = finishColor;
-                    
                     onFinish?.Invoke();
                 }
             ));
@@ -62,15 +49,11 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
         public static void TweenAnchoredPosition(MonoBehaviour caller, TweenTimeMode mode, RectTransform target,
             Vector2 startPosition, Vector2 finishPosition, float duration, Action onFinish = null)
         {
-            caller.StartCoroutine(Tween_Coroutine(mode, duration, 
-                tickDelta =>
-                {
-                    target.anchoredPosition = Vector2.Lerp(startPosition, finishPosition, tickDelta);
-                },
+            caller.StartCoroutine(Tween_Coroutine(mode, duration,
+                tickDelta => target.anchoredPosition = Vector2.Lerp(startPosition, finishPosition, tickDelta),
                 () =>
                 {
                     target.anchoredPosition = finishPosition;
-                    
                     onFinish?.Invoke();
                 }
             ));
@@ -87,28 +70,18 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
                 {
                     int currentFrame = Mathf.FloorToInt(tickDelta * duration / frameDuration);
                     currentFrame = Mathf.Clamp(currentFrame, 0, totalFrames - 1);
-
                     image.sprite = sprites[currentFrame];
                 },
-                () =>
-                {
-                    onFinish?.Invoke();
-                }
+                () => onFinish?.Invoke()
             ));
         }
 
         public static void Tween(MonoBehaviour caller, TweenTimeMode mode, float duration, Action<float> onTick,
             Action onFinish = null)
         {
-            caller.StartCoroutine(Tween_Coroutine(mode, duration,
-                tickDelta =>
-                {
-                    onTick?.Invoke(tickDelta);
-                },
-                () =>
-                {
-                    onFinish?.Invoke();
-                }
+            caller.StartCoroutine(Tween_Coroutine(mode, duration, 
+                tickDelta => onTick?.Invoke(tickDelta),
+                () => onFinish?.Invoke()
             ));
         }
         #endregion
@@ -116,19 +89,18 @@ namespace SkalluUtils.Utils.TimeBased.Tweening
         private static IEnumerator Tween_Coroutine(TweenTimeMode mode, float duration, Action<float> onTick,
             Action onFinish = null)
         {
-            float time = mode switch
-            {
-                TweenTimeMode.ScaledTime => Time.deltaTime,
-                TweenTimeMode.UnscaledTime => Time.unscaledDeltaTime,
-                _ => Time.deltaTime
-            };
-
             float elapsedTime = 0f;
             while (elapsedTime < duration)
             {
                 onTick?.Invoke(elapsedTime / duration); // tick delta
                 
-                elapsedTime += time;
+                elapsedTime += mode switch
+                {
+                    TweenTimeMode.ScaledTime => Time.deltaTime,
+                    TweenTimeMode.UnscaledTime => Time.unscaledDeltaTime,
+                    _ => Time.deltaTime
+                };
+                
                 yield return null;
             }
             

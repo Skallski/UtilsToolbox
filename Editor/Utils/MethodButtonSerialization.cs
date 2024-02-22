@@ -9,14 +9,18 @@ namespace SkalluUtils.Utils
     {
         public struct CustomMethodInfo
         {
-            public MethodInfo method;
-            public string signature;
+            public MethodInfo Method;
+            public string Signature;
+
+            public CustomMethodInfo(MethodInfo method, string signature)
+            {
+                Method = method;
+                Signature = signature;
+            }
         }
         
         private const BindingFlags DEFAULT_BINDING_FLAGS = 
-            BindingFlags.Instance | 
-            BindingFlags.Public | 
-            BindingFlags.NonPublic ;
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         
         /// <summary>
         /// 
@@ -56,12 +60,12 @@ namespace SkalluUtils.Utils
         
         private static void DrawMethod([NotNull] Object targetObj, CustomMethodInfo methodInfo)
         {
-            ParameterInfo[] parameters = methodInfo.method.GetParameters();
+            ParameterInfo[] parameters = methodInfo.Method.GetParameters();
             if (parameters.Length == 0)
             {
-                if (GUILayout.Button($"{methodInfo.signature}"))
+                if (GUILayout.Button($"{methodInfo.Signature}"))
                 {
-                    methodInfo.method.Invoke(targetObj, null);
+                    methodInfo.Method.Invoke(targetObj, null);
                 }
             }
         }
@@ -73,13 +77,8 @@ namespace SkalluUtils.Utils
                 methodsToShow = targetObj.GetType().GetMethods(DEFAULT_BINDING_FLAGS)
                     .Where(m => m.GetParameters().Length == 0 && m.IsAbstract == false && m.IsStatic == false && m.ReturnType == typeof(void))
                     .Where(m => m.GetCustomAttributes<PropertyAttributes.SerializeMethodAttribute>().Any())
-                    .Select(m =>
-                        new CustomMethodInfo
-                        {
-                            method = m,
-                            signature = GetMethodSignature(m)
-                        }
-                    ).ToArray();
+                    .Select(m => new CustomMethodInfo(m, GetMethodSignature(m)))
+                    .ToArray();
             }
         
             return methodsToShow;
@@ -88,7 +87,6 @@ namespace SkalluUtils.Utils
         private static string GetMethodSignature(MethodBase method)
         {
             var buttonName = method.GetCustomAttribute<PropertyAttributes.SerializeMethodAttribute>().ButtonName;
-
             if (buttonName == string.Empty)
             {
                 string accessQualifier = method.IsPublic ? "public" : method.IsPrivate ? "private" : "protected";

@@ -1,5 +1,5 @@
 using System.Reflection;
-using SkalluUtils.Utils.FieldOfView;
+using SkalluUtils.Utils.GameAI;
 using UnityEditor;
 using UnityEngine;
 

@@ -6,13 +6,13 @@ namespace SkalluUtils.PropertyAttributes
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     public class ShowIfAttribute : PropertyAttribute
     {
-        public string ComparedPropertyName { get; }
-        public object ComparedValue { get; }
+        public readonly string PropertyName;
+        public readonly object Value;
 
-        public ShowIfAttribute(string comparedPropertyName, object comparedValue)
+        public ShowIfAttribute(string propertyName, object value)
         {
-            ComparedPropertyName = comparedPropertyName;
-            ComparedValue = comparedValue;
+            PropertyName = propertyName;
+            Value = value;
         }
     }
 }

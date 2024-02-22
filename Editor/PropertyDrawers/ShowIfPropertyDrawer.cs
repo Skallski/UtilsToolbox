@@ -27,8 +27,8 @@ namespace SkalluUtils.PropertyDrawers
             }
             
             string path = property.propertyPath.Contains(".")
-                ? System.IO.Path.ChangeExtension(property.propertyPath, _showIf.ComparedPropertyName)
-                : _showIf.ComparedPropertyName;
+                ? System.IO.Path.ChangeExtension(property.propertyPath, _showIf.PropertyName)
+                : _showIf.PropertyName;
 
             _comparedField = property.serializedObject.FindProperty(path);
 
@@ -38,7 +38,7 @@ namespace SkalluUtils.PropertyDrawers
                 return true;
             }
 
-            object comparedValue = _showIf.ComparedValue;
+            object comparedValue = _showIf.Value;
 
             switch (_comparedField.type)
             {

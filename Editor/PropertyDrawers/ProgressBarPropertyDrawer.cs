@@ -9,38 +9,40 @@ namespace SkalluUtils.PropertyDrawers
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (!(attribute is ProgressBarAttribute progressBarAttribute))
+            if (attribute is not ProgressBarAttribute progressBarAttribute)
             {
                 return;
             }
+
+            Color oldBackgroundColor = GUI.backgroundColor;
             
-            var maxValue = progressBarAttribute.MaxValue;
+            float maxValue = progressBarAttribute.MaxValue;
                 
-            var name = progressBarAttribute.Name == string.Empty
+            string name = string.IsNullOrEmpty(progressBarAttribute.Name)
                 ? property.displayName
                 : progressBarAttribute.Name;
             
-            GUI.color = progressBarAttribute.Color;
+            GUI.backgroundColor = progressBarAttribute.Color;
 
             switch (property.propertyType)
             {
                 case SerializedPropertyType.Float:
                 {
-                    var value = property.floatValue;
+                    float value = property.floatValue;
                     EditorGUI.ProgressBar(position, value / maxValue, $"{name} = {value} / {maxValue}");
                   
                     break;
                 }
                 case SerializedPropertyType.Integer:
                 {
-                    var value = property.intValue;
+                    int value = property.intValue;
                     EditorGUI.ProgressBar(position, value / maxValue, $"{name} = {value} / {maxValue}");
 
                     break;
                 }
             }
             
-            GUI.color = Color.white;
+            GUI.backgroundColor = oldBackgroundColor;
         }
     }
 }
