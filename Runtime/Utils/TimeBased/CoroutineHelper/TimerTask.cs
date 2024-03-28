@@ -4,45 +4,48 @@ using UnityEngine;
 
 namespace SkalluUtils.Utils.TimeBased.CoroutineHelper
 {
-    public static class TimerTask
+    public class TimerTask
     {
-        private static readonly WaitForSeconds OneSecondDelay = new WaitForSeconds(1);
-        private static readonly WaitForEndOfFrame FrameDelay = new WaitForEndOfFrame();
-        
-        #region PUBLIC METHODS
-        public static void EachFrame(MonoBehaviour caller, float duration, Action onEachFrame, Action onFinish = null)
+        /// <summary>
+        /// Invokes callback each frame in n seconds duration
+        /// </summary>
+        /// <param name="duration"> duration of whole task </param>
+        /// <param name="onEachFrame"> callback that will be invoked every frame </param>
+        /// <param name="onFinish"> callback that will be invoked after task is completed </param>
+        /// <returns></returns>
+        public static IEnumerator EachFrame(float duration, Action<float> onEachFrame, Action onFinish = null)
         {
-            Create(caller, duration, FrameDelay, onEachFrame, onFinish);
+            return EachTimestamp(duration, Time.unscaledDeltaTime, onEachFrame, onFinish);
         }
 
-        public static void EachSecond(MonoBehaviour caller, float duration, Action onEachSecond, Action onFinish = null)
+        /// <summary>
+        /// Invokes callback each second in n seconds duration
+        /// </summary>
+        /// <param name="duration"> duration of whole task </param>
+        /// <param name="onEachSecond"> callback that will be invoked every second </param>
+        /// <param name="onFinish"> callback that will be invoked after task is completed </param>
+        /// <returns></returns>
+        public static IEnumerator EachSecond(float duration, Action<float> onEachSecond, Action onFinish = null)
         {
-            Create(caller, duration, OneSecondDelay, onEachSecond, onFinish);
+            return EachTimestamp(duration, 1, onEachSecond, onFinish);
         }
-        
-        public static void EachTimestamp(MonoBehaviour caller, float duration, float timestamp, Action onEachTimestamp,
+
+        /// <summary>
+        /// Invokes callback each timestamp in n seconds duration
+        /// </summary>
+        /// <param name="duration"> duration of whole task </param>
+        /// <param name="timestamp"> time interval between which the callback will be invoked </param>
+        /// <param name="onEachTimestamp"> callback that will be invoked each timestamp </param>
+        /// <param name="onFinish"> callback that will be invoked after task is completed </param>
+        /// <returns></returns>
+        public static IEnumerator EachTimestamp(float duration, float timestamp, Action<float> onEachTimestamp,
             Action onFinish = null)
         {
-            Create(caller, duration, new WaitForSeconds(timestamp), onEachTimestamp, onFinish);
-        }
-        #endregion
-
-        private static void Create(MonoBehaviour caller, float duration, YieldInstruction yieldInstruction,
-            Action onTick, Action onFinish = null)
-        {
-            caller.StartCoroutine(Timer_Coroutine(duration, yieldInstruction, onTick, onFinish));
-        }
-
-        private static IEnumerator Timer_Coroutine(float duration, YieldInstruction yieldInstruction, Action onTick,
-            Action onFinish = null)
-        {
-            var elapsedTime = 0f;
-            while (elapsedTime < duration)
+            WaitForSeconds delay = new WaitForSeconds(timestamp);
+            for (float elapsedTime = 0f; elapsedTime < duration; elapsedTime += timestamp)
             {
-                onTick?.Invoke();
-                
-                elapsedTime += Time.unscaledDeltaTime;
-                yield return yieldInstruction;
+                onEachTimestamp?.Invoke(elapsedTime);
+                yield return delay;
             }
             
             onFinish?.Invoke();

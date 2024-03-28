@@ -3,10 +3,10 @@ using SkalluUtils.Utils.GameAI;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors.FieldOfView
+namespace SkalluUtils.Editor.CustomEditors
 {
     [CustomEditor(typeof(Fov2D), true)]
-    public class Fov2DEditor : Editor
+    public class Fov2DEditor : UnityEditor.Editor
     {
         private Fov2D _fov;
         

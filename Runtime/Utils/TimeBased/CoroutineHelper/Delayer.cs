@@ -7,6 +7,28 @@ namespace SkalluUtils.Utils.TimeBased.CoroutineHelper
     public static class Delayer
     {
         /// <summary>
+        /// Invokes callback next frame
+        /// </summary>
+        /// <param name="callback"> callback, that will be called in next frame </param>
+        /// <returns></returns>
+        public static IEnumerator InvokeNextFrame(Action callback)
+        {
+            yield return null;
+            callback?.Invoke();
+        }
+
+        /// <summary>
+        /// Invokes callback after n seconds of time
+        /// </summary>
+        /// <param name="callback"> callback, that will be called after one second </param>
+        /// <param name="time"> time, after which the callback will be called </param>
+        /// <returns></returns>
+        public static IEnumerator InvokeAfterTime(Action callback, float time)
+        {
+            return InvokeDelayed(callback, new WaitForSeconds(time));
+        }
+        
+        /// <summary>
         /// Invokes callback after coroutine is completed
         /// </summary>
         /// <param name="callback"> callback, that will be called after coroutine completes </param>

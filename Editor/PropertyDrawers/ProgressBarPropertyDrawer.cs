@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.PropertyDrawers
+namespace SkalluUtils.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ProgressBarAttribute))]
     public class ProgressBarPropertyDrawer : PropertyDrawer

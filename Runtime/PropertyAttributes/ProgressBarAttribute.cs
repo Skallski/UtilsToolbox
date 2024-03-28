@@ -4,11 +4,12 @@ using UnityEngine;
 namespace SkalluUtils.PropertyAttributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public class ProgressBarAttribute : PropertyAttribute
     {
-        public string Name { get; } = string.Empty;
-        public float MaxValue { get; }
-        public Color Color { get; }
+        public readonly string Name = string.Empty;
+        public readonly float MaxValue;
+        public readonly Color Color;
         
         public ProgressBarAttribute(float maxValue, string colorHex = "")
         {

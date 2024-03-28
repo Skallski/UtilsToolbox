@@ -2,7 +2,7 @@ using SkalluUtils.Utils.Audio;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors.MultiSoundPlayer
+namespace SkalluUtils.Editor.CustomEditors.MultiSoundPlayer
 {
     [CustomPropertyDrawer(typeof(SoundClip))]
     public class SoundClipDrawer : PropertyDrawer

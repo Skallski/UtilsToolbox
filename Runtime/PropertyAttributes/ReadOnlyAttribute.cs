@@ -7,5 +7,9 @@ namespace SkalluUtils.PropertyAttributes
     /// This attribute makes field readonly in inspector
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class ReadOnlyAttribute : PropertyAttribute {}
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public class ReadOnlyAttribute : PropertyAttribute
+    {
+        // Should stay empty
+    }
 }

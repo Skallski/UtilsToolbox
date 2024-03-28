@@ -1,15 +1,14 @@
-﻿using SkalluUtils.Utils;
-using SkalluUtils.Utils.VFX;
+﻿using SkalluUtils.Utils.VFX;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors
+namespace SkalluUtils.Editor.CustomEditors
 {
     /// <summary>
     /// Test object shake during play mode
     /// </summary>
     [CustomEditor(typeof(ObjectShake))]
-    public class ObjectShakeEditor : Editor
+    public class ObjectShakeEditor : UnityEditor.Editor
     {
         private ObjectShake _objectShake;
 

@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.PropertyDrawers
+namespace SkalluUtils.Editor.PropertyDrawers
 {
     [CustomPropertyDrawer(typeof(ShowIfAttribute))]
     public class ShowIfPropertyDrawer : PropertyDrawer

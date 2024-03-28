@@ -2,12 +2,12 @@
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace SkalluUtils.CustomEditors.MultiSoundPlayer
+namespace SkalluUtils.Editor.CustomEditors.MultiSoundPlayer
 {
-    [CustomEditor(typeof(Utils.Audio.MultiSoundPlayer))]
-    public class MultiSoundPlayerEditor : Editor
+    [CustomEditor(typeof(SkalluUtils.Utils.Audio.MultiSoundPlayer))]
+    public class MultiSoundPlayerEditor : UnityEditor.Editor
     {
-        private Utils.Audio.MultiSoundPlayer _multiSoundPlayer;
+        private SkalluUtils.Utils.Audio.MultiSoundPlayer _multiSoundPlayer;
 
         private SerializedProperty _audioSource;
         private SerializedProperty _sounds;
@@ -19,7 +19,7 @@ namespace SkalluUtils.CustomEditors.MultiSoundPlayer
 
         private void OnEnable()
         {
-            _multiSoundPlayer = (Utils.Audio.MultiSoundPlayer) target;
+            _multiSoundPlayer = (SkalluUtils.Utils.Audio.MultiSoundPlayer) target;
             
             _audioSource = serializedObject.FindProperty("_audioSource");
             _sounds = serializedObject.FindProperty("_sounds");

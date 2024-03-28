@@ -4,6 +4,7 @@ using UnityEngine;
 namespace SkalluUtils.PropertyAttributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public class ShowIfAttribute : PropertyAttribute
     {
         public readonly string PropertyName;

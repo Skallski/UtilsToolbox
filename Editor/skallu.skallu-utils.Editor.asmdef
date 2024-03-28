@@ -1,6 +1,6 @@
 {
     "name": "skallu.skallu-utils.Editor",
-    "rootNamespace": "SkalluUtils",
+    "rootNamespace": "SkalluUtils.Editor",
     "references": [
         "skallu.skallu-utils",
         "Unity.TextMeshPro",
