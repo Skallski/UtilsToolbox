@@ -2,20 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using SkalluUtils.PropertyAttributes;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Utils.UI.UiPanel
 {
-    public class PanelsManager : MonoBehaviour
+    public class UiPanelsManager : MonoBehaviour
     {
-        [SerializeField, ReadOnly, CanBeNull] protected UiPanel _activePanel;
+        [SerializeField, CanBeNull] protected UiPanel _activePanel;
         [SerializeField, CanBeNull] protected UiPanel _homePanel;
         [SerializeField] protected List<UiPanel> _panels;
 
-        public UiPanel ActivePanel => _activePanel;
-        public UiPanel HomePanel => _homePanel;
-        public List<UiPanel> Panels => _panels;
+        private bool _isSwitchingPanels;
 
         protected virtual void OnEnable()
         {
@@ -42,37 +39,8 @@ namespace SkalluUtils.Utils.UI
             }
         }
 
-        private static void OpenPanel(UiPanel panel)
+        protected TPanel GetPanel<TPanel>(Predicate<int> predicate) where TPanel : UiPanel
         {
-            if (panel == null)
-            {
-                Debug.LogError("Panel to open is null!");
-                return;
-            }
-            
-            panel.Open();
-        }
-        
-        private static void ClosePanel(UiPanel panel)
-        {
-            if (panel == null)
-            {
-                Debug.LogError($"Panel to close is null!");
-                return;
-            }
-
-            panel.Close();
-        }
-        
-        protected TPanel GetPanel<TPanel, TType>(TType panelType, Predicate<int> predicate) 
-            where TPanel : UiPanel
-            where TType : Enum
-        {
-            if (EqualityComparer<TType>.Default.Equals(panelType, default))
-            {
-                return null;
-            }
-            
             for (int i = 0, c = _panels.Count; i < c; i++)
             {
                 if (predicate != null && predicate.Invoke(i) && _panels[i] is TPanel panel)
@@ -84,7 +52,7 @@ namespace SkalluUtils.Utils.UI
             return null;
         }
         
-        public void SwitchToPanel(UiPanel panel)
+        public void SwitchToPanel(UiPanel panel, UiPanelOpeningParameters openingParameters = null)
         {
             if (panel == null)
             {
@@ -92,24 +60,31 @@ namespace SkalluUtils.Utils.UI
                 return;
             }
 
-            StartCoroutine(SwitchToPanel_Coroutine(panel));
-        }
-
-        private IEnumerator SwitchToPanel_Coroutine(UiPanel panel)
-        {
-            if (_activePanel != null)
+            if (_isSwitchingPanels)
             {
-                UiPanel bottomPanel = _activePanel;
-                
-                ClosePanel(_activePanel);
-                
-                yield return new WaitUntil(() => bottomPanel.IsOpened == false);
+                return;
             }
+            
+            StartCoroutine(SwitchToPanel_Coroutine());
+            IEnumerator SwitchToPanel_Coroutine()
+            {
+                if (_activePanel == null)
+                {
+                    Debug.LogError("Panel to close is null!");
+                    yield break;
+                }
 
-            OpenPanel(panel);
+                _isSwitchingPanels = true;
+                UiPanel bottomPanel = _activePanel;
+                _activePanel.Close();
+
+                yield return new WaitUntil(() => bottomPanel.IsOpened == false);
+                panel.Open(openingParameters);
+                _isSwitchingPanels = false;
+            }
         }
-        
-        public void SwitchToPanel(int panelIndex)
+
+        public void SwitchToPanel(int panelIndex, UiPanelOpeningParameters openingParameters = null)
         {
             if (_panels.Count >= panelIndex)
             {
@@ -117,7 +92,7 @@ namespace SkalluUtils.Utils.UI
                 return;
             }
             
-            SwitchToPanel(_panels[panelIndex]);
+            SwitchToPanel(_panels[panelIndex], openingParameters);
         }
     }
 }

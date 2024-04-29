@@ -19,9 +19,6 @@ namespace SkalluUtils.Editor.Utils
             }
         }
         
-        private const BindingFlags DEFAULT_BINDING_FLAGS = 
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-        
         /// <summary>
         /// 
         /// </summary>
@@ -56,25 +53,25 @@ namespace SkalluUtils.Editor.Utils
                     }
                 }
             }
-        }
-        
-        private static void DrawMethod([NotNull] Object targetObj, CustomMethodInfo methodInfo)
-        {
-            ParameterInfo[] parameters = methodInfo.Method.GetParameters();
-            if (parameters.Length == 0)
+            
+            static void DrawMethod([NotNull] Object targetObj, CustomMethodInfo methodInfo)
             {
-                if (GUILayout.Button($"{methodInfo.Signature}"))
+                ParameterInfo[] parameters = methodInfo.Method.GetParameters();
+                if (parameters.Length == 0)
                 {
-                    methodInfo.Method.Invoke(targetObj, null);
+                    if (GUILayout.Button($"{methodInfo.Signature}"))
+                    {
+                        methodInfo.Method.Invoke(targetObj, null);
+                    }
                 }
             }
         }
-
-        private static CustomMethodInfo[] GetObjectMethods([NotNull] Object targetObj, ref CustomMethodInfo[] methodsToShow)
+        
+        public static CustomMethodInfo[] GetObjectMethods([NotNull] Object targetObj, ref CustomMethodInfo[] methodsToShow)
         {
             if (methodsToShow == null)
             {
-                methodsToShow = targetObj.GetType().GetMethods(DEFAULT_BINDING_FLAGS)
+                methodsToShow = targetObj.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(m => m.GetParameters().Length == 0 && m.IsAbstract == false && m.IsStatic == false && m.ReturnType == typeof(void))
                     .Where(m => m.GetCustomAttributes<PropertyAttributes.SerializeMethodAttribute>().Any())
                     .Select(m => new CustomMethodInfo(m, GetMethodSignature(m)))
@@ -82,19 +79,18 @@ namespace SkalluUtils.Editor.Utils
             }
         
             return methodsToShow;
-        }
-        
-        private static string GetMethodSignature(MethodBase method)
-        {
-            var buttonName = method.GetCustomAttribute<PropertyAttributes.SerializeMethodAttribute>().ButtonName;
-            if (buttonName == string.Empty)
+            
+            static string GetMethodSignature(MethodBase method)
             {
-                string accessQualifier = method.IsPublic ? "public" : method.IsPrivate ? "private" : "protected";
-        
-                return $"{accessQualifier} void {method.Name}()";
-            }
+                string buttonName = method.GetCustomAttribute<PropertyAttributes.SerializeMethodAttribute>().ButtonName;
+                if (buttonName.Equals(string.Empty))
+                {
+                    string accessQualifier = method.IsPublic ? "public" : method.IsPrivate ? "private" : "protected";
+                    return $"{accessQualifier} void {method.Name}()";
+                }
 
-            return buttonName;
+                return buttonName;
+            }
         }
     }
 }

@@ -1,30 +1,98 @@
+using System.Linq;
 using System.Reflection;
 using SkalluUtils.Editor.Utils;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SkalluUtils.Editor.CustomEditors
 {
     [CustomEditor(typeof(MonoBehaviour), true)]
     public class MonoBehaviourEditor : UnityEditor.Editor
     {
-        private bool _methodsShown;
         private MethodButtonAttributeHandler.CustomMethodInfo[] _methodsToShow;
-
-        protected override void OnHeaderGUI()
+        private GUIStyle _iconStyle;
+        
+        private void OnEnable()
         {
-            EditorGUILayout.LabelField("Header");
+            EditorHeaderGuiInitializer.OnDrawHeaderGUIEvent += OnHeaderItemGUI;
+            EditorHeaderGuiInitializer.InitializeHeaderGUI(target as MonoBehaviour);
+        }
+
+        private void OnDisable()
+        {
+            EditorHeaderGuiInitializer.OnDrawHeaderGUIEvent -= OnHeaderItemGUI;
+        }
+
+        protected virtual void OnHeaderItemGUI(Rect rect, Object targetObject)
+        {
+            DrawEditButton(rect, targetObject);
+            rect.x -= EditorHeaderGuiInitializer.HeaderSpace;
+            DrawMethodsButton(rect, targetObject);
+        }
+
+        private void DrawEditButton(Rect rect, Object targetObject)
+        {
+            GUIContent content = new GUIContent(string.Empty, EditorGUIUtility.IconContent("editicon.sml").image,
+                "Edit Script");
             
-            DrawHeader();
+            EditorHeaderGuiInitializer.DrawHeaderButton(rect, content, () => 
+                {
+                    MonoScript script = MonoScript.FromMonoBehaviour((MonoBehaviour)targetObject);
+                    if (script != null)
+                    {
+                        AssetDatabase.OpenAsset(script);
+                    }
+                    else
+                    {
+                        Debug.LogError($"Cannot open {script.name}");
+                    }
+                }
+            );
+        }
+
+        private void DrawMethodsButton(Rect rect, Object targetObject)
+        {
+            MethodButtonAttributeHandler.CustomMethodInfo[] methods = 
+                MethodButtonAttributeHandler.GetObjectMethods(target, ref _methodsToShow);
+            if (methods == null)
+            {
+                return;
+            }
+
+            GUIContent content = new GUIContent(string.Empty,
+                EditorGUIUtility.IconContent("d_Profiler.UIDetails").image,
+                "Display Serialized Methods");
+            
+            EditorHeaderGuiInitializer.DrawHeaderButton(rect, content, () =>
+                {
+                    GenericMenu menu = new GenericMenu();
+                
+                    int len = methods.Length;
+                    if (len == 0)
+                    {
+                        menu.AddItem(new GUIContent("No serialized methods to display"), false, () => {});
+                    }
+                    else
+                    {
+                        for (int i = 0, c = len; i < c; i++)
+                        {
+                            int index = i;
+                            MethodButtonAttributeHandler.CustomMethodInfo method = methods[i];
+
+                            menu.AddItem(new GUIContent($"{index}: {method.Signature}"), false,
+                                () => method.Method.Invoke(target, null));
+                        }
+                    }
+
+                    menu.ShowAsContext();
+                }
+            );
         }
 
         public override void OnInspectorGUI()
         {
-            MethodButtonAttributeHandler.DrawMethods(target, ref _methodsToShow, ref _methodsShown);
-
-            //DrawInspectorFields();
-            
-            EditorGUILayout.LabelField("Body");
+            DrawInspectorFields();
         }
 
         private void DrawInspectorFields()
@@ -40,11 +108,13 @@ namespace SkalluUtils.Editor.CustomEditors
             {
                 if (iterator.propertyPath.Equals("m_Script"))
                 {
-                    using (new EditorGUI.DisabledScope(true))
-                    {
-                        EditorGUILayout.PropertyField(iterator, new GUIContent("Script",
-                            showTooltip ? $"{tooltipAttribute.tooltip}" : null), true);
-                    }
+                    // using (new EditorGUI.DisabledScope(true))
+                    // {
+                    //     EditorGUILayout.PropertyField(iterator, new GUIContent("Script",
+                    //         showTooltip ? $"{tooltipAttribute.tooltip}" : null), true);
+                    // }
+                    
+                    continue;
                 }
                 else
                 {

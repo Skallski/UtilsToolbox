@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Reflection;
-using SkalluUtils.Utils.UI;
+using SkalluUtils.Utils.UI.UiPanel;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.CustomEditors.UI
+namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
 {
-    [CustomEditor(typeof(PanelsManager), true)]
-    public class PanelsManagerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(UiPanelsManager), true)]
+    public class UiPanelsManagerEditor : UnityEditor.Editor
     {
-        private PanelsManager _panelsManager;
+        private UiPanelsManager _uiPanelsManager;
         
         private SerializedProperty _activePanel;
         private SerializedProperty _homePanel;
@@ -20,7 +20,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI
 
         private void OnEnable()
         {
-            _panelsManager = target as PanelsManager;
+            _uiPanelsManager = target as UiPanelsManager;
             
             _activePanel = serializedObject.FindProperty("_activePanel");
             _homePanel = serializedObject.FindProperty("_homePanel");
@@ -29,7 +29,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI
 
         public override void OnInspectorGUI()
         {
-            if (_panelsManager == null)
+            if (_uiPanelsManager == null)
             {
                 return;
             }
@@ -41,40 +41,25 @@ namespace SkalluUtils.Editor.CustomEditors.UI
             GUI.enabled = false;
             EditorGUILayout.PropertyField(_activePanel);
             GUI.enabled = true;
-            
-            EditorGUILayout.Space();
-            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
-            EditorGUILayout.Space();
-            
-            // show home panel and panels stack
-            GUI.enabled = !Application.isPlaying;
+
+            // show home panel
             EditorGUILayout.PropertyField(_homePanel);
-            EditorGUILayout.PropertyField(_panels);
-            GUI.enabled = true;
             
             EditorGUILayout.Space();
-            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
-            EditorGUILayout.Space();
-
-            // show button that switches to selected panel
-            GUI.enabled = Application.isPlaying;
-            if (GUILayout.Button("Switch To Panel"))
+            if (Application.isPlaying == false)
             {
-                ShowGenericMenu();
+                // show panels list
+                EditorGUILayout.PropertyField(_panels);
             }
-            GUI.enabled = true;
-
-            // show button that closes active panel
-            if (_panelsManager.ActivePanel != null)
+            else
             {
-                if (GUILayout.Button("Close Active Panel"))
+                // show button that switches to selected panel
+                if (GUILayout.Button("Switch To Panel"))
                 {
-                    _panelsManager.GetType()
-                        ?.GetMethod("ClosePanel", BindingFlags.Instance | BindingFlags.NonPublic)
-                        ?.Invoke(_panelsManager, new object[] {_panelsManager.ActivePanel});
+                    ShowGenericMenu();
                 }
             }
-            
+
             EditorGUILayout.Space();
             EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
             EditorGUILayout.Space();
@@ -97,27 +82,28 @@ namespace SkalluUtils.Editor.CustomEditors.UI
         
         private void ShowGenericMenu()
         {
-            var menu = new GenericMenu();
-            var panels = _panelsManager.Panels;
+            if (_uiPanelsManager.GetType()
+                    ?.GetField("_panels", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?.GetValue(_uiPanelsManager) is not List<SkalluUtils.Utils.UI.UiPanel.UiPanel> panels)
+            {
+                return;
+            }
+            
+            GenericMenu menu = new GenericMenu();
             
             for (int i = 0, c = panels.Count; i < c; i++)
             {
-                var index = i;
-                var panel = panels[i];
-                
-                menu.AddItem(panel == null 
-                        ? new GUIContent($"{index}: _") 
+                int index = i;
+                SkalluUtils.Utils.UI.UiPanel.UiPanel panel = panels[i];
+
+                menu.AddItem(panel == null
+                        ? new GUIContent($"{index}: _")
                         : new GUIContent($"{index}: {panel.gameObject.name}"),
                     false,
-                    () => OnOptionSelected(index));
+                    () => _uiPanelsManager.SwitchToPanel(panel));
             }
             
             menu.ShowAsContext();
-        }
-
-        private void OnOptionSelected(int index)
-        {
-            _panelsManager.SwitchToPanel(_panelsManager.Panels[index]);
         }
     }
 }

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.UI
+namespace SkalluUtils.Utils.UI.UiPanel
 {
     /// <summary>
     /// Base panel class
@@ -24,8 +24,10 @@ namespace SkalluUtils.Utils.UI
         
         public bool IsOpened => _content != null && _content.activeSelf;
 
+        protected UiPanelOpeningParameters OpeningParameters { get; private set; }
+
 #if UNITY_EDITOR
-        private void Reset()
+        protected virtual void Reset()
         {
             if (_background == null) _background = FindInChildren("Background");
             if (_content == null) _content = FindInChildren("Content");
@@ -47,18 +49,19 @@ namespace SkalluUtils.Utils.UI
 #endif
         
         /// <summary>
-        /// Safe open
+        /// Opens panel
         /// </summary>
-        internal void Open()
+        internal void Open(UiPanelOpeningParameters openingParameters)
         {
             if (!IsOpened)
             {
+                OpeningParameters = openingParameters;
                 OpenSelf();
             }
         }
         
         /// <summary>
-        /// Safe close
+        /// Closes panel
         /// </summary>
         internal void Close()
         {
@@ -67,9 +70,9 @@ namespace SkalluUtils.Utils.UI
                 CloseSelf();
             }
         }
-
+        
         /// <summary>
-        /// Opens panel with animation
+        /// 
         /// </summary>
         protected virtual void OpenSelf()
         {
@@ -78,7 +81,7 @@ namespace SkalluUtils.Utils.UI
         }
         
         /// <summary>
-        /// Closes panel with animation
+        /// 
         /// </summary>
         protected virtual void CloseSelf()
         {
@@ -86,13 +89,19 @@ namespace SkalluUtils.Utils.UI
             ForceClose();
         }
         
+        
+        /// <summary>
+        /// Called when panel is successfully opened
+        /// </summary>
         protected virtual void OnOpened()
         {
             OnPanelOpened?.Invoke(this);
-            
             _opened?.Invoke();
         }
         
+        /// <summary>
+        /// Called when panel is successfully closed
+        /// </summary>
         protected virtual void OnClosed()
         {
             OnPanelClosed?.Invoke(this);
@@ -101,7 +110,10 @@ namespace SkalluUtils.Utils.UI
         }
         
         /// <summary>
-        /// Opens panel without invoking an event
+        /// Opens panel without executing additional logic
+        /// <remarks>
+        /// Good for debugging inside editor
+        /// </remarks>>
         /// </summary>
         [ContextMenu("DEBUG_Open")]
         protected void ForceOpen()
@@ -115,7 +127,10 @@ namespace SkalluUtils.Utils.UI
         }
 
         /// <summary>
-        /// Closes panel without invoking an event
+        /// Closes panel without executing additional logic
+        /// <remarks>
+        /// Good for debugging inside editor
+        /// </remarks>>
         /// </summary>
         [ContextMenu("DEBUG_Close")]
         protected void ForceClose()
