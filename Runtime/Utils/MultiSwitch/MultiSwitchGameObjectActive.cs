@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchGameObjectActive : MultiSwitchWithArray<GameObject>
+    public class MultiSwitchGameObjectActive : MultiSwitchWithSelection<GameObject>
     {
-        protected override void SetObject(GameObject obj, bool value)
+        protected override void SetSingleElement(GameObject obj, int value)
         {
-            obj.SetActive(value);
+            obj.SetActive(value == 1);
         }
     }
 }

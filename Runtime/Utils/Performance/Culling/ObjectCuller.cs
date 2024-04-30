@@ -1,6 +1,5 @@
 ﻿using System;
 using SkalluUtils.Extensions;
-using SkalluUtils.PropertyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,11 +12,9 @@ namespace SkalluUtils.Utils.Performance.Culling
         
         [SerializeField] private CullingBoundingBox _cullingBoundingBox;
         [SerializeField] private bool _isObjectMovable;
-        [SerializeField, ReadOnly] private bool _isObjectVisible;
-
-        [Space]
-        [SerializeField] private UnityEvent OnBecameVisible;
-        [SerializeField] private UnityEvent OnBecameInvisible;
+        [SerializeField] private bool _isObjectVisible;
+        [SerializeField] private UnityEvent _onBecameVisible;
+        [SerializeField] private UnityEvent _onBecameInvisible;
         
         private Camera _camera;
 
@@ -76,12 +73,12 @@ namespace SkalluUtils.Utils.Performance.Culling
 
         public void OnVisible()
         {
-            OnBecameVisible?.Invoke();
+            _onBecameVisible?.Invoke();
         }
 
         public void OnInvisible()
         {
-            OnBecameInvisible?.Invoke();
+            _onBecameInvisible?.Invoke();
         }
 
         private void OnDrawGizmosSelected()

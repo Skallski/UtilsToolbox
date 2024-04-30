@@ -1,26 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchImage : BasicMultiSwitch
+    public class MultiSwitchImage : MultiSwitchWithParams<Image, Sprite>
     {
-        [SerializeField] private Image _image;
-        [SerializeField] private Sprite[] _sprites;
-
-        protected override void SetStateInternal(int oldValue, int newValue)
+        protected override void SetStateInternalAction(Image image, Sprite sprite)
         {
-            if (oldValue == newValue || _image == null)
-            {
-                return;
-            }
-
-            if (newValue < 0 || _sprites.Length <= newValue)
-            {
-                return;
-            }
-
-            _image.sprite = _sprites[newValue];
+            image.sprite = sprite;
         }
     }
 }

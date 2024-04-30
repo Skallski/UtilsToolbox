@@ -1,46 +1,17 @@
-﻿using JetBrains.Annotations;
-using SkalluUtils.PropertyAttributes;
-using UnityEngine;
-
-namespace SkalluUtils.Utils.MultiSwitch
+﻿namespace Main.Scripts.Utils.MultiSwitch
 {
     /// <summary>
-    /// Allows to set state of multiple multi switches
+    /// Multi switch that can set multiple stored multi switches at once
+    /// <remarks>
+    /// Every multi switch in the array will be affected during state change!
+    /// Linking multiple broadcasts with each other could crash the application!
+    /// </remarks>
     /// </summary>
-    public class MultiSwitchBroadcast : MultiSwitch
+    public sealed class MultiSwitchBroadcast : MultiSwitchWithArray<MultiSwitch>
     {
-        [SerializeField] private int _defaultValueOnAwake = -1;
-        [SerializeField, ReadOnly] private int _state = -1;
-    
-        [SerializeField] private MultiSwitch[] _switches;
-    
-        public override int State => _state;
-
-        private void Awake()
+        protected override void SetSingleElement(MultiSwitch multiSwitch, int value)
         {
-            if (_defaultValueOnAwake != -1 && _state == -1)
-            {
-                SetStateSafe(_defaultValueOnAwake);
-            }
-        }
-
-        [UsedImplicitly]
-        public override void SetState(int value)
-        {
-            var len = _switches.Length;
-            for (int i = 0; i < len; i++)
-            {
-                var currentSwitch = _switches[i];
-
-                if (currentSwitch == null)
-                {
-                    continue;
-                }
-
-                currentSwitch.SetStateSafe(value);
-            }
-
-            _state = value;
+            multiSwitch.SetState(value);
         }
     }
 } 

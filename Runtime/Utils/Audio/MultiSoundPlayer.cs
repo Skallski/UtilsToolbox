@@ -10,7 +10,7 @@ namespace SkalluUtils.Utils.Audio
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private List<SoundClip> _sounds = new List<SoundClip>();
         [SerializeField, Min(1)] private int _playbackVoices = 6;
-        [SerializeField, PropertyAttributes.ReadOnly] private int _currentVoice;
+        [SerializeField] private int _currentVoice;
         [SerializeField] private bool _paused;
 
         private int[] _voiceClipIndex;

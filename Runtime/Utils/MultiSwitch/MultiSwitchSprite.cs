@@ -1,33 +1,12 @@
-﻿using SkalluUtils.Extensions;
-using SkalluUtils.Extensions.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchSprite : BasicMultiSwitch
+    public class MultiSwitchSprite : MultiSwitchWithParams<SpriteRenderer, Sprite>
     {
-        [SerializeField] private SpriteRenderer _spriteRenderer;
-        [field: SerializeField] public Sprite[] Sprites { get; private set; }
-
-        protected SpriteRenderer SpriteRenderer
+        protected override void SetStateInternalAction(SpriteRenderer spriteRenderer, Sprite sprite)
         {
-            get => _spriteRenderer;
-            set => _spriteRenderer = value;
-        }
-
-        protected override void SetStateInternal(int oldValue, int newValue)
-        {
-            if (oldValue == newValue || _spriteRenderer == null)
-            {
-                return;
-            }
-
-            if (newValue < 0 || Sprites.Length <= newValue)
-            {
-                return;
-            }
-
-            _spriteRenderer.sprite = Sprites[newValue];
+            spriteRenderer.sprite = sprite;
         }
     }
 }

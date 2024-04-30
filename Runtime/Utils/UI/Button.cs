@@ -1,5 +1,4 @@
-﻿using SkalluUtils.PropertyAttributes;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -21,7 +20,7 @@ namespace SkalluUtils.Utils.UI
             PointerExit
         }
 
-        [SerializeField, ReadOnly] private ButtonState _state = ButtonState.None;
+        [SerializeField] private ButtonState _state = ButtonState.None;
         [SerializeField] private bool _interactible = true;
         
         [SerializeField] private UnityEvent _onPointerEnter;

@@ -1,25 +1,12 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchScale : BasicMultiSwitch
+    public class MultiSwitchScale : MultiSwitchWithParams<Transform, Vector3>
     {
-        [SerializeField] private Transform _transform;
-        [SerializeField] private Vector3[] _scales;
-        
-        protected override void SetStateInternal(int oldValue, int newValue)
+        protected override void SetStateInternalAction(Transform tr, Vector3 scale)
         {
-            if (oldValue == newValue || _transform == null)
-            {
-                return;
-            }
-
-            if (newValue < 0 || _scales.Length <= newValue)
-            {
-                return;
-            }
-
-            _transform.localScale = _scales[newValue];
+            tr.localScale = scale;
         }
     }
 }

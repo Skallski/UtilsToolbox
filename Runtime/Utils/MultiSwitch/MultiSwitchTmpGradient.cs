@@ -1,26 +1,12 @@
 ﻿using TMPro;
-using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchTmpGradient : BasicMultiSwitch
+    public class MultiSwitchTmpGradient : MultiSwitchWithParams<TextMeshProUGUI, VertexGradient>
     {
-        [SerializeField] private TextMeshProUGUI _tmp;
-        [SerializeField] private VertexGradient[] _gradients;
-
-        protected override void SetStateInternal(int oldValue, int newValue)
+        protected override void SetStateInternalAction(TextMeshProUGUI tmp, VertexGradient gradient)
         {
-            if (oldValue == newValue || _tmp == null)
-            {
-                return;
-            }
-
-            if (newValue < 0 || _gradients.Length <= newValue)
-            {
-                return;
-            }
-
-            _tmp.colorGradient = _gradients[newValue];
+            tmp.colorGradient = gradient;
         }
     }
 }

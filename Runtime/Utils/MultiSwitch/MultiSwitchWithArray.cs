@@ -1,70 +1,41 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
     /// <summary>
-    /// 
+    /// Multi switch that can set multiple stored elements at once
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class MultiSwitchWithArray<T> : BasicMultiSwitch
+    /// <typeparam name="T"> Generic type of stored elements </typeparam>
+    public abstract class MultiSwitchWithArray<T> : MultiSwitch
     {
         [SerializeField] 
         [Tooltip("Array members can be null")]
-        private T[] _objects;
-
-        protected sealed override void SetStateInternal(int oldValue, int newValue)
+        protected T[] _elements;
+        
+        protected override bool SetStateInternal(int value)
         {
-            if (oldValue == newValue || _objects == null)
+            if (_elements == null)
             {
-                return;
+                Debug.LogError("Elements array cannot be null!");
+                return false;
             }
 
-            var len = _objects.Length;
-
-            // deactivate
-            for (int i = 0; i < len; i++)
+            foreach (T obj in _elements)
             {
-                T obj = _objects[i];
-
-                if (obj == null)
+                if (obj != null && (obj is not Object unityObject || unityObject != null))
                 {
-                    continue;
-                }
-
-                if (obj is Object unityObject && unityObject == null)
-                {
-                    continue;
-                }
-
-                if (newValue != i)
-                {
-                    SetObject(obj, false);
+                    SetSingleElement(obj, value);
                 }
             }
 
-            // activate
-            for (int i = 0; i < len; i++)
-            {
-                T obj = _objects[i];
-
-                if (obj == null)
-                {
-                    continue;
-                }
-                
-                if (obj is Object unityObject && unityObject == null)
-                {
-                    continue;
-                }
-
-                if (newValue == i)
-                {
-                    SetObject(obj, true);
-                }
-            }
+            return true;
         }
 
-        protected abstract void SetObject([NotNull] T obj, bool value);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="value"></param>
+        protected abstract void SetSingleElement(T obj, int value);
     }
 }

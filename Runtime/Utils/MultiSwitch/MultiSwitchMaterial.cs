@@ -1,25 +1,12 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.MultiSwitch
+namespace Main.Scripts.Utils.MultiSwitch
 {
-    public class MultiSwitchMaterial : BasicMultiSwitch
+    public class MultiSwitchMaterial : MultiSwitchWithParams<Renderer, Material>
     {
-        [SerializeField] private Renderer _renderer;
-        [SerializeField] private Material[] _materials;
-
-        protected override void SetStateInternal(int oldValue, int newValue)
+        protected override void SetStateInternalAction(Renderer rend, Material material)
         {
-            if (oldValue == newValue || _renderer == null)
-            {
-                return;
-            }
-
-            if (newValue < 0 || _materials.Length <= newValue)
-            {
-                return;
-            }
-
-            _renderer.material = _materials[newValue];
+            rend.material = material;
         }
     }
 }

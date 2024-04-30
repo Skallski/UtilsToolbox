@@ -50,7 +50,11 @@ namespace SkalluUtils.Editor.CustomEditors.MultiSoundPlayer
 
             EditorGUILayout.LabelField("Properties", labelGuiStyle, GUILayout.ExpandWidth(true));
             EditorGUILayout.PropertyField(_playbackVoices);
+            
+            GUI.enabled = false;
             EditorGUILayout.PropertyField(_currentVoice);
+            GUI.enabled = true;
+
             EditorGUILayout.PropertyField(_paused);
             EditorGUILayout.Space(20);
 
