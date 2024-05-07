@@ -2,6 +2,7 @@ using UnityEditor;
 
 namespace Main.Scripts.Utils.MultiSwitch.Editor
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(MultiSwitchWithArray<>), true)]
     public class MultiSwitchWithArrayEditor : MultiSwitchEditor
     {

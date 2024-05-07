@@ -9,7 +9,7 @@ namespace Main.Scripts.Utils.MultiSwitch
     public abstract class MultiSwitch : MonoBehaviour
     {
         [SerializeField] private int _defaultStateOnAwake = -1;
-        [SerializeField] private int _state = 0;
+        [SerializeField] private int _state = -1;
         [Space]
         
         private int _lastUpdatedFrame;
@@ -20,7 +20,7 @@ namespace Main.Scripts.Utils.MultiSwitch
         
         private void Awake()
         {
-            if (_defaultStateOnAwake != -1 && _state == -1)
+            if (_defaultStateOnAwake > -1)
             {
                 SetState(_defaultStateOnAwake);
             }

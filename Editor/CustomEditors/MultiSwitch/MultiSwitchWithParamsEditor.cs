@@ -2,6 +2,7 @@ using UnityEditor;
 
 namespace Main.Scripts.Utils.MultiSwitch.Editor
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(MultiSwitchWithParams<,>), true)]
     public class MultiSwitchWithParamsEditor : MultiSwitchEditor
     {
@@ -25,14 +26,9 @@ namespace Main.Scripts.Utils.MultiSwitch.Editor
             EditorGUILayout.PropertyField(_values);
         }
 
-        protected override void ValidateStateEdition()
+        protected override bool IsStateValid()
         {
-            base.ValidateStateEdition();
-
-            if (StateToSet >= _values.arraySize)
-            {
-                StateToSet = _values.arraySize - 1;
-            }
+            return base.IsStateValid() && StateToSet < _values.arraySize;
         }
     }
 }

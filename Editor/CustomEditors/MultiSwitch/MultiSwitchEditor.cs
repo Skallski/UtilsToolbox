@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Main.Scripts.Utils.MultiSwitch.Editor
 {
+    [CanEditMultipleObjects]
     [CustomEditor(typeof(MultiSwitch))]
     public class MultiSwitchEditor : UnityEditor.Editor
     {
@@ -22,7 +23,7 @@ namespace Main.Scripts.Utils.MultiSwitch.Editor
 
             _defaultStateOnAwake = serializedObject.FindProperty("_defaultStateOnAwake");
             _state = serializedObject.FindProperty("_state");
-
+            
             _editMode = false;
         }
 
@@ -41,25 +42,49 @@ namespace Main.Scripts.Utils.MultiSwitch.Editor
         {
             EditorGUILayout.PropertyField(_defaultStateOnAwake);
 
-            EditorGUILayout.BeginHorizontal();
-            if (_editMode)
+            if (Application.isPlaying)
             {
-                StateToSet = EditorGUILayout.IntField("State", StateToSet,
-                    GUILayout.MinWidth(50), GUILayout.ExpandWidth(true));
-                ValidateStateEdition();
-                
-                if (GUILayout.Button("Set", GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
+                if (_editMode)
                 {
-                    MethodInfo setStateMethod = _multiSwitch.GetType().GetMethods().FirstOrDefault(method =>
-                        method.Name.Equals("SetState") && method.GetParameters().Length == 1 &&
-                        method.GetParameters()[0].ParameterType == typeof(int));
+                    EditorGUILayout.BeginHorizontal();
+                
+                    StateToSet = EditorGUILayout.IntField("State", StateToSet,
+                        GUILayout.MinWidth(50), GUILayout.ExpandWidth(true));
 
-                    setStateMethod?.Invoke(_multiSwitch, new object[] { StateToSet });
-                }
+                    if (GUILayout.Button(new GUIContent(EditorGUIUtility.IconContent("P4_CheckOutRemote").image),
+                            GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
+                    {
+                        if (IsStateValid())
+                        {
+                            CallStateChange(StateToSet);
+                        }
+                    }
+
+                    if (GUILayout.Button(new GUIContent(EditorGUIUtility.IconContent("P4_DeletedLocal").image),
+                            GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
+                    {
+                        _editMode = false;
+                    }
                 
-                if (GUILayout.Button("Cancel", GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
+                    EditorGUILayout.EndHorizontal();
+                    
+                    EditorGUILayout.HelpBox("Preview mode will not affect MultiSwitch outside the play mode",
+                        MessageType.Info);
+                }
+                else
                 {
-                    _editMode = false;
+                    EditorGUILayout.BeginHorizontal();
+
+                    GUI.enabled = false;
+                    EditorGUILayout.PropertyField(_state);
+                    GUI.enabled = true;
+
+                    if (GUILayout.Button("Preview", GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
+                    {
+                        _editMode = true;
+                    }
+                
+                    EditorGUILayout.EndHorizontal();
                 }
             }
             else
@@ -67,22 +92,21 @@ namespace Main.Scripts.Utils.MultiSwitch.Editor
                 GUI.enabled = false;
                 EditorGUILayout.PropertyField(_state);
                 GUI.enabled = true;
-                
-                if (GUILayout.Button("Edit", GUILayout.MinWidth(50), GUILayout.ExpandWidth(true)))
-                {
-                    _editMode = !_editMode;
-                }
             }
-            
-            EditorGUILayout.EndHorizontal();
         }
 
-        protected virtual void ValidateStateEdition()
+        protected virtual bool IsStateValid()
         {
-            if (StateToSet < 0)
-            {
-                StateToSet = 0;
-            }
+            return StateToSet >= 0;
+        }
+
+        private void CallStateChange(int state)
+        {
+            MethodInfo setStateMethod = _multiSwitch.GetType().GetMethods().FirstOrDefault(method =>
+                method.Name.Equals("SetState") && method.GetParameters().Length == 1 &&
+                method.GetParameters()[0].ParameterType == typeof(int));
+
+            setStateMethod?.Invoke(_multiSwitch, new object[] { state });
         }
     }
 }
