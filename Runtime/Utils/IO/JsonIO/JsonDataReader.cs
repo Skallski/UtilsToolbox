@@ -1,13 +1,14 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using SkalluUtils.Utils.IO.Wrappers;
 using UnityEngine;
 
 namespace SkalluUtils.Utils.IO.JsonIO
 {
     public static class JsonDataReader
     {
-        public static async Task<T> Read<T>(string inputFilePath, Action<T> onSuccess = null, Action onError = null)
+        public static async Task<T> Read<T>(string inputFilePath, Action onSuccess = null, Action onError = null)
         {
             try
             {
@@ -15,8 +16,8 @@ namespace SkalluUtils.Utils.IO.JsonIO
                 {
                     string text = await reader.ReadToEndAsync();
                     T parsedData = await ParseStringToObjectAsync<T>(text);
-                    
-                    onSuccess?.Invoke(parsedData);
+                
+                    onSuccess?.Invoke();
                     return parsedData;
                 }
             }
@@ -29,11 +30,17 @@ namespace SkalluUtils.Utils.IO.JsonIO
             return default;
         }
 
+        public static async Task<T[]> ReadToArray<T>(string inputFilePath, Action onSuccess = null, Action onError = null)
+        {
+            DataArrayWrapper<T> wrapper = await Read<DataArrayWrapper<T>>(inputFilePath, onSuccess, onError);
+            return wrapper?.Array;
+        }
+
         private static async Task<T> ParseStringToObjectAsync<T>(string text)
         {
             try
             {
-                return await Task.FromResult(JsonUtility.FromJson<T>(text));
+                return await Task.Run(() => JsonUtility.FromJson<T>(text));
             }
             catch (Exception ex)
             {
