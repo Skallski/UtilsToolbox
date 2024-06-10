@@ -3,7 +3,6 @@ using System.Reflection;
 using SkalluUtils.Utils.UI;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SkalluUtils.Editor.CustomEditors.UI
 {
@@ -11,157 +10,138 @@ namespace SkalluUtils.Editor.CustomEditors.UI
     [CanEditMultipleObjects]
     public class ButtonEditor : UnityEditor.Editor
     {
-        private Button _button;
-
         private SerializedProperty _state;
-        private SerializedProperty _interactible;
-        private SerializedProperty _onPointerEnter;
-        private SerializedProperty _onPointerDown;
-        private SerializedProperty _onPointerUp;
-        private SerializedProperty _onPointerExit;
+        private SerializedProperty _isInteractible;
+        private SerializedProperty _events;
+        
+        private GUIContent _iconToolbarMinus;
+        private GUIContent[] _eventTypes;
+        private GUIContent _addButtonContent;
 
-        private bool _onPointerEnterUnfolded;
-        private bool _onPointerDownUnfolded;
-        private bool _onPointerUpUnfolded;
-        private bool _onPointerExitUnfolded;
-
-        private bool _methodsShown = false;
-
-        private static readonly BindingFlags Flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        const BindingFlags BINDING_FLAGS = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         private void OnEnable()
         {
-            _button = target as Button;
-
             _state = serializedObject.FindProperty("_state");
-            _interactible = serializedObject.FindProperty("_interactible");
-            _onPointerEnter = serializedObject.FindProperty("_onPointerEnter");
-            _onPointerDown = serializedObject.FindProperty("_onPointerDown");
-            _onPointerUp = serializedObject.FindProperty("_onPointerUp");
-            _onPointerExit = serializedObject.FindProperty("_onPointerExit");
+            _isInteractible = serializedObject.FindProperty("_isInteractible");
+            _events = serializedObject.FindProperty("_events");
+
+            _addButtonContent = EditorGUIUtility.TrTextContent("Add New Button Event");
+            
+            _iconToolbarMinus = new GUIContent(EditorGUIUtility.IconContent("Toolbar Minus"))
+            {
+                tooltip = "Remove all events in this list."
+            };
+            
+            string[] eventNames = Enum.GetNames(typeof(Button.ButtonEventType));
+            _eventTypes = new GUIContent[eventNames.Length];
+            for (int i = 0, c = eventNames.Length; i < c; i++)
+            {
+                _eventTypes[i] = new GUIContent(eventNames[i]);
+            }
         }
 
         public override void OnInspectorGUI()
         {
-            if (_button == null)
-            {
-                return;
-            }
-            
             serializedObject.Update();
-            EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.PropertyField(_interactible);
-            
-            GUI.enabled = false;
+            EditorGUILayout.PropertyField(_isInteractible);
+
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(_state);
-            GUI.enabled = true;
-            
-            #region POINTER EVENTS VISUALISATION
-            if (Application.isPlaying)
-            {
-                EditorGUILayout.Space();
-                GUIStyle oldStyle = GUI.skin.button;
-                GUIStyle style = new GUIStyle(GUI.skin.button)
-                {
-                    fixedHeight = 13f,
-                    fontSize = 10
-                };
+            EditorGUI.EndDisabledGroup();
 
-                GUI.skin.button = style;
-                if (GUILayout.Button(new GUIContent("Visualise Pointer Events", 
-                        EditorGUIUtility.IconContent(_methodsShown ? "PreviewCollapse" : "PreviewExpand").image)))
+            EditorGUILayout.Space();
+            EditorGUI.DrawRect(EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
+            EditorGUILayout.Space();
+
+            int toBeRemovedEntry = -1;
+            Vector2 removeButtonSize = GUIStyle.none.CalcSize(_iconToolbarMinus);
+
+            for (int i = 0, c = _events.arraySize; i < c; i++)
+            {
+                SerializedProperty delegateProp = _events.GetArrayElementAtIndex(i);
+                SerializedProperty callbackProp = delegateProp.FindPropertyRelative("callback");
+                SerializedProperty buttonEventProp = delegateProp.FindPropertyRelative("buttonEventType");
+                GUIContent eventName = new GUIContent(buttonEventProp.enumDisplayNames[buttonEventProp.enumValueIndex]);
+                
+                EditorGUILayout.PropertyField(callbackProp, eventName);
+                
+                // remove button
+                Rect callbackRect = GUILayoutUtility.GetLastRect();
+                Rect removeButtonPos = new Rect(callbackRect.xMax - removeButtonSize.x - 8, callbackRect.y + 1, removeButtonSize.x, removeButtonSize.y);
+                if (GUI.Button(removeButtonPos, _iconToolbarMinus, GUIStyle.none))
                 {
-                    _methodsShown = !_methodsShown;
+                    toBeRemovedEntry = i;
                 }
 
-                GUI.skin.button = oldStyle;
-                if (_methodsShown)
+                EditorGUILayout.Space();
+            }
+            
+            if (toBeRemovedEntry > -1)
+            {
+                _events.DeleteArrayElementAtIndex(toBeRemovedEntry);
+            }
+            
+            // add new button event
+            Rect btPosition = GUILayoutUtility.GetRect(_addButtonContent, GUI.skin.button);
+            const float addButtonWidth = 200f;
+            btPosition.x = btPosition.x + (btPosition.width - addButtonWidth) / 2;
+            btPosition.width = addButtonWidth;
+            if (_events.arraySize < _eventTypes.Length)
+            {
+                if (GUI.Button(btPosition, "Add Button Event"))
                 {
-                    object[] param = new object[] { };
-                    Type type = _button.GetType();
-
-                    if (GUILayout.Button("OnPointerEnter"))
-                    {
-                        type.GetMethod("OnPointerEnterInternal", Flags)?.Invoke(_button, param);
-                    }
-                
-                    if (GUILayout.Button("OnPointerDown"))
-                    {
-                        type.GetMethod("OnPointerDownInternal", Flags)?.Invoke(_button, param);
-                    }
-                
-                    if (GUILayout.Button("OnPointerUp"))
-                    {
-                        type.GetMethod("OnPointerUpInternal", Flags)?.Invoke(_button, param);
-                    }
-                
-                    if (GUILayout.Button("OnPointerExit"))
-                    {
-                        type.GetMethod("OnPointerExitInternal", Flags)?.Invoke(_button, param);
-                    }
+                    ShowAddPointerEventMenu();
                 }
             }
-            #endregion
-
-            EditorGUILayout.Space();
-            EditorGUI.DrawRect(
-                EditorGUILayout.GetControlRect(false, 1), new Color(0f, 0f, 0f, 0.3f));
-            EditorGUILayout.Space();
-            
-            #region DISPLAY BUTTON EVENTS
-            EditorGUILayout.LabelField("Button Events", 
-                new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold },
-                GUILayout.ExpandWidth(true));
-            EditorGUILayout.Space();
-
-            void DisplayButtonEvent(ref bool unfolded, string label, SerializedProperty property)
+            else
             {
-                FieldInfo propertyFieldInfo = target.GetType().GetField(property.propertyPath,
-                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                if (propertyFieldInfo == null)
-                {
-                    return;
-                }
+                EditorGUI.BeginDisabledGroup(true);
+                GUI.Button(btPosition, "Add Button Event");
+                EditorGUI.EndDisabledGroup();
+            }
 
-                object fieldValue = propertyFieldInfo.GetValue(target);
-                if (!(fieldValue is UnityEvent buttonEvent))
-                {
-                    return;
-                }
+            serializedObject.ApplyModifiedProperties();
+        }
 
-                if (buttonEvent.GetPersistentEventCount() > 0)
+        private void ShowAddPointerEventMenu()
+        {
+            GenericMenu menu = new GenericMenu();
+            for (int i = 0; i < _eventTypes.Length; i++)
+            {
+                bool active = true;
+                    
+                for (int j = 0; j < _events.arraySize; j++)
                 {
-                    EditorGUILayout.Space();
-                    EditorGUILayout.PropertyField(property);
-                    EditorGUILayout.Space();
+                    SerializedProperty delegateProp = _events.GetArrayElementAtIndex(j);
+                    SerializedProperty buttonEventProp = delegateProp.FindPropertyRelative("buttonEventType");
+                    if (buttonEventProp.enumValueIndex == i)
+                    {
+                        active = false;
+                    }
+                }
+                
+                if (active)
+                {
+                    int index = i;
+                    
+                    menu.AddItem(_eventTypes[i], false, () =>
+                    {
+                        _events.arraySize += 1;
+                        SerializedProperty newDelegateProp = _events.GetArrayElementAtIndex(_events.arraySize - 1);
+                        SerializedProperty buttonEventProp = newDelegateProp.FindPropertyRelative("buttonEventType");
+                        buttonEventProp.enumValueIndex = index;
+                        serializedObject.ApplyModifiedProperties();
+                    });
                 }
                 else
                 {
-                    if (unfolded)
-                    {
-                        EditorGUILayout.Space();
-                        EditorGUILayout.PropertyField(property);
-                        EditorGUILayout.Space();
-                    }
-                    else
-                    {
-                        if (GUILayout.Button(label))
-                        {
-                            unfolded = !unfolded;
-                        }
-                    }
+                    menu.AddDisabledItem(_eventTypes[i]);
                 }
             }
-            
-            DisplayButtonEvent(ref _onPointerEnterUnfolded, "OnPointerEnter()", _onPointerEnter);
-            DisplayButtonEvent(ref _onPointerDownUnfolded, "OnPointerDown()", _onPointerDown);
-            DisplayButtonEvent(ref _onPointerUpUnfolded, "OnPointerUp()", _onPointerUp);
-            DisplayButtonEvent(ref _onPointerExitUnfolded, "OnPointerExit()", _onPointerExit);
-            #endregion
-            
-            EditorGUILayout.EndVertical();
-            serializedObject.ApplyModifiedProperties();
+                
+            menu.ShowAsContext();
         }
     }
 }

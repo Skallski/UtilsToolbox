@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -13,81 +15,81 @@ namespace SkalluUtils.Utils.UI
     {
         private enum ButtonState
         {
-            None,
-            PointerEnter,
-            PointerDown,
-            PointerUp,
-            PointerExit
+            None = -1,
+            PointerEnter = 0,
+            PointerDown = 1,
+            PointerUp = 2,
+            PointerExit = 3
+        }
+
+        public enum ButtonEventType
+        {
+            PointerEnter = 0,
+            PointerDown = 1,
+            PointerUp = 2,
+            PointerExit = 3
+        }
+        
+        [Serializable]
+        private class Entry
+        {
+            public ButtonEventType buttonEventType = ButtonEventType.PointerEnter;
+            public UnityEvent callback = new UnityEvent();
         }
 
         [SerializeField] private ButtonState _state = ButtonState.None;
-        [SerializeField] private bool _interactible = true;
-        
-        [SerializeField] private UnityEvent _onPointerEnter;
-        [SerializeField] private UnityEvent _onPointerDown;
-        [SerializeField] private UnityEvent _onPointerUp;
-        [SerializeField] private UnityEvent _onPointerExit;
+        [SerializeField] private bool _isInteractible = true;
+        [SerializeField] private List<Entry> _events = new List<Entry>();
 
-        public bool Interactible
+        public bool IsInteractible
         {
-            get => _interactible;
-            set => _interactible = value;
+            get => _isInteractible;
+            set => _isInteractible = value;
         }
 
         #region POINTER EVENTS
-        public void OnPointerEnter(PointerEventData eventData) => OnPointerEnterInternal();
-        public void OnPointerDown(PointerEventData eventData) => OnPointerDownInternal();
-        public void OnPointerUp(PointerEventData eventData) => OnPointerUpInternal();
-        public void OnPointerExit(PointerEventData eventData) => OnPointerExitInternal();
-        #endregion
-
-        private void OnPointerEnterInternal()
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            if (_interactible == false)
-            {
-                return;
-            }
-            
-            _onPointerEnter?.Invoke();
-            _state = ButtonState.PointerEnter;
+            HandlePointerEvent(ButtonState.PointerEnter);
         }
 
-        private void OnPointerDownInternal()
+        public void OnPointerDown(PointerEventData eventData)
         {
-            if (_interactible == false)
-            {
-                return;
-            }
-            
-            _onPointerDown?.Invoke();
-            _state = ButtonState.PointerDown;
+            HandlePointerEvent(ButtonState.PointerDown);
         }
 
-        private void OnPointerUpInternal()
+        public void OnPointerUp(PointerEventData eventData)
         {
-            if (_interactible == false)
-            {
-                return;
-            }
-            
             if (_state == ButtonState.PointerExit)
             {
                 return;
             }
-            
-            _onPointerUp?.Invoke();
-            _state = ButtonState.PointerUp;
+
+            HandlePointerEvent(ButtonState.PointerUp);
         }
 
-        private void OnPointerExitInternal()
+        public void OnPointerExit(PointerEventData eventData)
         {
-            if (_interactible == false)
+            HandlePointerEvent(ButtonState.PointerExit);
+        }
+        #endregion
+        
+        private void HandlePointerEvent(ButtonState buttonState)
+        {
+            if (_state == buttonState || _isInteractible == false)
             {
                 return;
             }
+
+            foreach (Entry entry in _events)
+            {
+                if ((int) entry.buttonEventType == (int) buttonState)
+                {
+                    entry.callback?.Invoke();
+                }
+            }
             
-            _onPointerExit?.Invoke();
-            _state = ButtonState.PointerExit;
+            _state = buttonState;
         }
     }
 }
