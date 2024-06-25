@@ -3,54 +3,47 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace SkalluUtils.Utils.IO.Web
+namespace SkalluUtils.Utils.IO.JsonIO
 {
-    public static class WebRequestHandler
+    public static class JsonOverHttpHandler
     {
         #region PUBLIC METHODS
-        /// <summary>
-        /// Creates GET request
-        /// </summary>
-        /// <param name="caller"> MonoBehaviour, on which coroutine will be called </param>
-        /// <param name="uri"></param>
-        /// <param name="onSuccess"> Action that will be called on request success </param>
-        /// <param name="onError"> Action that will be called on request error </param>
-        /// <typeparam name="T"> DTO </typeparam>
+        public static void GetRequest<T>(MonoBehaviour caller, string uri, Func<string, T> deserializeFunc,
+            Action<T> onSuccess, Action onError = null)
+        {
+            caller.StartCoroutine(GetRequest_Coroutine(uri, deserializeFunc, onSuccess, onError));
+        }
+        
         public static void GetRequest<T>(MonoBehaviour caller, string uri, Action<T> onSuccess, Action onError = null)
         {
-            caller.StartCoroutine(GetRequest_Coroutine(uri, onSuccess, onError));
+            GetRequest(caller, uri, JsonUtility.FromJson<T>, onSuccess, onError);
+        }
+
+        public static void PutRequest<T>(MonoBehaviour caller, string uri, T data, Func<T, string> serializeFunc,
+            Action onSuccess = null, Action onError = null)
+        {
+            caller.StartCoroutine(PutRequest_Coroutine(uri, data, serializeFunc, onSuccess, onError));
         }
         
-        /// <summary>
-        /// Creates PUT request
-        /// </summary>
-        /// <param name="caller"> MonoBehaviour, on which coroutine will be called </param>
-        /// <param name="uri"></param>
-        /// <param name="data"> Class data that will be processed by request </param>
-        /// <param name="onSuccess"> Action that will be called on request success </param>
-        /// <param name="onError"> Action that will be called on request error </param>
-        /// <typeparam name="T"> DTO </typeparam>
         public static void PutRequest<T>(MonoBehaviour caller, string uri, T data, Action onSuccess = null, Action onError = null)
         {
-            caller.StartCoroutine(PutRequest_Coroutine(uri, data, onSuccess, onError));
+            PutRequest(caller, uri, data, d => JsonUtility.ToJson(d), onSuccess, onError);
+        }
+
+        public static void PostRequest<T>(MonoBehaviour caller, string uri, T data, Func<T, string> serializeFunc,
+            Action onSuccess = null, Action onError = null)
+        {
+            caller.StartCoroutine(PostRequest_Coroutine(uri, data, serializeFunc, onSuccess, onError));
         }
         
-        /// <summary>
-        /// Creates POST request
-        /// </summary>
-        /// <param name="caller"> MonoBehaviour, on which coroutine will be called </param>
-        /// <param name="uri"></param>
-        /// <param name="data"> Class data that will be processed by request </param>
-        /// <param name="onSuccess"> Action that will be called on request success </param>
-        /// <param name="onError"> Action that will be called on request error </param>
-        /// <typeparam name="T"> DTO </typeparam>
         public static void PostRequest<T>(MonoBehaviour caller, string uri, T data, Action onSuccess = null, Action onError = null)
         {
-            caller.StartCoroutine(PostRequest_Coroutine(uri, data, onSuccess, onError));
+            PostRequest(caller, uri, data, d => JsonUtility.ToJson(d), onSuccess, onError);
         }
         #endregion
 
-        private static IEnumerator GetRequest_Coroutine<T>(string url, Action<T> onSuccess, Action onError = null)
+        private static IEnumerator GetRequest_Coroutine<T>(string url, Func<string, T> deserializeFunc,
+            Action<T> onSuccess, Action onError = null)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
             {
@@ -63,7 +56,7 @@ namespace SkalluUtils.Utils.IO.Web
 
                     try
                     {
-                        T result = JsonUtility.FromJson<T>(response);
+                        T result = deserializeFunc(response);
                         onSuccess?.Invoke(result);
                     }
                     catch (Exception e)
@@ -79,10 +72,11 @@ namespace SkalluUtils.Utils.IO.Web
                 }
             }
         }
-        
-        private static IEnumerator PutRequest_Coroutine<T>(string url, T data, Action onSuccess, Action onError = null)
+
+        private static IEnumerator PutRequest_Coroutine<T>(string url, T data, Func<T, string> serializeFunc,
+            Action onSuccess, Action onError = null)
         {
-            string jsonData = JsonUtility.ToJson(data);
+            string jsonData = serializeFunc(data);
 
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))
             {
@@ -107,10 +101,11 @@ namespace SkalluUtils.Utils.IO.Web
             }
         }
 
-        private static IEnumerator PostRequest_Coroutine<T>(string url, T data, Action onSuccess, Action onError = null)
+        private static IEnumerator PostRequest_Coroutine<T>(string url, T data, Func<T, string> serializeFunc,
+            Action onSuccess, Action onError = null)
         {
-            string jsonData = JsonUtility.ToJson(data);
-            
+            string jsonData = serializeFunc(data);
+
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
             {
                 byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);

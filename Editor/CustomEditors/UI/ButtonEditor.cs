@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using SkalluUtils.Utils.UI;
 using UnityEditor;
 using UnityEngine;
@@ -17,9 +16,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI
         private GUIContent _iconToolbarMinus;
         private GUIContent[] _eventTypes;
         private GUIContent _addButtonContent;
-
-        const BindingFlags BINDING_FLAGS = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-
+        
         private void OnEnable()
         {
             _state = serializedObject.FindProperty("_state");

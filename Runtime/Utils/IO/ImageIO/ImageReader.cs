@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.IO.ImageFileIO
+namespace SkalluUtils.Utils.IO.ImageIO
 {
-    public static class ImageFileLoader
+    public static class ImageReader
     {
-        public static Sprite LoadAsSprite(string inputPath)
+        public static Sprite LoadFileAsSprite(string inputPath)
         {
-            Texture2D texture = LoadAsTexture2D(inputPath);
+            Texture2D texture = LoadFileAsTexture2D(inputPath);
             
             try
             {
@@ -21,7 +21,7 @@ namespace SkalluUtils.Utils.IO.ImageFileIO
             }
         }
         
-        public static Texture2D LoadAsTexture2D(string inputPath)
+        public static Texture2D LoadFileAsTexture2D(string inputPath)
         {
             try
             {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.Performance.Culling
+namespace SkalluUtils.Utils.Optimization.Culling
 {
     [System.Serializable]
     public struct CullingBoundingBox

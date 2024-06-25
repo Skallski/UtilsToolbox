@@ -1,4 +1,4 @@
-using SkalluUtils.Utils.Performance.Culling;
+using SkalluUtils.Utils.Optimization.Culling;
 using UnityEditor;
 using UnityEngine;
 

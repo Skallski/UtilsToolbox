@@ -3,7 +3,7 @@ using SkalluUtils.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.Performance.Culling
+namespace SkalluUtils.Utils.Optimization.Culling
 {
     public class ObjectCuller : MonoBehaviour
     {
