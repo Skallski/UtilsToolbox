@@ -6,9 +6,9 @@ namespace SkalluUtils.Utils.IO.ImageIO
 {
     public static class ImageReader
     {
-        public static Sprite LoadFileAsSprite(string inputPath)
+        public static Sprite ReadAsSprite(string inputPath)
         {
-            Texture2D texture = LoadFileAsTexture2D(inputPath);
+            Texture2D texture = ReadAsTexture2D(inputPath);
             
             try
             {
@@ -21,7 +21,7 @@ namespace SkalluUtils.Utils.IO.ImageIO
             }
         }
         
-        public static Texture2D LoadFileAsTexture2D(string inputPath)
+        public static Texture2D ReadAsTexture2D(string inputPath)
         {
             try
             {

@@ -47,13 +47,8 @@ namespace SkalluUtils.Utils.IO.JsonIO
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
             {
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
+                yield return SendRequest_Coroutine(webRequest, response =>
                 {
-                    string response = webRequest.downloadHandler.text;
-                    Debug.Log($"<color=green>Request successful:</color> {response}");
-
                     try
                     {
                         T result = deserializeFunc(response);
@@ -64,12 +59,7 @@ namespace SkalluUtils.Utils.IO.JsonIO
                         Debug.LogError($"JSON parsing error: {e.Message}");
                         onError?.Invoke();
                     }
-                }
-                else
-                {
-                    Debug.LogError($"Request error: {webRequest.error}");
-                    onError?.Invoke();
-                }
+                }, onError);
             }
         }
 
@@ -77,27 +67,15 @@ namespace SkalluUtils.Utils.IO.JsonIO
             Action onSuccess, Action onError = null)
         {
             string jsonData = serializeFunc(data);
+            byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);
 
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))
             {
-                byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);
                 webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
 
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    string response = webRequest.downloadHandler.text;
-                    Debug.Log($"<color=green>Request successful:</color> {response}");
-                    onSuccess?.Invoke();
-                }
-                else
-                {
-                    Debug.LogError($"Request error: {webRequest.error}");
-                    onError?.Invoke();
-                }
+                yield return SendRequest_Coroutine(webRequest, _ => onSuccess?.Invoke(), onError);
             }
         }
 
@@ -105,28 +83,54 @@ namespace SkalluUtils.Utils.IO.JsonIO
             Action onSuccess, Action onError = null)
         {
             string jsonData = serializeFunc(data);
+            byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);
 
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
             {
-                byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(jsonData);
                 webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
 
-                yield return webRequest.SendWebRequest();
-
-                if (webRequest.result == UnityWebRequest.Result.Success)
-                {
-                    string response = webRequest.downloadHandler.text;
-                    Debug.Log($"<color=green>Request successful:</color> {response}");
-                    onSuccess?.Invoke();
-                }
-                else
-                {
-                    Debug.LogError($"Request error: {webRequest.error}");
-                    onError?.Invoke();
-                }
+                yield return SendRequest_Coroutine(webRequest, _ => onSuccess?.Invoke(), onError);
             }
+        }
+
+        private static IEnumerator SendRequest_Coroutine(UnityWebRequest webRequest, Action<string> onSuccess, Action onError)
+        {
+            webRequest.SendWebRequest();
+            
+            // request timeout handling
+            const float timeoutSeconds = 10f;
+            float startTime = Time.time;
+            while (webRequest.isDone == false)
+            {
+                if (Time.time - startTime >= timeoutSeconds)
+                {
+                    webRequest.Abort();
+                    Debug.LogError("Request timed out!");
+                    onError?.Invoke();
+                    webRequest.Dispose();
+                    
+                    yield break;
+                }
+
+                yield return null;
+            }
+            
+            // request completed
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                string response = webRequest.downloadHandler.text ?? string.Empty;
+                Debug.Log($"<color=green>Request successful:</color> {response}");
+                onSuccess?.Invoke(response);
+            }
+            else
+            {
+                Debug.LogError($"Request error: {webRequest.error}");
+                onError?.Invoke();
+            }
+            
+            webRequest.Dispose();
         }
     }
 }
