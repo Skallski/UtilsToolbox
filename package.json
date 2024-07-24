@@ -2,7 +2,7 @@
   "name": "com.skallu.utils-toolbox",
   "version": "1.2.8",
   "displayName": "Utils Toolbox",
-  "description": "Package full of tools, extensions and QOL stuff, which I find useful :P. \nFormerly named Skallu-Utils",
+  "description": "Package full of tools, extensions and many QoL improvements. \nFormerly known as Skallu Utils.",
   "unity": "2020.3",
   "keywords": [
     "Skallu",
