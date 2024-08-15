@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SkalluUtils.PropertyAttributes
+namespace UtilsToolbox.PropertyAttributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
     [System.Diagnostics.Conditional("UNITY_EDITOR")]

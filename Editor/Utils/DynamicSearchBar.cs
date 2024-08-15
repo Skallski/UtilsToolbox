@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.Utils
+namespace UtilsToolbox.Editor.Utils
 {
     /// <summary>
     /// 1. Cache instance as global variable inside custom editor

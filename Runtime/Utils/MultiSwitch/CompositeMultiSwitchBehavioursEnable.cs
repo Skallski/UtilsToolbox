@@ -1,4 +1,4 @@
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     public class CompositeMultiSwitchBehavioursEnable : MultiSwitchWithArray<UnityEngine.Behaviour>
     {

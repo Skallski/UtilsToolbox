@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils.Extensions
+namespace UtilsToolbox.Extensions
 {
     public static class GameObjectExtensions
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace SkalluUtils.Utils.VFX
+namespace UtilsToolbox.Utils.VFX
 {
     public class ObjectShake : MonoBehaviour
     {

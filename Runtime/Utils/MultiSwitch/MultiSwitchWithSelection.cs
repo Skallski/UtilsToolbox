@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     /// <summary>
     /// Multi switch that can select one from stored elements and deselect others ones

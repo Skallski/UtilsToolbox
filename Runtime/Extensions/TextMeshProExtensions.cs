@@ -2,7 +2,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-namespace SkalluUtils.Extensions
+namespace UtilsToolbox.Extensions
 {
     public static class TextMeshProExtensions
     {

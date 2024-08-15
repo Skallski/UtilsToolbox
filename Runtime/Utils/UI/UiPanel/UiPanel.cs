@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.UI.UiPanel
+namespace UtilsToolbox.Utils.UI.UiPanel
 {
     /// <summary>
     /// Base panel class

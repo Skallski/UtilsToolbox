@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.Optimization.Culling
+namespace UtilsToolbox.Utils.Optimization.Culling
 {
     internal class ObjectCullingManager : MonoBehaviour
     {

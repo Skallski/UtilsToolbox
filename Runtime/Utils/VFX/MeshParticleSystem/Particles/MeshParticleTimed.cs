@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.VFX.MeshParticleSystem.Particles
+namespace UtilsToolbox.Utils.VFX.MeshParticleSystem.Particles
 {
     public class MeshParticleTimed : MeshParticle
     {

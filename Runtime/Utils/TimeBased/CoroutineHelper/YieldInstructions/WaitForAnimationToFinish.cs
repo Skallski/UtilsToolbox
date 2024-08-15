@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.TimeBased.CoroutineHelper.YieldInstructions
+namespace UtilsToolbox.Utils.TimeBased.CoroutineHelper.YieldInstructions
 {
     public class WaitForAnimationToFinish : CustomYieldInstruction
     {

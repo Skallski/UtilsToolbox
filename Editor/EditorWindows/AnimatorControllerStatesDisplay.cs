@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.EditorWindows
+namespace UtilsToolbox.Editor.EditorWindows
 {
     public class AnimatorControllerStatesDisplay : EditorWindowBase
     {

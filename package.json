@@ -1,18 +1,17 @@
 {
-  "name": "com.skallu.utils-toolbox",
-  "version": "1.2.8",
+  "name": "com.skallski.utils-toolbox",
+  "version": "1.2.9",
   "displayName": "Utils Toolbox",
-  "description": "Package full of tools, extensions and many QoL improvements. \nFormerly known as Skallu Utils.",
+  "description": "Package full of tools, extensions and many QoL improvements.",
   "unity": "2020.3",
   "keywords": [
-    "Skallu",
     "utils",
     "extensions",
     "tools"
   ],
   "author": {
-    "name": "Skallu",
+    "name": "Skallski",
     "email": "kaminski.patryk@hotmail.com",
-    "url": "https://github.com/Skallu0711"
+    "url": "https://github.com/Skallski"
   }
 }

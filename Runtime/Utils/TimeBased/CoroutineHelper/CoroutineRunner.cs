@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TimeBased.CoroutineHelper
+namespace UtilsToolbox.Utils.TimeBased.CoroutineHelper
 {
     public static class CoroutineRunner
     {

@@ -1,4 +1,4 @@
-namespace SkalluUtils.Utils.TimeBased.Tweening
+namespace UtilsToolbox.Utils.TimeBased.Tweening
 {
     public enum TweenTimeMode
     {

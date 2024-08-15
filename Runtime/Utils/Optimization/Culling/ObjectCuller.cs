@@ -1,9 +1,9 @@
 ﻿using System;
-using SkalluUtils.Extensions;
 using UnityEngine;
 using UnityEngine.Events;
+using UtilsToolbox.Extensions;
 
-namespace SkalluUtils.Utils.Optimization.Culling
+namespace UtilsToolbox.Utils.Optimization.Culling
 {
     public class ObjectCuller : MonoBehaviour
     {

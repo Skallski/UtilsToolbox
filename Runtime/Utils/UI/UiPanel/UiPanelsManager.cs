@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.UiPanel
+namespace UtilsToolbox.Utils.UI.UiPanel
 {
     public class UiPanelsManager : MonoBehaviour
     {

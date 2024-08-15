@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.IO.JsonIO
+namespace UtilsToolbox.Utils.IO.JsonIO
 {
     public static class JsonWriter
     {

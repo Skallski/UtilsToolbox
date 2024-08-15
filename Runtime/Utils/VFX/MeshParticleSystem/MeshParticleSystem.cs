@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.VFX.MeshParticleSystem
+namespace UtilsToolbox.Utils.VFX.MeshParticleSystem
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class MeshParticleSystem : MonoBehaviour

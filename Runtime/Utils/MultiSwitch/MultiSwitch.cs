@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     /// <summary>
     /// Base class that contains basic implementation of multi switch

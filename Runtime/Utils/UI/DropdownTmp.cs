@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace SkalluUtils.Utils.UI
+namespace UtilsToolbox.Utils.UI
 {
     public class DropdownTmp : TMP_Dropdown
     {

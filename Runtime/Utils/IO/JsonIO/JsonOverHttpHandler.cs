@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace SkalluUtils.Utils.IO.JsonIO
+namespace UtilsToolbox.Utils.IO.JsonIO
 {
     public static class JsonOverHttpHandler
     {
@@ -47,7 +47,10 @@ namespace SkalluUtils.Utils.IO.JsonIO
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
             {
-                yield return SendRequest_Coroutine(webRequest, response =>
+                webRequest.timeout = 10;
+                
+                yield return webRequest.SendWebRequest();
+                HandleRequestResult(webRequest, response =>
                 {
                     try
                     {
@@ -62,8 +65,8 @@ namespace SkalluUtils.Utils.IO.JsonIO
                 }, onError);
             }
         }
-
-        private static IEnumerator PutRequest_Coroutine<T>(string url, T data, Func<T, string> serializeFunc,
+        
+        private static IEnumerator PutRequest_Coroutine<T>(string url, T data, Func<T, string> serializeFunc, 
             Action onSuccess, Action onError = null)
         {
             string jsonData = serializeFunc(data);
@@ -71,11 +74,13 @@ namespace SkalluUtils.Utils.IO.JsonIO
 
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))
             {
+                webRequest.timeout = 10;
                 webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
 
-                yield return SendRequest_Coroutine(webRequest, _ => onSuccess?.Invoke(), onError);
+                yield return webRequest.SendWebRequest();
+                HandleRequestResult(webRequest, _ => onSuccess?.Invoke(), onError);
             }
         }
 
@@ -87,50 +92,30 @@ namespace SkalluUtils.Utils.IO.JsonIO
 
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
             {
+                webRequest.timeout = 10;
                 webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 webRequest.SetRequestHeader("Content-Type", "application/json");
 
-                yield return SendRequest_Coroutine(webRequest, _ => onSuccess?.Invoke(), onError);
+                yield return webRequest.SendWebRequest();
+                HandleRequestResult(webRequest, _ => onSuccess?.Invoke(), onError);
             }
         }
 
-        private static IEnumerator SendRequest_Coroutine(UnityWebRequest webRequest, Action<string> onSuccess, Action onError)
+        private static void HandleRequestResult(UnityWebRequest webRequest, Action<string> onResponseReceived, 
+            Action onResultError)
         {
-            webRequest.SendWebRequest();
-            
-            // request timeout handling
-            const float timeoutSeconds = 10f;
-            float startTime = Time.time;
-            while (webRequest.isDone == false)
-            {
-                if (Time.time - startTime >= timeoutSeconds)
-                {
-                    webRequest.Abort();
-                    Debug.LogError("Request timed out!");
-                    onError?.Invoke();
-                    webRequest.Dispose();
-                    
-                    yield break;
-                }
-
-                yield return null;
-            }
-            
-            // request completed
             if (webRequest.result == UnityWebRequest.Result.Success)
             {
-                string response = webRequest.downloadHandler.text ?? string.Empty;
+                string response = webRequest.downloadHandler.text;
                 Debug.Log($"<color=green>Request successful:</color> {response}");
-                onSuccess?.Invoke(response);
+                onResponseReceived?.Invoke(response);
             }
             else
             {
                 Debug.LogError($"Request error: {webRequest.error}");
-                onError?.Invoke();
+                onResultError?.Invoke();
             }
-            
-            webRequest.Dispose();
         }
     }
 }

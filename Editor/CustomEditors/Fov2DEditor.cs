@@ -1,9 +1,9 @@
 using System.Reflection;
-using SkalluUtils.Utils.GameAI;
 using UnityEditor;
 using UnityEngine;
+using UtilsToolbox.Utils.GameAI;
 
-namespace SkalluUtils.Editor.CustomEditors
+namespace UtilsToolbox.Editor.CustomEditors
 {
     [CustomEditor(typeof(Fov2D), true)]
     public class Fov2DEditor : UnityEditor.Editor

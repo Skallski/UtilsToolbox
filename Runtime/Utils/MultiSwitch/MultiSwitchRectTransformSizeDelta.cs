@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     public class MultiSwitchRectTransformSizeDelta : MultiSwitchWithParams<RectTransform, Vector2>
     {

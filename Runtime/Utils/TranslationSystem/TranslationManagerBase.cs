@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TranslationSystem
+namespace UtilsToolbox.Utils.TranslationSystem
 {
     /// <summary>
     /// Abstract class that represents base of translation manager

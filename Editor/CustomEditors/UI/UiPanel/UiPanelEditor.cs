@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
+namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 {
-    [CustomEditor(typeof(SkalluUtils.Utils.UI.UiPanel.UiPanel), true)]
+    [CustomEditor(typeof(UtilsToolbox.Utils.UI.UiPanel.UiPanel), true)]
     public class UiPanelEditor : UnityEditor.Editor
     {
-        private SkalluUtils.Utils.UI.UiPanel.UiPanel _panel;
+        private UtilsToolbox.Utils.UI.UiPanel.UiPanel _panel;
 
         private SerializedProperty _content;
         private SerializedProperty _background;
@@ -22,7 +22,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
 
         protected virtual void OnEnable()
         {
-            _panel = target as SkalluUtils.Utils.UI.UiPanel.UiPanel;
+            _panel = target as UtilsToolbox.Utils.UI.UiPanel.UiPanel;
 
             SetupProperties();
         }

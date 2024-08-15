@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.Optimization.Pooling
+namespace UtilsToolbox.Utils.Optimization.Pooling
 {
     public abstract class PoolableObject : MonoBehaviour
     {

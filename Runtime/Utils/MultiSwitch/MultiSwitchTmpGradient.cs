@@ -1,6 +1,6 @@
 ﻿using TMPro;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     public class MultiSwitchTmpGradient : MultiSwitchWithParams<TextMeshProUGUI, VertexGradient>
     {

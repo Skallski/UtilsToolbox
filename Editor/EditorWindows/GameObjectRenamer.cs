@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.EditorWindows
+namespace UtilsToolbox.Editor.EditorWindows
 {
     public class GameObjectRenamer : EditorWindowBase
     {

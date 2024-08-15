@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     public class MultiSwitchMaterial : MultiSwitchWithParams<Renderer, Material>
     {

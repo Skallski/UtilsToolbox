@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SkalluUtils.Extensions
+namespace UtilsToolbox.Extensions
 {
     public static class Texture2DExtensions
     {

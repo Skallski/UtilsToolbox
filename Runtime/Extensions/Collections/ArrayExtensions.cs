@@ -1,4 +1,4 @@
-﻿namespace SkalluUtils.Extensions.Collections
+﻿namespace UtilsToolbox.Extensions.Collections
 {
     public static class ArrayExtensions
     {

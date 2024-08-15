@@ -1,8 +1,8 @@
-using SkalluUtils.Utils.Optimization.Culling;
 using UnityEditor;
 using UnityEngine;
+using UtilsToolbox.Utils.Optimization.Culling;
 
-namespace SkalluUtils.Editor.CustomEditors
+namespace UtilsToolbox.Editor.CustomEditors
 {
     [CustomEditor(typeof(ObjectCuller))]
     public class ObjectCullerEditor : UnityEditor.Editor

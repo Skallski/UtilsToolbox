@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SkalluUtils.Utils.TimeBased.Update;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TimeBased.Update
+namespace UtilsToolbox.Utils.TimeBased.Update
 {
     public class UpdateManager : MonoBehaviour
     {

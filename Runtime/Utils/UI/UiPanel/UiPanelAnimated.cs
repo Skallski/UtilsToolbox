@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.UI.UiPanel
+namespace UtilsToolbox.Utils.UI.UiPanel
 {
     /// <summary>
     /// Base panel class with opening and closing animations handling

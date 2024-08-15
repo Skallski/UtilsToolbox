@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.Audio
+namespace UtilsToolbox.Utils.Audio
 {
     public static class SoundLoader
     {

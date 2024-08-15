@@ -1,4 +1,4 @@
-namespace SkalluUtils.Utils.EventSystem
+namespace UtilsToolbox.Utils.EventSystem
 {
     /// <summary>
     /// 

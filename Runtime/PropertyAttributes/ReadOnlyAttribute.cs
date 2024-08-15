@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SkalluUtils.PropertyAttributes
+namespace UtilsToolbox.PropertyAttributes
 {
     /// <summary>
     /// This attribute makes field readonly in inspector

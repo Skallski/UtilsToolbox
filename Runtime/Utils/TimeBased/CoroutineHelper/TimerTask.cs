@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TimeBased.CoroutineHelper
+namespace UtilsToolbox.Utils.TimeBased.CoroutineHelper
 {
     public class TimerTask
     {

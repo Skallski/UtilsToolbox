@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace SkalluUtils.Utils.UI
+namespace UtilsToolbox.Utils.UI
 {
     public class Button :
         MonoBehaviour,
@@ -38,13 +38,13 @@ namespace SkalluUtils.Utils.UI
         }
 
         [SerializeField] private ButtonState _state = ButtonState.None;
-        [SerializeField] private bool _isInteractible = true;
+        [SerializeField] private bool _isInteractable = true;
         [SerializeField] private List<Entry> _events = new List<Entry>();
 
-        public bool IsInteractible
+        public bool IsInteractable
         {
-            get => _isInteractible;
-            set => _isInteractible = value;
+            get => _isInteractable;
+            set => _isInteractable = value;
         }
 
         #region POINTER EVENTS
@@ -76,7 +76,7 @@ namespace SkalluUtils.Utils.UI
         
         private void HandlePointerEvent(ButtonState buttonState)
         {
-            if (_state == buttonState || _isInteractible == false)
+            if (_state == buttonState || _isInteractable == false)
             {
                 return;
             }

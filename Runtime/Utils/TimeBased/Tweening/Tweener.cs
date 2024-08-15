@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TimeBased.Tweening
+namespace UtilsToolbox.Utils.TimeBased.Tweening
 {
     public static class Tweener
     {

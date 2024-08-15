@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SkalluUtils.Utils.EventSystem
+namespace UtilsToolbox.Utils.EventSystem
 {
     public static class EventManager
     {

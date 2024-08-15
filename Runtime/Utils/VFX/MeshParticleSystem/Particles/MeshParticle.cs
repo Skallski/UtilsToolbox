@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.VFX.MeshParticleSystem.Particles
+namespace UtilsToolbox.Utils.VFX.MeshParticleSystem.Particles
 {
     /// <summary>
     /// Class representing single particle

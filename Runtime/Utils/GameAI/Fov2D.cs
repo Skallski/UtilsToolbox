@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SkalluUtils.Utils.GameAI
+namespace UtilsToolbox.Utils.GameAI
 {
     public class Fov2D : MonoBehaviour
     {

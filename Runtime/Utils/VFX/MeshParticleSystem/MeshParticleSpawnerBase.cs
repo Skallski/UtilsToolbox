@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using SkalluUtils.Utils.VFX.MeshParticleSystem.Particles;
 using UnityEngine;
+using UtilsToolbox.Utils.VFX.MeshParticleSystem.Particles;
 
-namespace SkalluUtils.Utils.VFX.MeshParticleSystem
+namespace UtilsToolbox.Utils.VFX.MeshParticleSystem
 {
     [RequireComponent(typeof(MeshParticleSystem))]
     public abstract class MeshParticleSpawnerBase : MonoBehaviour

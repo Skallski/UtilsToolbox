@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace SkalluUtils.Editor.EditorWindows
+namespace UtilsToolbox.Editor.EditorWindows
 {
     public abstract class EditorWindowBase : EditorWindow
     {

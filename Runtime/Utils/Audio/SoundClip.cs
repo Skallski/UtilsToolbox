@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SkalluUtils.Utils.Audio
+namespace UtilsToolbox.Utils.Audio
 {
     [System.Serializable]
     public class SoundClip

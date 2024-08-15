@@ -1,6 +1,7 @@
 using UnityEditor;
+using UtilsToolbox.Utils.MultiSwitch;
 
-namespace Main.Scripts.Utils.MultiSwitch.Editor
+namespace UtilsToolbox.Editor.CustomEditors.MultiSwitch
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(MultiSwitchWithParams<,>), true)]

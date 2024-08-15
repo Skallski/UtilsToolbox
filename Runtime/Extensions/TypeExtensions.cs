@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SkalluUtils.Extensions
+namespace UtilsToolbox.Extensions
 {
     public static class TypeExtensions
     {

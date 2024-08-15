@@ -4,7 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-namespace SkalluUtils.Editor.EditorWindows
+namespace UtilsToolbox.Editor.EditorWindows
 {
     public class TmpFinder : EditorWindowBase
     {

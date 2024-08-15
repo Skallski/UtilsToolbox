@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.IO.ImageIO
+namespace UtilsToolbox.Utils.IO.ImageIO
 {
     public static class ImageWriter
     {

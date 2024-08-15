@@ -1,8 +1,8 @@
-﻿using SkalluUtils.Utils.VFX;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using UtilsToolbox.Utils.VFX;
 
-namespace SkalluUtils.Editor.CustomEditors
+namespace UtilsToolbox.Editor.CustomEditors
 {
     /// <summary>
     /// Test object shake during play mode

@@ -3,13 +3,13 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch.Editor
+namespace UtilsToolbox.Editor.CustomEditors.MultiSwitch
 {
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(MultiSwitch))]
+    [CustomEditor(typeof(UtilsToolbox.Utils.MultiSwitch.MultiSwitch))]
     public class MultiSwitchEditor : UnityEditor.Editor
     {
-        private MultiSwitch _multiSwitch;
+        private UtilsToolbox.Utils.MultiSwitch.MultiSwitch _multiSwitch;
         
         private SerializedProperty _defaultStateOnAwake;
         private SerializedProperty _state;
@@ -19,7 +19,7 @@ namespace Main.Scripts.Utils.MultiSwitch.Editor
 
         protected virtual void OnEnable()
         {
-            _multiSwitch = target as MultiSwitch;
+            _multiSwitch = target as UtilsToolbox.Utils.MultiSwitch.MultiSwitch;
 
             _defaultStateOnAwake = serializedObject.FindProperty("_defaultStateOnAwake");
             _state = serializedObject.FindProperty("_state");

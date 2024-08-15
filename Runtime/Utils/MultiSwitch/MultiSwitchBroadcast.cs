@@ -1,4 +1,4 @@
-﻿namespace Main.Scripts.Utils.MultiSwitch
+﻿namespace UtilsToolbox.Utils.MultiSwitch
 {
     /// <summary>
     /// Multi switch that can set multiple stored multi switches at once

@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.TranslationSystem
+namespace UtilsToolbox.Utils.TranslationSystem
 {
     /// <summary>
     /// <remarks>

@@ -1,4 +1,4 @@
-namespace SkalluUtils.Utils.TimeBased.Update
+namespace UtilsToolbox.Utils.TimeBased.Update
 {
     public enum UpdateType
     {

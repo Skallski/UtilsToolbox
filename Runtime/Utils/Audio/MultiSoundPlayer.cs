@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.Audio
+namespace UtilsToolbox.Utils.Audio
 {
     [RequireComponent(typeof(AudioSource))]
     public class MultiSoundPlayer : MonoBehaviour

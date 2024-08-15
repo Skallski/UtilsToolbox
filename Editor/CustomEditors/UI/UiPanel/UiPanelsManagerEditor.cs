@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Reflection;
-using SkalluUtils.Utils.UI.UiPanel;
 using UnityEditor;
 using UnityEngine;
+using UtilsToolbox.Utils.UI.UiPanel;
 
-namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
+namespace UtilsToolbox.Editor.CustomEditors.UI.UiPanel
 {
     [CustomEditor(typeof(UiPanelsManager), true)]
     public class UiPanelsManagerEditor : UnityEditor.Editor
@@ -84,7 +84,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
         {
             if (_uiPanelsManager.GetType()
                     ?.GetField("_panels", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?.GetValue(_uiPanelsManager) is not List<SkalluUtils.Utils.UI.UiPanel.UiPanel> panels)
+                    ?.GetValue(_uiPanelsManager) is not List<UtilsToolbox.Utils.UI.UiPanel.UiPanel> panels)
             {
                 return;
             }
@@ -94,7 +94,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI.UiPanel
             for (int i = 0, c = panels.Count; i < c; i++)
             {
                 int index = i;
-                SkalluUtils.Utils.UI.UiPanel.UiPanel panel = panels[i];
+                UtilsToolbox.Utils.UI.UiPanel.UiPanel panel = panels[i];
 
                 menu.AddItem(panel == null
                         ? new GUIContent($"{index}: _")

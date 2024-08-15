@@ -1,9 +1,8 @@
 {
-    "name": "skallu.skallu-utils",
-    "rootNamespace": "SkalluUtils",
+    "name": "Skallski.utils-toolbox",
+    "rootNamespace": "UtilsToolbox",
     "references": [
-        "Unity.TextMeshPro",
-        "Unity.TextMeshPro.Editor"
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

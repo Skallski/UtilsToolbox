@@ -1,9 +1,9 @@
 using System;
-using SkalluUtils.Utils.UI;
 using UnityEditor;
 using UnityEngine;
+using UtilsToolbox.Utils.UI;
 
-namespace SkalluUtils.Editor.CustomEditors.UI
+namespace UtilsToolbox.Editor.CustomEditors.UI
 {
     [CustomEditor(typeof(Button))]
     [CanEditMultipleObjects]
@@ -20,7 +20,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI
         private void OnEnable()
         {
             _state = serializedObject.FindProperty("_state");
-            _isInteractible = serializedObject.FindProperty("_isInteractible");
+            _isInteractible = serializedObject.FindProperty("_isInteractable");
             _events = serializedObject.FindProperty("_events");
 
             _addButtonContent = EditorGUIUtility.TrTextContent("Add New Button Event");
@@ -83,11 +83,15 @@ namespace SkalluUtils.Editor.CustomEditors.UI
             // add new button event
             Rect btPosition = GUILayoutUtility.GetRect(_addButtonContent, GUI.skin.button);
             const float addButtonWidth = 200f;
-            btPosition.x = btPosition.x + (btPosition.width - addButtonWidth) / 2;
+            btPosition.x += (btPosition.width - addButtonWidth) / 2;
             btPosition.width = addButtonWidth;
+
+            GUIContent buttonLabel = new GUIContent("Add Button Event",
+                EditorGUIUtility.IconContent("d_EventTrigger Icon").image);
+            
             if (_events.arraySize < _eventTypes.Length)
             {
-                if (GUI.Button(btPosition, "Add Button Event"))
+                if (GUI.Button(btPosition, buttonLabel))
                 {
                     ShowAddPointerEventMenu();
                 }
@@ -95,7 +99,7 @@ namespace SkalluUtils.Editor.CustomEditors.UI
             else
             {
                 EditorGUI.BeginDisabledGroup(true);
-                GUI.Button(btPosition, "Add Button Event");
+                GUI.Button(btPosition, buttonLabel);
                 EditorGUI.EndDisabledGroup();
             }
 

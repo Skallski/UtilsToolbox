@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace SkalluUtils.Utils.Optimization.Pooling
+namespace UtilsToolbox.Utils.Optimization.Pooling
 {
     public class ObjectPool<T> where T : PoolableObject
     {

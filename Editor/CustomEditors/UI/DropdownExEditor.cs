@@ -1,7 +1,7 @@
-﻿using SkalluUtils.Utils.UI;
-using UnityEditor;
+﻿using UnityEditor;
+using UtilsToolbox.Utils.UI;
 
-namespace SkalluUtils.Editor.CustomEditors.UI
+namespace UtilsToolbox.Editor.CustomEditors.UI
 {
     [CustomEditor(typeof(DropdownTmp))]
     [CanEditMultipleObjects]

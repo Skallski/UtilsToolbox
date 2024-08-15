@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Main.Scripts.Utils.MultiSwitch
+namespace UtilsToolbox.Utils.MultiSwitch
 {
     /// <summary>
     /// Simple multi switch that can modify the source .

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace SkalluUtils.Utils.IO.ImageIO
+namespace UtilsToolbox.Utils.IO.ImageIO
 {
     public static class ImageReader
     {
