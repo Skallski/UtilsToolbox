@@ -6,8 +6,8 @@ namespace UtilsToolbox.Editor.EditorWindows
 {
     public static class WindowOpener
     {
-        private const string MENU_NAME_BASE = "Window/Skallu Utils/";
-        
+        private const string MENU_NAME_BASE = "Window/Utils Toolbox/";
+
         [MenuItem(MENU_NAME_BASE + "Animator Controller States Display")]
         public static void OpenAnimatorControllerStatesDisplay()
         {

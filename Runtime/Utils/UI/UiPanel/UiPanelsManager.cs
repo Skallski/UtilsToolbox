@@ -52,7 +52,7 @@ namespace UtilsToolbox.Utils.UI.UiPanel
             return null;
         }
         
-        public void SwitchToPanel(UiPanel panel, UiPanelOpeningParameters openingParameters = null)
+        public void SwitchToPanel(UiPanel panel, UiPanelOpeningParameters openingParameters = null) 
         {
             if (panel == null)
             {

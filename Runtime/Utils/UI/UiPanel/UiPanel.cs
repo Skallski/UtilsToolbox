@@ -53,7 +53,7 @@ namespace UtilsToolbox.Utils.UI.UiPanel
         /// </summary>
         internal void Open(UiPanelOpeningParameters openingParameters)
         {
-            if (!IsOpened)
+            if (IsOpened == false)
             {
                 OpeningParameters = openingParameters;
                 OpenSelf();

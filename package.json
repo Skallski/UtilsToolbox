@@ -1,6 +1,6 @@
 {
   "name": "com.skallski.utils-toolbox",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "displayName": "Utils Toolbox",
   "description": "Package full of tools, extensions and many QoL improvements.",
   "unity": "2020.3",
