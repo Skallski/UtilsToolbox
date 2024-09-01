@@ -5,6 +5,28 @@ namespace UtilsToolbox.Extensions.Collections
     public static class ListExtensions
     {
         /// <summary>
+        /// Removes list of elements from selected list
+        /// </summary>
+        /// <param name="origin"> list from which elements will be removed </param>
+        /// <param name="partToRemove"> list that contains elements that will be removed </param>
+        /// <typeparam name="T"> type of list </typeparam>
+        public static void RemoveRange<T>(this IList<T> origin, IEnumerable<T> partToRemove)
+        {
+            if (origin.Count <= 0)
+            {
+                return;
+            }
+
+            foreach (T t in partToRemove)
+            {
+                if (origin.Contains(t))
+                {
+                    origin.Remove(t);
+                }
+            }
+        }
+        
+        /// <summary>
         /// Gets random item from list
         /// </summary>
         /// <param name="list"> list on which the method will be called </param>
@@ -34,75 +56,30 @@ namespace UtilsToolbox.Extensions.Collections
                 (list[j], list[i]) = (list[i], list[j]);
             }
         }
-
+        
         /// <summary>
-        /// Check if list is a subset of other list
+        /// Creates a subset of an array
         /// </summary>
-        /// <param name="subset"> list on which the method will be called </param>
-        /// <param name="set"> list to check if it contains whole subset </param>
-        /// <typeparam name="T"> type of both lists </typeparam>
-        /// <returns> true or false, depending on whether the list is a subset of second list </returns>
-        public static bool IsSubsetOf<T>(this IList<T> subset, IList<T> set)
+        /// <param name="list"> array on which the method will be called </param>
+        /// <param name="startIndex"> index that will be the first element of subset </param>
+        /// <param name="endIndex"> index that will be the last element of subset </param>
+        /// <typeparam name="T">  type of the array </typeparam>
+        /// <returns> iEnumerable, which is a subset of original processed array </returns>
+        public static IList<T> Subset<T>(this IList<T> list, int startIndex, int endIndex)
         {
-            bool contains = false;
-            
-            foreach (T element in subset)
+            if (startIndex < 0 || endIndex >= list.Count || startIndex > endIndex)
             {
-                if (set.Contains(element))
-                {
-                    contains = true;
-                }
-                else
-                {
-                    return false;
-                }
+                throw new System.ArgumentOutOfRangeException("Invalid start index or end index");
             }
 
-            return contains;
+            int count = endIndex - startIndex + 1;
+            T[] result = new T[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = list[startIndex + i];
+            }
+
+            return result;
         }
-
-        /// <summary>
-        /// Removes list of elements from selected list
-        /// </summary>
-        /// <param name="origin"> list from which elements will be removed </param>
-        /// <param name="partToRemove"> list that contains elements that will be removed </param>
-        /// <typeparam name="T"> type of list </typeparam>
-        public static void RemoveRange<T>(this IList<T> origin, IEnumerable<T> partToRemove)
-        {
-            if (origin.Count <= 0)
-            {
-                return;
-            }
-
-            foreach (T t in partToRemove)
-            {
-                if (origin.Contains(t))
-                {
-                    origin.Remove(t);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check if the list is null or empty
-        /// </summary>
-        /// <param name="list"> list on which the method will be called </param>
-        /// <typeparam name="T"> type of list </typeparam>
-        /// <returns> true or false, depending on whether the list is null or empty </returns>
-        public static bool IsNullOrEmpty<T>(this IList<T> list)
-        {
-            if (list == null)
-            {
-                return true;
-            }
-
-            if (list.Count == 0)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
     }
 }

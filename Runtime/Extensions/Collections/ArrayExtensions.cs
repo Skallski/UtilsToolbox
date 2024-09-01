@@ -31,35 +31,43 @@
         /// </summary>
         /// <param name="array"> array on which the method will be called </param>
         /// <param name="startIndex"> index that will be the first element of subset </param>
-        /// <param name="length"> amount of elements that will be added one-by-one to the subset </param>
+        /// <param name="endIndex"> index that will be the last element of subset </param>
         /// <typeparam name="T">  type of the array </typeparam>
         /// <returns> array, which is a subset of original processed array </returns>
-        public static T[] Subset<T>(this T[] array, int startIndex, int length)
+        public static T[] Subset<T>(this T[] array, int startIndex, int endIndex)
         {
-            T[] subset = new T[length];
-            System.Array.Copy(array, startIndex, subset, 0, length);
-            
-            return subset;
+            return new System.ArraySegment<T>(array, startIndex, endIndex).ToArray();
+        }
+        
+        /// <summary>
+        /// Gets random item from array
+        /// </summary>
+        /// <param name="array"> array on which the method will be called </param>
+        /// <typeparam name="T"> type of array </typeparam>
+        /// <returns> random item from array </returns>
+        public static T RandomItem<T>(this T[] array)
+        {
+            if (array.Length == 0)
+            {
+                throw new System.IndexOutOfRangeException("Cannot select random item from empty array!");
+            }
+
+            return array[UnityEngine.Random.Range(0, array.Length)];
         }
 
         /// <summary>
-        /// Creates a subset of an array
+        /// Shuffles list
         /// </summary>
         /// <param name="array"> array on which the method will be called </param>
-        /// <param name="indices"> indices </param>
-        /// <typeparam name="T">  type of the array </typeparam>
-        /// <returns> array, which is a subset of original processed array </returns>
-        public static T[] Subset<T>(this T[] array, params int[] indices)
+        /// <typeparam name="T"> type of array </typeparam>
+        public static void Shuffle<T>(this T[] array)
         {
-            int len = indices.Length;
-            T[] subset = new T[len];
-
-            for (int i = 0; i < len; i++)
+            int len = array.Length;
+            for (int i = len - 1; i > 1; i--)
             {
-                subset[i] = array[indices[i]];
+                int j = UnityEngine.Random.Range(0, i + 1);
+                (array[j], array[i]) = (array[i], array[j]);
             }
-
-            return subset;
         }
     }
 }

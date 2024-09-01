@@ -66,5 +66,10 @@ namespace UtilsToolbox.Utils.MultiSwitch
             _values = new TValue[values.Length];
             System.Array.Copy(values, _values, values.Length);
         }
+
+        public void SetRandomState()
+        {
+            SetState(Random.Range(0, _values.Length));
+        }
     }
 }
